@@ -11,9 +11,4 @@ export class AppController {
   index() {
     return this.appService.index();
   }
-
-  @Get('env-mode')
-  envMode() {
-    return this.appService.envMode();
-  }
 }

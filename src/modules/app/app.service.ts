@@ -6,11 +6,6 @@ import { ENV_MODE } from '../../constants/env-constants';
 export class AppService {
   constructor(private configService: ConfigService) {}
   index() {
-    return 'Hello'
-  }
-  envMode() {
-    return {
-      envMode: this.configService.get(ENV_MODE),
-    };
+    return `Capstone API. Env ${this.configService.get(ENV_MODE)}`;
   }
 }
