@@ -6,7 +6,12 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  index() {
+    return this.appService.index();
+  }
+
+  @Get('env-mode')
+  envMode() {
+    return this.appService.envMode();
   }
 }
