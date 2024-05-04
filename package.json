@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:debug": "nest start --debug --watch",
     "start:dev": "env-cmd -f env/development.env node scripts/write-env.cjs && nest start --watch",
-    "start:staging": "env-cmd -f env/staging.env node scripts/write-env.cjs && nest start --watch",
+    "start:staging": "env-cmd -f env/staging.env node scripts/write-env.cjs && node dist/main",
     "start:prod": "env-cmd -f env/production.env node scripts/write-env.cjs && node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
