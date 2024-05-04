@@ -6,7 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build:dev": "env-cmd -f env/development.env node scripts/write-env.cjs && nest build",
+    "build:staging": "env-cmd -f env/staging.env node scripts/write-env.cjs && nest build",
+    "build:prod": "env-cmd -f env/production.env node scripts/write-env.cjs && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:debug": "nest start --debug --watch",
     "start:dev": "env-cmd -f env/development.env node scripts/write-env.cjs && nest start --watch",
