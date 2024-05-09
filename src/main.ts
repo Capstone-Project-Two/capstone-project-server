@@ -14,7 +14,6 @@ async function bootstrap() {
 
   SwaggerModule.setup('/swagger', app, document);
 
-
   await app.listen(parseInt(configService.get(APP_PORT)));
 
   console.log(`Api is running on: ${configService.get(API_BASE_URL)}`);
