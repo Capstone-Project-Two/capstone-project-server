@@ -16,5 +16,10 @@
         "DELETE"
       ]
     }
-  ]
+  ],
+  "env": {
+    "APP_PORT": "8000",
+    "ENV_MODE": "production",
+    "API_BASE_URL": "https://capstone-project-server-prod.vercel.app"
+  }
 }
