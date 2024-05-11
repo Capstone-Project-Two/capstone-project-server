@@ -3,15 +3,14 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { API_BASE_URL, APP_PORT } from './constants/env-constants';
 import { SwaggerModule } from '@nestjs/swagger';
-import { documentBuilder } from './config/swagger/options';
+import { documentBuilderOptions } from './config/swagger/options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const document = SwaggerModule.createDocument(app, documentBuilder);
+  const document = SwaggerModule.createDocument(app, documentBuilderOptions);
 
   SwaggerModule.setup('api', app, document);
-
 
   await app.listen(parseInt(configService.get(APP_PORT)));
 
