@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { API_BASE_URL, APP_PORT } from './constants/env-constants';
+import { APP_PORT, ENV_MODE } from './constants/env-constants';
 import { SwaggerModule } from '@nestjs/swagger';
 import { documentBuilder } from './config/swagger/options';
 
@@ -12,9 +12,10 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-
   await app.listen(parseInt(configService.get(APP_PORT)));
 
-  console.log(`Api is running on: ${configService.get(API_BASE_URL)}`);
+  console.log(
+    `(${configService.get(ENV_MODE)}) Api is running on: http://localhost:${configService.get(`${APP_PORT}`)}`,
+  );
 }
 bootstrap();
