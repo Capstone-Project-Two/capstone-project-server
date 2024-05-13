@@ -4,6 +4,7 @@ declare global {
       APP_PORT: string;
       ENV_MODE: string;
       API_BASE_URL: string;
+      MONGO_CONNECTION_STRING: string;
     }
   }
 }
