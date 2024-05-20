@@ -15,7 +15,7 @@ async function bootstrap() {
   await app.listen(parseInt(configService.get(APP_PORT)));
 
   console.log(
-    `(${configService.get(ENV_MODE)}) Api is running on: http://localhost:${configService.get(`${APP_PORT}`)}`,
+    `(${configService.get(ENV_MODE)}) Api is running on: ${(await app.getUrl()).toString()}`,
   );
 }
 bootstrap();
