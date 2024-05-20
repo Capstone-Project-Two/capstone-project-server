@@ -9,7 +9,7 @@ import { CatResponseDto } from './dto/response/cat-response.dto';
 export class CatsService {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
-  async findAll(): Promise<Array<CatResponseDto>> {
+  async findAll(): Promise<Array<CatResponseDto>> {    
     return await this.catModel.find().exec();
   }
 
