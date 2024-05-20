@@ -2,7 +2,6 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { API_BASE_URL, ENV_MODE } from 'src/constants/env-constants';
-
 @ApiTags('Index')
 @Controller()
 export class AppController {
