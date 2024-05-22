@@ -16,10 +16,7 @@ export class PatientsService {
       const res = await this.patientModel.create(createPatientDto);
       return res;
     } catch (e) {
-      return {
-        statusCode: e.code,
-        message: e.message,
-      };
+      return e;
     }
   }
 
