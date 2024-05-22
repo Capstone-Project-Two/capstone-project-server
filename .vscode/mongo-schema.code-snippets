@@ -7,7 +7,7 @@
 			"",
 			"export type ${1:$TM_FILENAME_BASE}Document = HydratedDocument<${1:$TM_FILENAME_BASE}>;",
 			"",
-			"@Schema()",
+			"@Schema({ timestamps: true })",
 			"export class ${1:$TM_FILENAME_BASE} {",
 			"	@Prop()",
 			"	",

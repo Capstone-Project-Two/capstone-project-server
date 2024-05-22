@@ -4,7 +4,7 @@ import { ROLES } from 'src/constants/roles-constant';
 
 export type AdminDocument = HydratedDocument<Admin>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Admin {
   @Prop({ unique: true })
   email: string;
