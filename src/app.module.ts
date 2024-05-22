@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { CatsModule } from './modules/cats/cats.module';
 import { DatabaseModule } from './config/database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { DatabaseModule } from './config/database/database.module';
     }),
     DatabaseModule,
     CatsModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
