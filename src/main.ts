@@ -9,6 +9,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const document = SwaggerModule.createDocument(app, documentBuilderOptions);
+  if (configService.getOrThrow(ENV_MODE) === 'development') {
+    app.enableCors({
+      origin: '*',
+    });
+  }
 
   SwaggerModule.setup('api', app, document);
 

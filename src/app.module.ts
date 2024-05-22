@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
-import { CatsModule } from './modules/cats/cats.module';
 import { DatabaseModule } from './config/database/database.module';
+import { AdminsModule } from './modules/admins/admins.module';
+import { PatientsModule } from './modules/patients/patients.module';
 
 @Module({
   imports: [
@@ -10,7 +11,8 @@ import { DatabaseModule } from './config/database/database.module';
       isGlobal: true,
     }),
     DatabaseModule,
-    CatsModule,
+    AdminsModule,
+    PatientsModule,
   ],
   controllers: [AppController],
 })
