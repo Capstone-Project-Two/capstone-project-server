@@ -23,7 +23,7 @@ export class AdminsController {
     return this.adminsService.create(createAdminDto);
   }
 
-  @ApiOkResponse({ type: AdminResponseDto })
+  @ApiOkResponse({ type: AdminResponseDto, isArray: true })
   @Get()
   findAll() {
     return this.adminsService.findAll();

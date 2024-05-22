@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { APP_PORT, ENV_MODE } from './constants/env-constants';
 import { SwaggerModule } from '@nestjs/swagger';
 import { documentBuilderOptions } from './config/swagger/options';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,11 @@ async function bootstrap() {
     });
   }
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
   SwaggerModule.setup('api', app, document);
 
   await app.listen(parseInt(configService.get(APP_PORT)));

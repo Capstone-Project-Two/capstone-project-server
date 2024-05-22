@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BaseResponse } from 'src/common/base-response.dto';
 import { GENDER } from 'src/constants/gender-constant';
 import { ROLES } from 'src/constants/roles-constant';
 
-export class PatientResponseDto {
+export class PatientResponseDto extends BaseResponse {
   @ApiProperty({ type: String })
   email: string;
 

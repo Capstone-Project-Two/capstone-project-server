@@ -23,7 +23,7 @@ export class PatientsController {
     return this.patientsService.create(createPatientDto);
   }
 
-  @ApiOkResponse({ type: PatientResponseDto })
+  @ApiOkResponse({ type: PatientResponseDto, isArray: true })
   @Get()
   findAll() {
     return this.patientsService.findAll();

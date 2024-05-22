@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BaseResponse } from 'src/common/base-response.dto';
 import { ROLES } from 'src/constants/roles-constant';
 
-export class AdminResponseDto {
+export class AdminResponseDto extends BaseResponse {
   @ApiProperty({ type: String })
   email: string;
 

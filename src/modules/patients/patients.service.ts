@@ -4,7 +4,6 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from 'src/schemas/patient.schema';
 import { Model } from 'mongoose';
-import { PatientResponseDto } from './dto/response/patient-response.dto';
 
 @Injectable()
 export class PatientsService {
@@ -24,7 +23,7 @@ export class PatientsService {
     }
   }
 
-  async findAll(): Promise<Array<PatientResponseDto>> {
+  async findAll() {
     const res = await this.patientModel.find().exec();
     return res;
   }
