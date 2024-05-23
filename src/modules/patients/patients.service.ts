@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -29,8 +29,16 @@ export class PatientsService {
     return res;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  async findOne(id: string) {
+    try {
+      const res = await this.patientModel.findOne({ _id: id }).exec();
+      if (!res) {
+        throw new NotFoundException();
+      }
+      return res;
+    } catch (e) {
+      return e;
+    }
   }
 
   update(id: number, updatePatientDto: UpdatePatientDto) {
