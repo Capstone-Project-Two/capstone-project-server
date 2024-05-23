@@ -6,7 +6,6 @@ import { AdminsModule } from './modules/admins/admins.module';
 import { PatientsModule } from './modules/patients/patients.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './common/response.interceptor';
-import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,7 +15,6 @@ import { AuthModule } from './modules/auth/auth.module';
     DatabaseModule,
     AdminsModule,
     PatientsModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [
