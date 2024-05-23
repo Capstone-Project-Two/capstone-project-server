@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IsEmail } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 import { GENDER } from 'src/constants/gender-constant';
 import { ROLES } from 'src/constants/roles-constant';
@@ -8,14 +7,13 @@ export type PatientDocument = HydratedDocument<Patient>;
 
 @Schema({ timestamps: true })
 export class Patient {
-  @Prop({ unique: true })
-  @IsEmail()
+  @Prop({ type: String, unique: true })
   email: string;
 
-  @Prop({ unique: true })
+  @Prop({ type: String, unique: true, minlength: 3, maxlength: 64 })
   username: string;
 
-  @Prop({ unique: true })
+  @Prop({ type: String, unique: true, trim: true })
   phone_number: string;
 
   @Prop({ type: String, enum: GENDER, isRequired: false })
@@ -24,7 +22,7 @@ export class Patient {
   @Prop({ type: Array, enum: ROLES, default: [ROLES.PATIENT] })
   roles: Array<ROLES>;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   is_deleted: boolean;
 }
 
