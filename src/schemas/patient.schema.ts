@@ -21,7 +21,7 @@ export class Patient {
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender: GENDER;
 
-  @Prop({ type: String, enum: ROLES, default: [ROLES.PATIENT] })
+  @Prop({ type: Array, enum: ROLES, default: [ROLES.PATIENT] })
   roles: Array<ROLES>;
 
   @Prop({ default: false })
