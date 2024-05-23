@@ -35,7 +35,6 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.2",
     "env-cmd": "^10.1.0",
-    "firebase": "^10.12.1",
     "mongoose": "^8.3.4",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
