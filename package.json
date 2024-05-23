@@ -18,6 +18,7 @@
     "preview:dev": "yarn build:dev && node dist/main",
     "preview:staging": "yarn build:staging && node dist/main",
     "preview:prod": "yarn build:prod && node dist/main",
+    "gen:module": "nest g resource",
     "start:debug": "nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

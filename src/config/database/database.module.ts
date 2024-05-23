@@ -5,16 +5,13 @@ import { MONGO_CONNECTION_STRING } from 'src/constants/env-constants';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-      MongooseModule.forRootAsync({
-        imports: [ConfigModule],
-        useFactory: async (configService: ConfigService) => ({
-          uri: configService.getOrThrow<string>(MONGO_CONNECTION_STRING),
-        }),
-        inject: [ConfigService],
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.getOrThrow<string>(MONGO_CONNECTION_STRING),
       }),
+      inject: [ConfigService],
+    }),
   ],
 })
 export class DatabaseModule {}
