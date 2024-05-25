@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { GENDER } from 'src/constants/gender-constant';
 import { CreatePatientDto } from 'src/modules/patients/dto/create-patient.dto';
 
-export const fakePatients = ({ length }: { length: number }) => {
+export const PatientFactory = ({ length }: { length: number }) => {
   const fakePatient: CreatePatientDto[] = [];
   Array.from({ length }).forEach(() => {
     fakePatient.push({

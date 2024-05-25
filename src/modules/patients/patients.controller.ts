@@ -12,7 +12,7 @@ import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PatientResponseDto } from './dto/response/patient-response.dto';
-import { SeedPatientDto } from 'src/seed/dto/patient-seed.dto';
+import { PatientSeederDto } from 'src/database/seeders/patient-seeder/dto/patient-seeder.dto';
 import { RelationalPatientResponseDto } from './dto/response/relational-patient-response.dto';
 
 @ApiTags('Patients')
@@ -21,7 +21,7 @@ export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
   @Post('/seed')
-  seedPatient(@Body() length: SeedPatientDto) {
+  seedPatient(@Body() length: PatientSeederDto) {
     return this.patientsService.seedPatient(length);
   }
 
