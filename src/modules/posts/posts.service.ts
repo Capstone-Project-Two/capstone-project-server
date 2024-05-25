@@ -54,15 +54,32 @@ export class PostsService {
 
   async findOne(id: string) {
     try {
-      const res = (await this.postModel.findById(id)).populate(['patient']);
+      const res = await this.postModel
+        .findOne({
+          _id: id,
+        })
+        .populate(['patient']);
       return res;
     } catch (e) {
       return e;
     }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto) {
+    try {
+      const res = await this.postModel.updateOne(
+        { _id: id },
+        { ...updatePostDto },
+      );
+      return {
+        data: {
+          res,
+          field: updatePostDto,
+        },
+      };
+    } catch (e) {
+      return e;
+    }
   }
 
   async userRemovePost(id: string, body: { patient_id: string }) {

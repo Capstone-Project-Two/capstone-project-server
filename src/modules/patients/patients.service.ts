@@ -7,11 +7,13 @@ import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
 import { fakePatients } from 'src/data/seed-patients-data';
 import { SeedPatientDto } from 'src/seed/dto/patient-seed.dto';
+import { Post } from 'src/schemas/post.schema';
 
 @Injectable()
 export class PatientsService {
   constructor(
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
+    @InjectModel(Post.name) private postModel: Model<Post>,
   ) {}
 
   async dropPatients() {
@@ -110,6 +112,10 @@ export class PatientsService {
 
   async remove(id: string) {
     const res = await this.patientModel.deleteOne({ _id: id });
+
+    /** @description deletes post related to user */
+    await this.postModel.deleteMany({ patient: id });
+
     return res;
   }
 }
