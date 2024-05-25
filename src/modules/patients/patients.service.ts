@@ -6,6 +6,7 @@ import { Patient } from 'src/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
 import { fakePatients } from 'src/data/seed-patients-data';
+import { SeedPatientDto } from 'src/seed/dto/patient-seed.dto';
 
 @Injectable()
 export class PatientsService {
@@ -22,11 +23,11 @@ export class PatientsService {
     }
   }
 
-  async seedPatient() {
+  async seedPatient(length: SeedPatientDto) {
     try {
       const res = await this.dropPatients().then(async () => {
         const res = await this.patientModel.insertMany(
-          fakePatients({ length: 100 }),
+          fakePatients({ length: length.lenght ?? 100 }),
         );
         return res;
       });
