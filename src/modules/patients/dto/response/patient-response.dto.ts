@@ -21,4 +21,7 @@ export class PatientResponseDto extends BaseResponse {
 
   @ApiProperty({ type: Boolean, default: false })
   is_deleted: boolean;
+
+  @ApiProperty({ type: Boolean, default: false })
+  is_banned: boolean;
 }

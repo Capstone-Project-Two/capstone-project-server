@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from 'src/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
-import { patientsData } from 'src/data/patients-data';
+import { fakePatients } from 'src/data/seed-patients-data';
 
 @Injectable()
 export class PatientsService {
@@ -13,9 +13,24 @@ export class PatientsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
   ) {}
 
-  async createMany() {
+  async dropPatients() {
     try {
-      const res = await this.patientModel.insertMany(patientsData);
+      const res = await this.patientModel.deleteMany();
+      return res;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  async seedPatient() {
+    try {
+      const res = await this.dropPatients().then(async () => {
+        const res = await this.patientModel.insertMany(
+          fakePatients({ length: 100 }),
+        );
+        return res;
+      });
+
       return res;
     } catch (e) {
       return e;
@@ -52,16 +67,41 @@ export class PatientsService {
   }
 
   async update(id: string, updatePatientDto: UpdatePatientDto) {
-    const res = await this.patientModel.updateOne(
-      { _id: id },
-      { ...updatePatientDto },
-    );
+    const res = await this.patientModel
+      .updateOne({ _id: id }, { ...updatePatientDto })
+      .exec();
     return {
       data: {
         res,
         field: updatePatientDto,
       },
     };
+  }
+
+  async banPatient(id: string) {
+    try {
+      const res = await this.patientModel.updateOne(
+        { _id: id },
+        { is_banned: true },
+      );
+
+      return res;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  async unbanPatient(id: string) {
+    try {
+      const res = await this.patientModel.updateOne(
+        { _id: id },
+        { is_banned: false },
+      );
+
+      return res;
+    } catch (e) {
+      return e;
+    }
   }
 
   async remove(id: string) {

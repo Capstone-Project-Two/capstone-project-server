@@ -18,9 +18,9 @@ import { PatientResponseDto } from './dto/response/patient-response.dto';
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
-  @Post('/insert-many')
+  @Post('/seed')
   createMany() {
-    return this.patientsService.createMany();
+    return this.patientsService.seedPatient();
   }
 
   @Post()
@@ -43,6 +43,16 @@ export class PatientsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
     return this.patientsService.update(id, updatePatientDto);
+  }
+
+  @Patch('/ban-patient/:id')
+  banPatient(@Param('id') id: string) {
+    return this.patientsService.banPatient(id);
+  }
+
+  @Patch('/unban-patient/:id')
+  unbanPatient(@Param('id') id: string) {
+    return this.patientsService.unbanPatient(id);
   }
 
   @Delete(':id')

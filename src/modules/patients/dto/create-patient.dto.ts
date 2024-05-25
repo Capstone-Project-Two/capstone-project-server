@@ -28,5 +28,5 @@ export class CreatePatientDto {
 
   @ApiProperty()
   @IsEnum(GENDER)
-  gender: typeof GENDER;
+  gender: string;
 }
