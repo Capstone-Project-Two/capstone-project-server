@@ -34,6 +34,7 @@ export class PatientsController {
     return this.patientsService.findAll();
   }
 
+  @ApiOkResponse({ type: PatientResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.patientsService.findOne(id);
