@@ -12,6 +12,19 @@ export class PatientsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
   ) {}
 
+  async createMany(createPatientDto: CreatePatientDto[]) {
+    console.log(
+      '🚀 ~ PatientsService ~ createMany ~ createPatientDto:',
+      createPatientDto,
+    );
+    try {
+      const res = await this.patientModel.insertMany(createPatientDto);
+      return res;
+    } catch (e) {
+      return e;
+    }
+  }
+
   async create(createPatientDto: CreatePatientDto) {
     try {
       const res = await this.patientModel.create({

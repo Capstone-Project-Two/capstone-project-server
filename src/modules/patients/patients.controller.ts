@@ -18,6 +18,11 @@ import { PatientResponseDto } from './dto/response/patient-response.dto';
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
+  @Post('/many')
+  createMany(@Body() createPatientDto: CreatePatientDto[]) {
+    return this.patientsService.createMany(createPatientDto);
+  }
+
   @Post()
   create(@Body() createPatientDto: CreatePatientDto) {
     return this.patientsService.create(createPatientDto);
