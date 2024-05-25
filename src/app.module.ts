@@ -7,6 +7,7 @@ import { PatientsModule } from './modules/patients/patients.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { PostsModule } from './modules/posts/posts.module';
+import { SeedsModule } from './modules/seeds/seeds.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PostsModule } from './modules/posts/posts.module';
     AdminsModule,
     PatientsModule,
     PostsModule,
+    SeedsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -6,8 +6,6 @@ import { Patient } from 'src/database/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
-import { PatientSeederDto } from 'src/database/seeders/patient-seeder/dto/patient-seeder.dto';
-import { PatientFactory } from 'src/database/factories/patients.factory';
 
 @Injectable()
 export class PatientsService {
@@ -15,30 +13,6 @@ export class PatientsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
     @InjectModel(Post.name) private postModel: Model<Post>,
   ) {}
-
-  async dropPatients() {
-    try {
-      const res = await this.patientModel.deleteMany();
-      return res;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  async seedPatient(length: PatientSeederDto) {
-    try {
-      const res = await this.dropPatients().then(async () => {
-        const res = await this.patientModel.insertMany(
-          PatientFactory({ length: length.lenght ?? 100 }),
-        );
-        return res;
-      });
-
-      return res;
-    } catch (e) {
-      return e;
-    }
-  }
 
   async create(createPatientDto: CreatePatientDto) {
     try {
