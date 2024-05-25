@@ -17,13 +17,16 @@ export class Patient {
   phone_number: string;
 
   @Prop({ type: String, enum: GENDER, isRequired: false })
-  gender: GENDER;
+  gender?: GENDER;
 
   @Prop({ type: Array, enum: ROLES, default: [ROLES.PATIENT] })
   roles: Array<ROLES>;
 
   @Prop({ type: Boolean, default: false })
   is_deleted: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  is_banned: boolean;
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);

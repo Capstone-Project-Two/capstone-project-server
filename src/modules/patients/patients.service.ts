@@ -51,9 +51,17 @@ export class PatientsService {
     }
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    console.log(updatePatientDto);
-    return `This action updates a #${id} patient`;
+  async update(id: string, updatePatientDto: UpdatePatientDto) {
+    const res = await this.patientModel.updateOne(
+      { _id: id },
+      { ...updatePatientDto },
+    );
+    return {
+      data: {
+        res,
+        field: updatePatientDto,
+      },
+    };
   }
 
   async remove(id: string) {
