@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from 'src/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
+import { patientsData } from 'src/data/patients-data';
 
 @Injectable()
 export class PatientsService {
@@ -12,13 +13,9 @@ export class PatientsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
   ) {}
 
-  async createMany(createPatientDto: CreatePatientDto[]) {
-    console.log(
-      '🚀 ~ PatientsService ~ createMany ~ createPatientDto:',
-      createPatientDto,
-    );
+  async createMany() {
     try {
-      const res = await this.patientModel.insertMany(createPatientDto);
+      const res = await this.patientModel.insertMany(patientsData);
       return res;
     } catch (e) {
       return e;
@@ -55,6 +52,7 @@ export class PatientsService {
   }
 
   update(id: number, updatePatientDto: UpdatePatientDto) {
+    console.log(updatePatientDto);
     return `This action updates a #${id} patient`;
   }
 
