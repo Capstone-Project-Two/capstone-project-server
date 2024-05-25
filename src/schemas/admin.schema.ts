@@ -15,7 +15,7 @@ export class Admin {
   @Prop()
   phone_number: string;
 
-  @Prop({ type: String, enum: ROLES, default: [ROLES.ADMIN] })
+  @Prop({ type: Array, enum: ROLES, default: [ROLES.ADMIN] })
   roles: ROLES;
 }
 
