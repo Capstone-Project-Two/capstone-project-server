@@ -4,7 +4,7 @@ import { GENDER } from 'src/constants/gender-constant';
 import { MODEL } from 'src/constants/model-constant';
 import { ROLES } from 'src/constants/roles-constant';
 import { Post } from './post.schema';
-import { TObjectId } from 'src/constants/mongo-constant';
+import { TObjectId } from 'src/utils/mongo-helper';
 
 export type PatientDocument = HydratedDocument<Patient>;
 

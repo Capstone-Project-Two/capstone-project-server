@@ -4,11 +4,11 @@ import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 export class CreatePostDto {
   @ApiProperty()
   @IsString()
-  @MaxLength(256)
+  @MaxLength(1000)
   body: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  patientId: string;
+  patient: string;
 }
