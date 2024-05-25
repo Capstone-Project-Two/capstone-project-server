@@ -13,6 +13,7 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PatientResponseDto } from './dto/response/patient-response.dto';
 import { SeedPatientDto } from 'src/seed/dto/patient-seed.dto';
+import { RelationalPatientResponseDto } from './dto/response/relational-patient-response.dto';
 
 @ApiTags('Patients')
 @Controller('patients')
@@ -29,7 +30,7 @@ export class PatientsController {
     return this.patientsService.create(createPatientDto);
   }
 
-  @ApiOkResponse({ type: PatientResponseDto, isArray: true })
+  @ApiOkResponse({ type: RelationalPatientResponseDto, isArray: true })
   @Get()
   findAll() {
     return this.patientsService.findAll();
