@@ -7,9 +7,7 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class AdminsService {
-  constructor(
-    @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
-  ) {}
+  constructor(@InjectModel(Admin.name) private adminModel: Model<Admin>) {}
 
   create(createAdminDto: CreateAdminDto) {
     return 'This action adds a new admin';
