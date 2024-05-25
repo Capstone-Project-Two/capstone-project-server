@@ -51,13 +51,16 @@ export class PatientsService {
   }
 
   async findAll() {
-    const res = await this.patientModel.find().exec();
+    const res = await this.patientModel.find().populate(['posts']).exec();
     return res;
   }
 
   async findOne(id: string) {
     try {
-      const res = await this.patientModel.findOne({ _id: id }).exec();
+      const res = await this.patientModel
+        .findById(id)
+        .populate(['posts'])
+        .exec();
       if (!res) {
         throw new NotFoundException();
       }

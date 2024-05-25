@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { Patient } from './patient.schema';
 import { MODEL } from 'src/constants/model-constant';
+import { TObjectId } from 'src/constants/mongo-constant';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -10,7 +11,7 @@ export class Post {
   @Prop({ required: false })
   body: string;
 
-  @Prop({ type: Types.ObjectId, ref: MODEL.Patient })
+  @Prop({ type: TObjectId, ref: MODEL.Patient })
   patient: Patient;
 }
 

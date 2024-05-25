@@ -1,9 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { GENDER } from 'src/constants/gender-constant';
+import { MODEL } from 'src/constants/model-constant';
 import { ROLES } from 'src/constants/roles-constant';
 import { Post } from './post.schema';
-import { MODEL } from 'src/constants/model-constant';
+import { TObjectId } from 'src/constants/mongo-constant';
 
 export type PatientDocument = HydratedDocument<Patient>;
 
@@ -30,7 +31,7 @@ export class Patient {
   @Prop({ type: Boolean, default: false })
   is_banned: boolean;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: MODEL.Post }] })
+  @Prop({ type: [{ type: TObjectId, ref: MODEL.Post }] })
   posts: Post[];
 }
 
