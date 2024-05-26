@@ -1,10 +1,18 @@
 import { faker } from '@faker-js/faker';
 import { GENDER } from 'src/constants/gender-constant';
 import { CreatePatientDto } from 'src/modules/patients/dto/create-patient.dto';
+import { stringToHex } from 'src/utils/seeder-helpter';
 
-export const PatientFactory = ({ length }: { length: number }) => {
+export const PatientFactory = ({ length }: { length?: number }) => {
   const fakePatient: CreatePatientDto[] = [];
-  Array.from({ length }).forEach(() => {
+  const admin: CreatePatientDto & { _id: string } = {
+    _id: stringToHex('admin'),
+    username: 'admin',
+    email: `admin@email.com`,
+    gender: GENDER.MALE,
+    phone_number: '+85512345678',
+  };
+  Array.from({ length: length ?? 10 }).forEach(() => {
     fakePatient.push({
       email: faker.internet.email(),
       username: faker.internet.userName(),
@@ -13,5 +21,5 @@ export const PatientFactory = ({ length }: { length: number }) => {
     });
   });
 
-  return fakePatient;
+  return [admin, ...fakePatient];
 };
