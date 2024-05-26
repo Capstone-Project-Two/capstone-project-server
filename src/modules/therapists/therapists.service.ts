@@ -4,7 +4,6 @@ import { UpdateTherapistDto } from './dto/update-therapist.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Therapist } from 'src/schemas/therapist.schema';
 import { Model } from 'mongoose';
-import { TherapistResponseDto } from './dto/response/therapist-response.dto';
 
 @Injectable()
 export class TherapistsService {
@@ -21,13 +20,13 @@ export class TherapistsService {
     }
   }
 
-  async findAll(){
-    return await this.therapistModel.find();
+  async findAll() {
+    return await this.therapistModel.find().exec();
   }
 
-  async findOne(id: string){
+  async findOne(id: string) {
     try {
-      const res = await this.therapistModel.findOne({ _id: id }).exec()
+      const res = await this.therapistModel.findById(id).exec();
       if (!res) {
         throw new NotFoundException();
       }
@@ -38,10 +37,31 @@ export class TherapistsService {
   }
 
   async update(id: string, updateTherapistDto: UpdateTherapistDto) {
-    return updateTherapistDto
+    try {
+      const res = await this.therapistModel.updateOne(
+        { _id: id, },
+        { ...updateTherapistDto, },
+      );
+      return {
+        data: {
+          res, 
+          field: updateTherapistDto
+        }
+      }
+    } catch (error) {
+      return error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} therapist`;
+  async remove(id: string) {
+    try {
+      const res = await this.therapistModel.deleteOne({
+        _id: id,
+      });
+
+      return res;
+    } catch (error) {
+      return error;
+    }
   }
 }

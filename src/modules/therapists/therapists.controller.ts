@@ -12,7 +12,6 @@ import { CreateTherapistDto } from './dto/create-therapist.dto';
 import { UpdateTherapistDto } from './dto/update-therapist.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { TherapistResponseDto } from './dto/response/therapist-response.dto';
-import { Therapist } from 'src/schemas/therapist.schema';
 
 @ApiTags('Therapists')
 @Controller('therapists')
@@ -24,11 +23,13 @@ export class TherapistsController {
     return this.therapistsService.create(createTherapistDto);
   }
 
+  @ApiOkResponse({ type: TherapistResponseDto, isArray: true })
   @Get()
   findAll() {
     return this.therapistsService.findAll();
   }
 
+  @ApiOkResponse({ type: TherapistResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.therapistsService.findOne(id);
@@ -44,6 +45,6 @@ export class TherapistsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.therapistsService.remove(+id);
+    return this.therapistsService.remove(id);
   }
 }

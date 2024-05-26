@@ -16,9 +16,12 @@ export class PatientResponseDto extends BaseResponse {
   @ApiProperty({ type: String, enum: GENDER })
   gender: GENDER;
 
-  @ApiProperty({ type: Array<ROLES>, enum: ROLES })
+  @ApiProperty({ type: ROLES, enum: ROLES, isArray: true })
   roles: Array<ROLES>;
 
   @ApiProperty({ type: Boolean, default: false })
   is_deleted: boolean;
+
+  @ApiProperty({ type: Boolean, default: false })
+  is_banned: boolean;
 }

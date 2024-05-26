@@ -9,6 +9,6 @@ export class AdminResponseDto extends BaseResponse {
   @ApiProperty({ type: String })
   phone_number: string;
 
-  @ApiProperty({ type: Array<ROLES>, enum: ROLES })
+  @ApiProperty({ type: ROLES, enum: ROLES, isArray: true })
   roles: Array<ROLES>;
 }
