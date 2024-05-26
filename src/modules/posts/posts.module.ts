@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Post, PostSchema } from 'src/schemas/post.schema';
-import { Patient, PatientSchema } from 'src/schemas/patient.schema';
+import { Post, PostSchema } from 'src/database/schemas/post.schema';
+import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
 
 @Module({
   imports: [

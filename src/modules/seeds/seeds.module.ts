@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PatientsService } from './patients.service';
-import { PatientsController } from './patients.controller';
+import { SeedsService } from './seeds.service';
+import { SeedsController } from './seeds.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
 import { Post, PostSchema } from 'src/database/schemas/post.schema';
@@ -12,7 +12,7 @@ import { Post, PostSchema } from 'src/database/schemas/post.schema';
       { name: Post.name, schema: PostSchema },
     ]),
   ],
-  controllers: [PatientsController],
-  providers: [PatientsService],
+  controllers: [SeedsController],
+  providers: [SeedsService],
 })
-export class PatientsModule {}
+export class SeedsModule {}

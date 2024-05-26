@@ -7,9 +7,9 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post } from 'src/schemas/post.schema';
+import { Post } from 'src/database/schemas/post.schema';
 import { isValidObjectId, Model } from 'mongoose';
-import { Patient } from 'src/schemas/patient.schema';
+import { Patient } from 'src/database/schemas/patient.schema';
 
 @Injectable()
 export class PostsService {
