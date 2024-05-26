@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTherapistDto } from './dto/create-therapist.dto';
 import { UpdateTherapistDto } from './dto/update-therapist.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Therapist } from 'src/schemas/therapist.schema';
 import { Model } from 'mongoose';
+import { Therapist } from 'src/database/schemas/therapist.schema';
 
 @Injectable()
 export class TherapistsService {
