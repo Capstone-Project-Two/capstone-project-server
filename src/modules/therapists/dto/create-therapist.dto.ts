@@ -1,7 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsEmail, IsEnum, IsString, IsStrongPassword } from "class-validator";
-import { GENDER } from "src/constants/gender-constant";
-import { ROLES } from "src/constants/roles-constant";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsString,
+  IsStrongPassword,
+} from 'class-validator';
+import { GENDER } from 'src/constants/gender-constant';
+import { ROLES } from 'src/constants/roles-constant';
 
 export class CreateTherapistDto {
   @ApiProperty()
@@ -16,11 +22,11 @@ export class CreateTherapistDto {
   @IsString()
   bio: string;
 
-  @ApiProperty({uniqueItems: true})
+  @ApiProperty({ uniqueItems: true })
   @IsString()
   username: string;
 
-  @ApiProperty({uniqueItems: true})
+  @ApiProperty({ uniqueItems: true })
   @IsEmail()
   email: string;
 
@@ -28,7 +34,7 @@ export class CreateTherapistDto {
   @IsStrongPassword()
   password: string;
 
-  @ApiProperty({uniqueItems: true})
+  @ApiProperty({ uniqueItems: true })
   @IsString()
   phone_number: string;
 

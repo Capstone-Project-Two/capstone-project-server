@@ -4,6 +4,7 @@ import { UpdateTherapistDto } from './dto/update-therapist.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Therapist } from 'src/database/schemas/therapist.schema';
+import { phoneFormat } from 'src/utils/helpter';
 
 @Injectable()
 export class TherapistsService {
@@ -13,7 +14,10 @@ export class TherapistsService {
 
   async create(createTherapistDto: CreateTherapistDto) {
     try {
-      const res = await this.therapistModel.create(createTherapistDto);
+      const res = await this.therapistModel.create({
+        phone_number: phoneFormat(createTherapistDto.phone_number.trim()),
+        ...createTherapistDto,
+      });
       return res;
     } catch (error) {
       return error;
