@@ -2,12 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Patient } from 'src/schemas/patient.schema';
+import { Patient } from 'src/database/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
-import { fakePatients } from 'src/data/seed-patients-data';
-import { SeedPatientDto } from 'src/seed/dto/patient-seed.dto';
-import { Post } from 'src/schemas/post.schema';
+import { Post } from 'src/database/schemas/post.schema';
 
 @Injectable()
 export class PatientsService {
@@ -15,30 +13,6 @@ export class PatientsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
     @InjectModel(Post.name) private postModel: Model<Post>,
   ) {}
-
-  async dropPatients() {
-    try {
-      const res = await this.patientModel.deleteMany();
-      return res;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  async seedPatient(length: SeedPatientDto) {
-    try {
-      const res = await this.dropPatients().then(async () => {
-        const res = await this.patientModel.insertMany(
-          fakePatients({ length: length.lenght ?? 100 }),
-        );
-        return res;
-      });
-
-      return res;
-    } catch (e) {
-      return e;
-    }
-  }
 
   async create(createPatientDto: CreatePatientDto) {
     try {
