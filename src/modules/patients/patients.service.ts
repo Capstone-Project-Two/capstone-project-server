@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +11,8 @@ import { Patient } from 'src/database/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
+import { getPaginateMeta } from 'src/common/paginate';
+import { error } from 'console';
 
 @Injectable()
 export class PatientsService {
@@ -26,9 +33,40 @@ export class PatientsService {
     }
   }
 
-  async findAll() {
-    const res = await this.patientModel.find().populate(['posts']).exec();
-    return res;
+  async findAll({ page = 1, limit = 10 }: { page: number; limit: number }) {
+    try {
+      const skip = page * limit - limit;
+      const res = await this.patientModel
+        .find()
+        .limit(limit)
+        .skip(Number(page) === 0 || Number(page) === 1 ? 0 : skip)
+        .populate(['posts'])
+        .exec();
+
+      if (page > 1 && res.length === 0)
+        throw new HttpException(
+          {
+            status: HttpStatus.NO_CONTENT,
+            error: 'No Data',
+          },
+          HttpStatus.NO_CONTENT,
+          { cause: error },
+        );
+
+      return {
+        data: res,
+        meta: {
+          ...(await getPaginateMeta({
+            model: this.patientModel,
+            limit,
+            page,
+            resLength: res.length,
+          })),
+        },
+      };
+    } catch (e) {
+      return e;
+    }
   }
 
   async findOne(id: string) {
