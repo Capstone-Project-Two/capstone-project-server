@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker';
-import { stringToHex } from 'src/utils/seed-helpter';
+import { CreatePostDto } from 'src/modules/posts/dto/create-post.dto';
+import { stringToHex, TSeederNames } from 'src/utils/seeder-helpter';
 
 export const PostSeeder = () => {
-  const createPosts = (name: string) => {
-    const list = [];
+  const createPosts = (name: TSeederNames) => {
+    const list: Array<CreatePostDto & { _id: string }> = [];
     Array.from({ length: 5 }).forEach((_, index) => {
       list.push({
-        _id: stringToHex(`${name.slice(0, 4)}${index}`),
+        _id: stringToHex(`${name}post${index}`),
         body: faker.lorem.sentence(5),
         patient: stringToHex(name),
       });

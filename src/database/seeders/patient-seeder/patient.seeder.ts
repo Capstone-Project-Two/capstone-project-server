@@ -1,26 +1,21 @@
 import { faker } from '@faker-js/faker';
 import { GENDER } from 'src/constants/gender-constant';
-import { stringToHex } from 'src/utils/seed-helpter';
-
-export type TPatient =
-  | 'chhay'
-  | 'rpong'
-  | 'panha'
-  | 'vchit'
-  | 'lizaj'
-  | 'lizac';
+import { CreatePatientDto } from 'src/modules/patients/dto/create-patient.dto';
+import { stringToHex, TSeederNames } from 'src/utils/seeder-helpter';
 
 export const PatientSeeder = () => {
-  const createPosts = (name: TPatient) => {
+  const createPosts = (name: TSeederNames) => {
     const list = [];
     Array.from({ length: 5 }).forEach((_, index) => {
-      list.push(stringToHex(`${name.slice(0, 4)}${index}`));
+      list.push(stringToHex(`${name}post${index}`));
     });
     return list;
   };
 
-  const createUsers = (name: TPatient) => {
-    const list = [];
+  const createPatient = (name: TSeederNames) => {
+    const list: Array<
+      CreatePatientDto & { _id: string; posts: Array<string> }
+    > = [];
     list.push({
       _id: stringToHex(name),
       email: `${name}@gmail.com`,
@@ -34,12 +29,12 @@ export const PatientSeeder = () => {
   };
 
   const patientSeeds = [
-    ...createUsers('chhay'),
-    ...createUsers('rpong'),
-    ...createUsers('panha'),
-    ...createUsers('vchit'),
-    ...createUsers('lizaj'),
-    ...createUsers('lizac'),
+    ...createPatient('chhay'),
+    ...createPatient('rpong'),
+    ...createPatient('panha'),
+    ...createPatient('vchit'),
+    ...createPatient('lizaj'),
+    ...createPatient('lizac'),
   ];
 
   return patientSeeds;
