@@ -13,6 +13,7 @@ import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { error } from 'console';
+import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 
 @Injectable()
 export class PatientsService {
@@ -33,7 +34,8 @@ export class PatientsService {
     }
   }
 
-  async findAll({ page = 1, limit = 10 }: { page: number; limit: number }) {
+  async findAll(pagination: PaginationParamDto) {
+    const { limit, page } = pagination;
     try {
       const skip = page * limit - limit;
       const res = await this.patientModel
