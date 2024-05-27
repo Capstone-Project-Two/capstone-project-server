@@ -10,6 +10,7 @@ import { TherapistsModule } from './modules/therapists/therapists.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { SeedsModule } from './modules/seeds/seeds.module';
 import { FactoriesModule } from './modules/factories/factories.module';
+import { EventsModule } from './config/web-socket/events.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FactoriesModule } from './modules/factories/factories.module';
     PostsModule,
     SeedsModule,
     FactoriesModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [
