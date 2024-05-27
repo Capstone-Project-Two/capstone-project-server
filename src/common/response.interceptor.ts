@@ -39,6 +39,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
           message: data?.message ?? 'Success',
           statusCode: data?.statusCode ?? statusCode,
           data: data?.data ?? data,
+          meta: data?.meta,
         };
       }),
     );
