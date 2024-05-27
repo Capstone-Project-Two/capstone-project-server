@@ -12,6 +12,7 @@ import { SeedsModule } from './modules/seeds/seeds.module';
 import { FactoriesModule } from './modules/factories/factories.module';
 import { EventsModule } from './config/web-socket/events.module';
 import { ChatroomsModule } from './modules/chatrooms/chatrooms.module';
+import { MessagesModule } from './modules/messages/messages.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ChatroomsModule } from './modules/chatrooms/chatrooms.module';
     FactoriesModule,
     EventsModule,
     ChatroomsModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [

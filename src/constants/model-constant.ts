@@ -3,4 +3,8 @@ export enum MODEL {
   Admin = 'Admin',
   Post = 'Post',
   Therapist = 'Therapist',
+
+  // Chat room
+  ChatRoom = 'ChatRoom',
+  Message = 'Message',
 }
