@@ -18,9 +18,12 @@ export class TherapistsService {
         phone_number: phoneFormat(createTherapistDto.phone_number.trim()),
         ...createTherapistDto,
       });
-      return res;
-    } catch (error) {
-      return error;
+      return {
+        message: 'Therapist Created Successfully!',
+        data: res,
+      };
+    } catch (e) {
+      return e;
     }
   }
 
@@ -30,7 +33,11 @@ export class TherapistsService {
 
   async findOne(id: string) {
     try {
-      const res = await this.therapistModel.findById(id).exec();
+      const res = await this.therapistModel
+        .findOne({
+          _id: id,
+        })
+        .exec();
       if (!res) {
         throw new NotFoundException();
       }
@@ -43,15 +50,15 @@ export class TherapistsService {
   async update(id: string, updateTherapistDto: UpdateTherapistDto) {
     try {
       const res = await this.therapistModel.updateOne(
-        { _id: id, },
-        { ...updateTherapistDto, },
+        { _id: id },
+        { ...updateTherapistDto },
       );
       return {
         data: {
-          res, 
-          field: updateTherapistDto
-        }
-      }
+          res,
+          field: updateTherapistDto,
+        },
+      };
     } catch (error) {
       return error;
     }

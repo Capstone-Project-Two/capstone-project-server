@@ -13,7 +13,7 @@ export class Therapist {
   @Prop({ type: String, minlength: 2, maxlength: 64 })
   last_name: string;
 
-  @Prop({ type: String, minlength: 2, maxlength: 128 })
+  @Prop({ type: String, maxlength: 128 })
   bio: string;
 
   @Prop({
@@ -27,16 +27,13 @@ export class Therapist {
   @Prop({ type: String, unique: true })
   email: string;
 
-  @Prop({ type: String })
-  password: string;
-
   @Prop({ type: String, unique: true, trim: true })
   phone_number: string;
 
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender: GENDER;
 
-  @Prop({ type: String, enum: ROLES, default: [ROLES.THERAPIST] })
+  @Prop({ type: Array, enum: ROLES, default: [ROLES.THERAPIST] })
   roles: ROLES;
 
   @Prop({ default: false })

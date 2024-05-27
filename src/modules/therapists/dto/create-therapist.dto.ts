@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsEmail,
   IsEnum,
+  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
@@ -20,7 +21,8 @@ export class CreateTherapistDto {
 
   @ApiProperty()
   @IsString()
-  bio: string;
+  @IsOptional()
+  bio?: string;
 
   @ApiProperty({ uniqueItems: true })
   @IsString()
@@ -30,10 +32,6 @@ export class CreateTherapistDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty()
-  @IsStrongPassword()
-  password: string;
-
   @ApiProperty({ uniqueItems: true })
   @IsString()
   phone_number: string;
@@ -42,11 +40,13 @@ export class CreateTherapistDto {
   @IsEnum(GENDER)
   gender: Array<GENDER>;
 
-  @ApiProperty({ enum: ROLES, default: ROLES.THERAPIST })
+  @ApiProperty({ enum: ROLES, default: [ROLES.THERAPIST] })
   @IsEnum(ROLES)
-  roles: Array<ROLES>;
+  @IsOptional()
+  roles?: Array<ROLES>;
 
   @ApiProperty({ default: false })
+  @IsOptional()
   @IsBoolean()
-  is_deleted: boolean;
+  is_deleted?: boolean;
 }
