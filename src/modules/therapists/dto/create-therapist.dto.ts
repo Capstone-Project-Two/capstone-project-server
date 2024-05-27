@@ -38,7 +38,7 @@ export class CreateTherapistDto {
 
   @ApiProperty({ enum: GENDER })
   @IsEnum(GENDER)
-  gender: Array<GENDER>;
+  gender: string;
 
   @ApiProperty({ enum: ROLES, default: [ROLES.THERAPIST] })
   @IsEnum(ROLES)
