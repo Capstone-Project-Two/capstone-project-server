@@ -13,7 +13,7 @@ export class Therapist {
   @Prop({ type: String, minlength: 2, maxlength: 64 })
   last_name: string;
 
-  @Prop({ type: String, maxlength: 128 })
+  @Prop({ type: String })
   bio: string;
 
   @Prop({
