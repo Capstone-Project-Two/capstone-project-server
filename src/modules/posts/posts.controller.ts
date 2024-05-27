@@ -7,11 +7,12 @@ import {
   Param,
   Delete,
   Req,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PostResponseDto } from './response/post-response.dto';
 
 @ApiTags('Posts')
@@ -26,8 +27,10 @@ export class PostsController {
 
   @ApiOkResponse({ type: PostResponseDto, isArray: true })
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
+  @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.postsService.findAll({ page, limit });
   }
 
   @ApiOkResponse({ type: PostResponseDto })
