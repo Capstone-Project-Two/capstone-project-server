@@ -10,6 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post } from 'src/database/schemas/post.schema';
 import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
+import { getPaginateMeta } from 'src/common/paginate';
 
 @Injectable()
 export class PostsService {
@@ -43,10 +44,25 @@ export class PostsService {
     }
   }
 
-  async findAll() {
+  async findAll({ page = 1, limit = 10 }: { page: number; limit: number }) {
     try {
-      const res = await this.postModel.find().populate(['patient']).exec();
-      return res;
+      const skip = page * limit - limit;
+      const res = await this.postModel
+        .find()
+        .limit(limit)
+        .skip(skip)
+        .populate(['patient'])
+        .exec();
+
+      return {
+        data: res,
+        meta: await getPaginateMeta({
+          model: this.postModel,
+          resLength: res.length,
+          limit,
+          page,
+        }),
+      };
     } catch (e) {
       return e;
     }
