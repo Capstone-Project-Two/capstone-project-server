@@ -33,6 +33,9 @@ export class Therapist {
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender: GENDER;
 
+  @Prop({type: Array, isRequired: false})
+  specialization: string[]
+
   @Prop({ type: Array, enum: ROLES, default: [ROLES.THERAPIST] })
   roles: ROLES;
 
