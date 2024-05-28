@@ -14,5 +14,5 @@ export class CreateLikePostDto {
 
   @ApiProperty({ type: Number, default: 0 })
   @IsOptional()
-  like_count: number;
+  like_count?: number;
 }

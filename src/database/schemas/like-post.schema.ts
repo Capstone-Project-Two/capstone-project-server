@@ -9,7 +9,7 @@ export type LikePostDocument = HydratedDocument<LikePost>;
 
 @Schema({ timestamps: true })
 export class LikePost {
-  @Prop({ type: TObjectId, ref: MODEL.Patient })
+  @Prop({ type: TObjectId, ref: MODEL.Patient, unique: true })
   patient: Patient;
 
   @Prop({ type: TObjectId, ref: MODEL.Post })

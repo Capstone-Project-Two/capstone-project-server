@@ -1,14 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
 import { LikePostsService } from './like-posts.service';
-import { CreateLikePostDto } from './dto/create-like-post.dto';
 import { UpdateLikePostDto } from './dto/update-like-post.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LikePostResponseDto } from './dto/response/like-post-response.dto';
@@ -18,10 +9,6 @@ import { LikePostResponseDto } from './dto/response/like-post-response.dto';
 export class LikePostsController {
   constructor(private readonly likePostsService: LikePostsService) {}
 
-  @Post()
-  create(@Body() createLikePostDto: CreateLikePostDto) {
-    return this.likePostsService.create(createLikePostDto);
-  }
 
   @ApiOkResponse({ type: LikePostResponseDto, isArray: true })
   @Get()
@@ -32,7 +19,7 @@ export class LikePostsController {
   @ApiOkResponse({ type: LikePostResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.likePostsService.findOne(+id);
+    return this.likePostsService.findOne(id);
   }
 
   @Patch(':id')
@@ -40,11 +27,6 @@ export class LikePostsController {
     @Param('id') id: string,
     @Body() updateLikePostDto: UpdateLikePostDto,
   ) {
-    return this.likePostsService.update(+id, updateLikePostDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.likePostsService.remove(+id);
+    return this.likePostsService.update(id, updateLikePostDto);
   }
 }
