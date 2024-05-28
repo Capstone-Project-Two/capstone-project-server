@@ -5,15 +5,18 @@ import { Post } from './post.schema';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { MODEL } from 'src/constants/model-constant';
 
-export type LikeDocument = HydratedDocument<Like>;
+export type LikePostDocument = HydratedDocument<LikePost>;
 
 @Schema({ timestamps: true })
-export class Like {
+export class LikePost {
   @Prop({ type: TObjectId, ref: MODEL.Patient })
   patient: Patient;
 
   @Prop({ type: TObjectId, ref: MODEL.Post })
   post: Post;
+
+  @Prop({ type: Number, default: 0 })
+  like_count: number;
 }
 
-export const LikeSchema = SchemaFactory.createForClass(Like);
+export const LikePostSchema = SchemaFactory.createForClass(LikePost);
