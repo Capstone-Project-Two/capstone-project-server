@@ -39,7 +39,7 @@ export class CreateTherapistDto {
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  specialization?: string[]
+  specializations?: string[]
 
   @ApiProperty({ enum: GENDER })
   @IsEnum(GENDER)

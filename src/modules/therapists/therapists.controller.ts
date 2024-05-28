@@ -31,6 +31,11 @@ export class TherapistsController {
     return this.therapistsService.findAll(pagination);
   }
 
+  @Get('specializations')
+  getAllSpecializations() {
+    return this.therapistsService.getAllSpecializations();
+  }
+
   @ApiOkResponse({ type: TherapistResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {

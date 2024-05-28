@@ -35,6 +35,15 @@ export class TherapistsService {
     }
   }
 
+  async getAllSpecializations(){
+    const specializations = await this.therapistModel.aggregate([
+      { $unwind: '$specializations' },
+      { $group: { _id: null, specializations: { $addToSet: '$specializations' } } },
+      { $project: { _id: 0, specializations: 1 } }
+    ]).exec();
+    return specializations.length > 0 ? specializations[0].specializations : [];
+  }
+
   async findAll(pagination: PaginationParamDto) {
     const { limit, page } = pagination;
     try {

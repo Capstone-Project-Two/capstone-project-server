@@ -23,7 +23,7 @@ export class TherapistResponseDto extends BaseResponse {
   phone_number: string;
 
   @ApiProperty({type: Array})
-  specialization: string[];
+  specializations: string[];
 
   @ApiProperty({ type: String, enum: GENDER })
   gender: GENDER;
