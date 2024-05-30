@@ -9,17 +9,16 @@ import { LikePostResponseDto } from './dto/response/like-post-response.dto';
 export class LikePostsController {
   constructor(private readonly likePostsService: LikePostsService) {}
 
-
   @ApiOkResponse({ type: LikePostResponseDto, isArray: true })
   @Get()
   findAll() {
     return this.likePostsService.findAll();
   }
 
-  @ApiOkResponse({ type: LikePostResponseDto })
+  @ApiOkResponse({ type: LikePostResponseDto, isArray: true })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.likePostsService.findOne(id);
+  findLikePostByPost(@Param('id') id: string) {
+    return this.likePostsService.findLikePostByPost(id);
   }
 
   @Patch(':id')

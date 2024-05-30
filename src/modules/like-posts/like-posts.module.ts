@@ -6,11 +6,13 @@ import {
   LikePost,
   LikePostSchema,
 } from 'src/database/schemas/like-post.schema';
+import { Post, PostSchema } from 'src/database/schemas/post.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: LikePost.name, schema: LikePostSchema },
+      { name: Post.name, schema: PostSchema },
     ]),
   ],
   controllers: [LikePostsController],

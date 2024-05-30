@@ -8,11 +8,7 @@ export class CreateLikePostDto {
   patient: string;
 
   @ApiProperty({ type: String })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   post: string;
-
-  @ApiProperty({ type: Number, default: 0 })
-  @IsOptional()
-  like_count?: number;
 }

@@ -14,6 +14,9 @@ export class LikePost {
 
   @Prop({ type: TObjectId, ref: MODEL.Post })
   post: Post;
+
+  @Prop({ type: Boolean, default: true })
+  is_like: boolean;
 }
 
 export const LikePostSchema = SchemaFactory.createForClass(LikePost);
