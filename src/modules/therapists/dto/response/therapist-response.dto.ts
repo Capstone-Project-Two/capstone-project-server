@@ -4,25 +4,25 @@ import { GENDER } from 'src/constants/gender-constant';
 import { ROLES } from 'src/constants/roles-constant';
 
 export class TherapistResponseDto extends BaseResponse {
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   first_name: string;
 
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   last_name: string;
 
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   bio: string;
 
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   username: string;
 
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   email: string;
 
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   phone_number: string;
 
-  @ApiProperty({type: Array})
+  @ApiProperty({ isArray: true, type: String })
   specializations: string[];
 
   @ApiProperty({ type: String, enum: GENDER })

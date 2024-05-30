@@ -36,7 +36,7 @@ export class CreateTherapistDto {
   @IsString()
   phone_number: string;
 
-  @ApiProperty()
+  @ApiProperty({isArray: true, type: String})
   @IsArray()
   @IsOptional()
   specializations?: string[]

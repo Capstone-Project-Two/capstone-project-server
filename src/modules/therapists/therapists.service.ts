@@ -67,8 +67,6 @@ export class TherapistsService {
         meta: {
           ...(await getPaginateMeta({
             model: this.therapistModel,
-            limit,
-            page,
             resLength: res.length,
           })),
         },

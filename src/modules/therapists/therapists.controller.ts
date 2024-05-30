@@ -31,6 +31,7 @@ export class TherapistsController {
     return this.therapistsService.findAll(pagination);
   }
 
+  @ApiOkResponse({ type: String, isArray: true })
   @Get('specializations')
   getAllSpecializations() {
     return this.therapistsService.getAllSpecializations();
