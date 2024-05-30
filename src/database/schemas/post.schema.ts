@@ -19,6 +19,12 @@ export class Post {
 
   @Prop({ type: Boolean, default: false })
   is_deleted: boolean;
+
+  @Prop({ type: [{ type: TObjectId, ref: MODEL.Patient }] })
+  liked_by: Array<string>;
+
+  @Prop({ type: Number, default: 0 })
+  like_count: number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

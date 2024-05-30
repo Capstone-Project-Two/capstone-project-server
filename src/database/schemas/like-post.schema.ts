@@ -14,9 +14,6 @@ export class LikePost {
 
   @Prop({ type: TObjectId, ref: MODEL.Post })
   post: Post;
-
-  @Prop({ type: Number, default: 0 })
-  like_count: number;
 }
 
 export const LikePostSchema = SchemaFactory.createForClass(LikePost);
