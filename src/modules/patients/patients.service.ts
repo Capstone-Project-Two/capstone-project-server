@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,7 +7,6 @@ import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
 import { getPaginateMeta } from 'src/common/paginate';
-import { error } from 'console';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 
 @Injectable()
@@ -35,25 +29,15 @@ export class PatientsService {
   }
 
   async findAll(pagination: PaginationParamDto) {
-    const { limit, page } = pagination;
+    const { limit = 10, page = 1 } = pagination;
     try {
       const skip = page * limit - limit;
       const res = await this.patientModel
         .find()
         .limit(limit)
-        .skip(Number(page) === 0 || Number(page) === 1 ? 0 : skip)
+        .skip(skip)
         .populate(['posts'])
         .exec();
-
-      if (page > 1 && res.length === 0)
-        throw new HttpException(
-          {
-            status: HttpStatus.NO_CONTENT,
-            error: 'No Data',
-          },
-          HttpStatus.NO_CONTENT,
-          { cause: error },
-        );
 
       return {
         data: res,

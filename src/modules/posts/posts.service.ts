@@ -11,6 +11,7 @@ import { Post } from 'src/database/schemas/post.schema';
 import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { getPaginateMeta } from 'src/common/paginate';
+import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 
 @Injectable()
 export class PostsService {
@@ -44,7 +45,8 @@ export class PostsService {
     }
   }
 
-  async findAll({ page = 1, limit = 10 }: { page: number; limit: number }) {
+  async findAll(pagination: PaginationParamDto) {
+    const { page = 1, limit = 10 } = pagination;
     try {
       const skip = page * limit - limit;
       const res = await this.postModel
