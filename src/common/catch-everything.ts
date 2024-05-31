@@ -29,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
       messages: [exception.message ?? String(exception)],
       errorType: exception.name,
-      validationMessages: Boolean(exception['response']['message'])
+      validationMessages: Boolean(exception['response'])
         ? exception['response']['message']
         : [],
     };

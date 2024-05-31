@@ -13,18 +13,14 @@ export class TherapistsService {
   ) {}
 
   async create(createTherapistDto: CreateTherapistDto) {
-    try {
-      const res = await this.therapistModel.create({
-        phone_number: phoneFormat(createTherapistDto.phone_number.trim()),
-        ...createTherapistDto,
-      });
-      return {
-        message: 'Therapist Created Successfully!',
-        data: res,
-      };
-    } catch (e) {
-      return e;
-    }
+    const res = await this.therapistModel.create({
+      phone_number: phoneFormat(createTherapistDto.phone_number.trim()),
+      ...createTherapistDto,
+    });
+    return {
+      message: 'Therapist Created Successfully!',
+      data: res,
+    };
   }
 
   async findAll() {
@@ -32,47 +28,35 @@ export class TherapistsService {
   }
 
   async findOne(id: string) {
-    try {
-      const res = await this.therapistModel
-        .findOne({
-          _id: id,
-        })
-        .exec();
-      if (!res) {
-        throw new NotFoundException();
-      }
-      return res;
-    } catch (error) {
-      return error;
+    const res = await this.therapistModel
+      .findOne({
+        _id: id,
+      })
+      .exec();
+    if (!res) {
+      throw new NotFoundException();
     }
+    return res;
   }
 
   async update(id: string, updateTherapistDto: UpdateTherapistDto) {
-    try {
-      const res = await this.therapistModel.updateOne(
-        { _id: id },
-        { ...updateTherapistDto },
-      );
-      return {
-        data: {
-          res,
-          field: updateTherapistDto,
-        },
-      };
-    } catch (error) {
-      return error;
-    }
+    const res = await this.therapistModel.updateOne(
+      { _id: id },
+      { ...updateTherapistDto },
+    );
+    return {
+      data: {
+        res,
+        field: updateTherapistDto,
+      },
+    };
   }
 
   async remove(id: string) {
-    try {
-      const res = await this.therapistModel.deleteOne({
-        _id: id,
-      });
+    const res = await this.therapistModel.deleteOne({
+      _id: id,
+    });
 
-      return res;
-    } catch (error) {
-      return error;
-    }
+    return res;
   }
 }
