@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "drop:db": "node scripts/drop-db.cjs",
+    "seed": "node scripts/seed-db.cjs",
     "copy:env:dev": "env-cmd -f env/development.env node scripts/write-env.cjs",
     "copy:env:staging": "env-cmd -f env/staging.env node scripts/write-env.cjs",
     "copy:env:prod": "env-cmd -f env/production.env node scripts/write-env.cjs",
@@ -18,6 +20,7 @@
     "preview:dev": "yarn build:dev && node dist/main",
     "preview:staging": "yarn build:staging && node dist/main",
     "preview:prod": "yarn build:prod && node dist/main",
+    "start:dev:fresh": "yarn drop:db && yarn start:dev",
     "gen:module": "nest g resource",
     "start:debug": "nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
