@@ -34,7 +34,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         if (Number(requestQuery?.page) > data?.meta?.totalPages) {
           return {
             message: 'No Content',
-            data: data,
+            data: [],
             statusCode: HttpStatus.NO_CONTENT,
           };
         }
