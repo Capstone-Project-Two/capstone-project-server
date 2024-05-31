@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsBoolean,
   IsEmail,
   IsEnum,
   IsOptional,
   IsString,
-  IsStrongPassword,
 } from 'class-validator';
 import { GENDER } from 'src/constants/gender-constant';
 import { ROLES } from 'src/constants/roles-constant';
@@ -35,6 +35,11 @@ export class CreateTherapistDto {
   @ApiProperty({ uniqueItems: true })
   @IsString()
   phone_number: string;
+
+  @ApiProperty({isArray: true, type: String})
+  @IsArray()
+  @IsOptional()
+  specializations?: string[]
 
   @ApiProperty({ enum: GENDER })
   @IsEnum(GENDER)
