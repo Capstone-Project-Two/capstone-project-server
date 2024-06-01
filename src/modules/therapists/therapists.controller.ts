@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TherapistsService } from './therapists.service';
 import { CreateTherapistDto } from './dto/create-therapist.dto';
 import { UpdateTherapistDto } from './dto/update-therapist.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { TherapistResponseDto } from './dto/response/therapist-response.dto';
+import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 
 @ApiTags('Therapists')
 @Controller('therapists')
@@ -25,8 +27,14 @@ export class TherapistsController {
 
   @ApiOkResponse({ type: TherapistResponseDto, isArray: true })
   @Get()
-  findAll() {
-    return this.therapistsService.findAll();
+  findAll(@Query() pagination: PaginationParamDto) {
+    return this.therapistsService.findAll(pagination);
+  }
+
+  @ApiOkResponse({ type: String, isArray: true })
+  @Get('specializations')
+  getAllSpecializations() {
+    return this.therapistsService.getAllSpecializations();
   }
 
   @ApiOkResponse({ type: TherapistResponseDto })
