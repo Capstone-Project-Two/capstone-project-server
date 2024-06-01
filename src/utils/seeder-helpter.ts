@@ -9,12 +9,8 @@ export type TSeederNames =
   | 'lizac';
 
 async function drop(model: Model<any>) {
-  try {
-    const res = await model.deleteMany();
-    return res;
-  } catch (e) {
-    return e;
-  }
+  const res = await model.deleteMany();
+  return res;
 }
 
 export async function seed({
@@ -24,15 +20,11 @@ export async function seed({
   model: Model<any>;
   seedData: any;
 }) {
-  try {
-    const res = await drop(model).then(async () => {
-      const res = await model.insertMany(seedData);
-      return res;
-    });
+  const res = await drop(model).then(async () => {
+    const res = await model.insertMany(seedData);
     return res;
-  } catch (e) {
-    return e;
-  }
+  });
+  return res;
 }
 
 /**
