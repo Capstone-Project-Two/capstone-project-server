@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { MODEL } from 'src/constants/model-constant';
 import { TObjectId } from 'src/utils/mongo-helper';
@@ -22,3 +22,5 @@ export class Appointment {
   @Prop({ type: Date, isRequired: true })
   datetime: Date;
 }
+
+export const AppointmentSchema = SchemaFactory.createForClass(Appointment);
