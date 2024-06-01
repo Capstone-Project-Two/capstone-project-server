@@ -19,29 +19,25 @@ export class FactoriesService {
   ) {}
 
   async create(createFactoryDto: CreateFactoryDto) {
-    try {
-      await seed({
-        model: this.patientsModel,
-        seedData: PatientFactory({ ...createFactoryDto }),
-      });
+    await seed({
+      model: this.patientsModel,
+      seedData: PatientFactory({ ...createFactoryDto }),
+    });
 
-      await seed({
-        model: this.postsModel,
-        seedData: PostFactory({ ...createFactoryDto }),
-      });
+    await seed({
+      model: this.postsModel,
+      seedData: PostFactory({ ...createFactoryDto }),
+    });
 
-      await seed({
-        model: this.therapistModel,
-        seedData: TherapistFactory({ ...createFactoryDto }),
-      });
+    await seed({
+      model: this.therapistModel,
+      seedData: TherapistFactory({ ...createFactoryDto }),
+    });
 
-      // Other factory
+    // Other factory
 
-      return {
-        message: 'Finish running factory',
-      };
-    } catch (e) {
-      return e;
-    }
+    return {
+      message: 'Finish running factory',
+    };
   }
 }

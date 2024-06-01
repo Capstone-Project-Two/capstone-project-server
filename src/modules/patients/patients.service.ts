@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,7 +7,6 @@ import { Model } from 'mongoose';
 import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
 import { getPaginateMeta } from 'src/common/paginate';
-import { error } from 'console';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 
 @Injectable()
@@ -23,67 +17,42 @@ export class PatientsService {
   ) {}
 
   async create(createPatientDto: CreatePatientDto) {
-    try {
-      const res = await this.patientModel.create({
-        phone_number: phoneFormat(createPatientDto.phone_number.trim()),
-        ...createPatientDto,
-      });
-      return res;
-    } catch (e) {
-      return e;
-    }
+    const res = await this.patientModel.create({
+      phone_number: phoneFormat(createPatientDto.phone_number.trim()),
+      ...createPatientDto,
+    });
+    return res;
   }
 
   async findAll(pagination: PaginationParamDto) {
-    const { limit, page } = pagination;
-    try {
-      const skip = page * limit - limit;
-      const res = await this.patientModel
-        .find()
-        .limit(limit)
-        .skip(Number(page) === 0 || Number(page) === 1 ? 0 : skip)
-        .populate(['posts'])
-        .exec();
+    const { limit = 10, page = 1 } = pagination;
+    const skip = page * limit - limit;
+    const res = await this.patientModel
+      .find()
+      .limit(limit)
+      .skip(skip)
+      .populate(['posts'])
+      .exec();
 
-      if (page > 1 && res.length === 0)
-        throw new HttpException(
-          {
-            status: HttpStatus.NO_CONTENT,
-            error: 'No Data',
-          },
-          HttpStatus.NO_CONTENT,
-          { cause: error },
-        );
-
-      return {
-        data: res,
-        meta: {
-          ...(await getPaginateMeta({
-            model: this.patientModel,
-            limit,
-            page,
-            resLength: res.length,
-          })),
-        },
-      };
-    } catch (e) {
-      return e;
-    }
+    return {
+      data: res,
+      meta: {
+        ...(await getPaginateMeta({
+          model: this.patientModel,
+          limit,
+          page,
+          resLength: res.length,
+        })),
+      },
+    };
   }
 
   async findOne(id: string) {
-    try {
-      const res = await this.patientModel
-        .findById(id)
-        .populate(['posts'])
-        .exec();
-      if (!res) {
-        throw new NotFoundException();
-      }
-      return res;
-    } catch (e) {
-      return e;
+    const res = await this.patientModel.findById(id).populate(['posts']).exec();
+    if (!res) {
+      throw new NotFoundException();
     }
+    return res;
   }
 
   async update(id: string, updatePatientDto: UpdatePatientDto) {
@@ -99,35 +68,27 @@ export class PatientsService {
   }
 
   async banPatient(id: string) {
-    try {
-      const res = await this.patientModel.updateOne(
-        { _id: id },
-        { is_banned: true },
-      );
+    const res = await this.patientModel.updateOne(
+      { _id: id },
+      { is_banned: true },
+    );
 
-      return res;
-    } catch (e) {
-      return e;
-    }
+    return res;
   }
 
   async unbanPatient(id: string) {
-    try {
-      const res = await this.patientModel.updateOne(
-        { _id: id },
-        { is_banned: false },
-      );
+    const res = await this.patientModel.updateOne(
+      { _id: id },
+      { is_banned: false },
+    );
 
-      return res;
-    } catch (e) {
-      return e;
-    }
+    return res;
   }
 
   async remove(id: string) {
     const res = await this.patientModel.deleteOne({ _id: id });
 
-    /** @description deletes post related to user */
+    /** deletes post related to user */
     await this.postModel.deleteMany({ patient: id });
 
     return res;
