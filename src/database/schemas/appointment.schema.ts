@@ -10,17 +10,17 @@ export type AppointmentDocument = HydratedDocument<Appointment>;
 
 @Schema({ timestamps: true })
 export class Appointment {
+  @Prop({ type: Date, isRequired: true })
+  datetime: Date;
+
+  @Prop({ type: String, enum: STATUS, default: STATUS.REQUESTED })
+  status: STATUS;
+
   @Prop({ type: TObjectId, ref: MODEL.Patient })
   patient: Patient;
 
   @Prop({ type: TObjectId, ref: MODEL.Therapist })
   therapist: Therapist;
-
-  @Prop({ type: String, enum: STATUS, default: STATUS.REQUESTED })
-  status: STATUS;
-
-  @Prop({ type: Date, isRequired: true })
-  datetime: Date;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
+import { STATUS } from 'src/constants/status-constant';
 
 export class CreateAppointmentDto {
   @ApiProperty()
@@ -18,4 +19,9 @@ export class CreateAppointmentDto {
   @IsDate()
   @Type(() => Date)
   datetime: Date;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsEnum(STATUS)
+  status: string
 }
