@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PostPhotosService } from './post-photos.service';
 import { CreatePostPhotoDto } from './dto/create-post-photo.dto';
 import { UpdatePostPhotoDto } from './dto/update-post-photo.dto';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { PostResponseDto } from '../posts/response/post-response.dto';
 
 @Controller('post-photos')
 export class PostPhotosController {
@@ -12,6 +22,7 @@ export class PostPhotosController {
     return this.postPhotosService.create(createPostPhotoDto);
   }
 
+  @ApiOkResponse({ type: PostResponseDto })
   @Get()
   findAll() {
     return this.postPhotosService.findAll();
@@ -23,7 +34,10 @@ export class PostPhotosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostPhotoDto: UpdatePostPhotoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePostPhotoDto: UpdatePostPhotoDto,
+  ) {
     return this.postPhotosService.update(+id, updatePostPhotoDto);
   }
 

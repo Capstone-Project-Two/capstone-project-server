@@ -12,12 +12,15 @@ import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
+import { PostPhoto } from 'src/database/schemas/post-photo-schema';
+import { CreatePostPhotoDto } from '../post-photos/dto/create-post-photo.dto';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
+    @InjectModel(PostPhoto.name) private postPhoto: Model<PostPhoto>,
   ) {}
 
   async create(
@@ -32,6 +35,9 @@ export class PostsService {
     if (!findUser) {
       throw new NotFoundException('Patient does not exist');
     }
+
+    const postPhotos: Array<CreatePostPhotoDto> = [];
+
     const res = await this.postModel.create(createPostDto);
 
     await findUser.updateOne({
@@ -39,6 +45,15 @@ export class PostsService {
         posts: res._id,
       },
     });
+
+    files.forEach((file) => {
+      postPhotos.push({
+        filename: file.filename,
+        post: res._id,
+      });
+    });
+
+    await this.postPhoto.insertMany(postPhotos);
 
     return res;
   }
