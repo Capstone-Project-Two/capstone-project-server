@@ -17,26 +17,22 @@ export class SeedsService {
   ) {}
 
   async create() {
-    try {
-      // seed patients
-      await seed({
-        model: this.patientsModel,
-        seedData: PatientSeeder(),
-      });
+    // seed patients
+    await seed({
+      model: this.patientsModel,
+      seedData: PatientSeeder(),
+    });
 
-      // seed posts
-      await seed({
-        model: this.postsModel,
-        seedData: PostSeeder(),
-      });
+    // seed posts
+    await seed({
+      model: this.postsModel,
+      seedData: PostSeeder(),
+    });
 
-      // other seed...
+    // other seed...
 
-      return {
-        message: 'Seeding Successful',
-      };
-    } catch (e) {
-      return e;
-    }
+    return {
+      message: 'Seeding Successful',
+    };
   }
 }
