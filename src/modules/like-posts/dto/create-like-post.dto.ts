@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateLikePostDto {
   @ApiProperty({ type: String })
@@ -8,7 +8,7 @@ export class CreateLikePostDto {
   patient: string;
 
   @ApiProperty({ type: String })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   post: string;
 }

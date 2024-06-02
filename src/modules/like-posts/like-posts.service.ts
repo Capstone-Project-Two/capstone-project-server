@@ -5,6 +5,7 @@ import { LikePost } from 'src/database/schemas/like-post.schema';
 import { Model } from 'mongoose';
 import { CreateLikePostDto } from './dto/create-like-post.dto';
 import { Post } from 'src/database/schemas/post.schema';
+import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 
 @Injectable()
 export class LikePostsService {
@@ -18,15 +19,33 @@ export class LikePostsService {
     return res;
   }
 
-  async findAll() {
-    const res = await this.likePostModel.find();
+  async findAll(pagination: PaginationParamDto) {
+    const { limit = 10, page = 1 } = pagination;
+    const skip = limit * page - limit;
+
+    const res = await this.likePostModel
+      .find()
+      .populate(['patient'])
+      .skip(skip)
+      .limit(limit);
+
     return res;
   }
 
   async findLikePostByPost(id: string) {
     const res = await this.likePostModel
-      .find({ post: id })
-      .populate(['post', 'patient']);
+      .find({ post: id, is_like: true })
+      .populate(['patient']);
+
+    if (!res) return [];
+
+    return res;
+  }
+
+  async findLikePostByPatient(id: string) {
+    const res = await this.likePostModel
+      .find({ patient: id, is_like: true })
+      .populate(['post']);
 
     if (!res) return [];
 
@@ -54,12 +73,8 @@ export class LikePostsService {
 
       // update like count of post
       await this.postModel.findOneAndUpdate(
-        {
-          _id: id,
-        },
-        {
-          like_count: Number(post.like_count) + 1,
-        },
+        { _id: id },
+        { like_count: Number(post.like_count) + 1 },
       );
 
       return {
@@ -75,12 +90,8 @@ export class LikePostsService {
       });
       // update like count of original post
       await this.postModel.findOneAndUpdate(
-        {
-          _id: id,
-        },
-        {
-          like_count: Number(post.like_count) - 1,
-        },
+        { _id: id },
+        { like_count: Number(post.like_count) - 1 },
       );
 
       return {
@@ -94,12 +105,8 @@ export class LikePostsService {
     });
     // update like count of original post
     await this.postModel.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        like_count: Number(post.like_count) + 1,
-      },
+      { _id: id },
+      { like_count: Number(post.like_count) + 1 },
     );
 
     return {
