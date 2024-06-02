@@ -18,6 +18,7 @@ import { ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PostResponseDto } from './response/post-response.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/config/files/multer-file-options';
+import { MAX_FILE_COUNT } from 'src/constants/multer-file-constant';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -25,7 +26,9 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  @UseInterceptors(FilesInterceptor('postPhotos', 10, multerOptions))
+  @UseInterceptors(
+    FilesInterceptor('postPhotos', MAX_FILE_COUNT, multerOptions),
+  )
   create(
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles()

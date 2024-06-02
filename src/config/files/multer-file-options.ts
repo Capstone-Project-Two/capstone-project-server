@@ -1,7 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
-import { FILE_DESTINATION } from 'src/constants/multer-file-constant';
+import {
+  FILE_DESTINATION,
+  MAX_FILE_COUNT,
+  MAX_FILE_SIZE,
+} from 'src/constants/multer-file-constant';
 
 export type TFile = {
   fieldname: string;
@@ -44,6 +48,10 @@ const fileFilter = (
 export const multerOptions: MulterOptions = {
   dest: FILE_DESTINATION,
   fileFilter: fileFilter,
+  limits: {
+    files: MAX_FILE_COUNT,
+    fileSize: MAX_FILE_SIZE,
+  },
   storage: diskStorage({
     filename: fileName,
     destination: FILE_DESTINATION,
