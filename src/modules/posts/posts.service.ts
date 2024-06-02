@@ -20,7 +20,10 @@ export class PostsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(
+    createPostDto: CreatePostDto,
+    files: Array<Express.Multer.File>,
+  ) {
     if (!isValidObjectId(createPostDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }

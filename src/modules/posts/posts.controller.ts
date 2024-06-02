@@ -8,12 +8,16 @@ import {
   Delete,
   Req,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PostResponseDto } from './response/post-response.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/config/files/multer-file-options';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -21,8 +25,13 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  @UseInterceptors(FilesInterceptor('postPhotos', 10, multerOptions))
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFiles()
+    files: Array<Express.Multer.File>,
+  ) {
+    return this.postsService.create(createPostDto, files);
   }
 
   @ApiOkResponse({ type: PostResponseDto, isArray: true })

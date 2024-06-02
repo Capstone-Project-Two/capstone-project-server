@@ -13,11 +13,18 @@ import { FactoriesModule } from './modules/factories/factories.module';
 import { EventsModule } from './config/web-socket/events.module';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
 import { PostPhotosModule } from './modules/post-photos/post-photos.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { FILE_DESTINATION } from './constants/multer-file-constant';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        dest: FILE_DESTINATION,
+      }),
     }),
     DatabaseModule,
     AdminsModule,
