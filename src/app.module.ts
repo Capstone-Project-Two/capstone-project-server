@@ -12,6 +12,7 @@ import { SeedsModule } from './modules/seeds/seeds.module';
 import { FactoriesModule } from './modules/factories/factories.module';
 import { EventsModule } from './config/web-socket/events.module';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
+import { PostPhotosModule } from './modules/post-photos/post-photos.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { LikePostsModule } from './modules/like-posts/like-posts.module';
     FactoriesModule,
     EventsModule,
     LikePostsModule,
+    PostPhotosModule,
   ],
   controllers: [AppController],
   providers: [
