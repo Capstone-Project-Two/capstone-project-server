@@ -48,7 +48,7 @@ export class PatientsService {
   }
 
   async findOne(id: string) {
-    const res = await this.patientModel.findById(id).populate(['posts']).exec();
+    const res = await this.patientModel.findById(id).populate(['posts']);
     if (!res) {
       throw new NotFoundException();
     }

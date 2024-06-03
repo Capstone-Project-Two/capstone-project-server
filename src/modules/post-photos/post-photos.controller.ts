@@ -6,20 +6,30 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { PostPhotosService } from './post-photos.service';
-import { CreatePostPhotoDto } from './dto/create-post-photo.dto';
 import { UpdatePostPhotoDto } from './dto/update-post-photo.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { PostResponseDto } from '../posts/response/post-response.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { MAX_FILE_COUNT } from 'src/constants/multer-file-constant';
+import { multerOptions } from 'src/config/files/multer-file-options';
 
 @Controller('post-photos')
 export class PostPhotosController {
   constructor(private readonly postPhotosService: PostPhotosService) {}
 
   @Post()
-  create(@Body() createPostPhotoDto: CreatePostPhotoDto) {
-    return this.postPhotosService.create(createPostPhotoDto);
+  @UseInterceptors(
+    FilesInterceptor('postPhotos', MAX_FILE_COUNT, multerOptions),
+  )
+  create(
+    @Body() id: string,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    return this.postPhotosService.create(id, files);
   }
 
   @ApiOkResponse({ type: PostResponseDto })

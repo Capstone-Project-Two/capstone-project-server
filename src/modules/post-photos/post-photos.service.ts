@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostPhotoDto } from './dto/create-post-photo.dto';
 import { UpdatePostPhotoDto } from './dto/update-post-photo.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostPhoto } from 'src/database/schemas/post-photo-schema';
 import { Model } from 'mongoose';
+import { CreatePostPhotoDto } from './dto/create-post-photo.dto';
 
 @Injectable()
 export class PostPhotosService {
@@ -11,8 +11,19 @@ export class PostPhotosService {
     @InjectModel(PostPhoto.name) private postPhoto: Model<PostPhoto>,
   ) {}
 
-  create(createPostPhotoDto: CreatePostPhotoDto) {
-    return 'This action adds a new postPhoto';
+  async create(id: any, files: Array<Express.Multer.File>) {
+    const postPhotos: Array<CreatePostPhotoDto> = [];
+
+    files.forEach((file) => {
+      postPhotos.push({
+        filename: file.filename,
+        post: id,
+      });
+    });
+
+    await this.postPhoto.insertMany(postPhotos);
+    const resId = await this.postPhoto.find({ post: id }).select('_id');
+    return resId;
   }
 
   async findAll() {
