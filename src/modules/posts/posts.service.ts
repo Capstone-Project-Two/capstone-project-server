@@ -41,7 +41,7 @@ export class PostsService {
 
     const createPostRes = await this.postModel.create(createPostDto);
 
-    if (files.length > 0) {
+    if (files?.length > 0) {
       const postPhotosRes = await this.postPhotosService.create(
         createPostRes._id,
         files,
@@ -74,6 +74,9 @@ export class PostsService {
       .find()
       .limit(limit)
       .skip(skip)
+      .sort({
+        updatedAt: 'desc',
+      })
       .populate(['patient', 'postPhotos'])
       .exec();
 
