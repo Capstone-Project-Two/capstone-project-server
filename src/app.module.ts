@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './config/database/database.module';
 import { AdminsModule } from './modules/admins/admins.module';
 import { PatientsModule } from './modules/patients/patients.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { TherapistsModule } from './modules/therapists/therapists.module';
 import { PostsModule } from './modules/posts/posts.module';
@@ -16,6 +16,9 @@ import { PostPhotosModule } from './modules/post-photos/post-photos.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthModule } from './modules/auth/auth.module';
+import { CredentialModule } from './modules/credential/credential.module';
+import { AtGuard } from './common/guards';
 
 @Module({
   imports: [
@@ -40,12 +43,18 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     EventsModule,
     LikePostsModule,
     PostPhotosModule,
+    AuthModule,
+    CredentialModule,
   ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
     },
   ],
 })
