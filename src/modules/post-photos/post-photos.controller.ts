@@ -14,7 +14,10 @@ import { UpdatePostPhotoDto } from './dto/update-post-photo.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { PostResponseDto } from '../posts/response/post-response.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { MAX_FILE_COUNT } from 'src/constants/multer-file-constant';
+import {
+  MAX_FILE_COUNT,
+  PostPhotosPath,
+} from 'src/constants/multer-file-constant';
 import { multerOptions } from 'src/config/files/multer-file-options';
 
 @Controller('post-photos')
@@ -23,7 +26,11 @@ export class PostPhotosController {
 
   @Post()
   @UseInterceptors(
-    FilesInterceptor('postPhotos', MAX_FILE_COUNT, multerOptions),
+    FilesInterceptor(
+      'postPhotos',
+      MAX_FILE_COUNT,
+      multerOptions(PostPhotosPath),
+    ),
   )
   create(
     @Body() id: string,

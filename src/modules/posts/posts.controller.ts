@@ -18,7 +18,10 @@ import { ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PostResponseDto } from './response/post-response.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/config/files/multer-file-options';
-import { MAX_FILE_COUNT } from 'src/constants/multer-file-constant';
+import {
+  MAX_FILE_COUNT,
+  PostPhotosPath,
+} from 'src/constants/multer-file-constant';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -27,7 +30,11 @@ export class PostsController {
 
   @Post()
   @UseInterceptors(
-    FilesInterceptor('postPhotos', MAX_FILE_COUNT, multerOptions),
+    FilesInterceptor(
+      'postPhotos',
+      MAX_FILE_COUNT,
+      multerOptions(PostPhotosPath),
+    ),
   )
   create(
     @Body() createPostDto: CreatePostDto,

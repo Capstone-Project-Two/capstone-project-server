@@ -14,7 +14,8 @@ import { EventsModule } from './config/web-socket/events.module';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
 import { PostPhotosModule } from './modules/post-photos/post-photos.module';
 import { MulterModule } from '@nestjs/platform-express';
-import { FILE_DESTINATION } from './constants/multer-file-constant';
+import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -23,8 +24,11 @@ import { FILE_DESTINATION } from './constants/multer-file-constant';
     }),
     MulterModule.registerAsync({
       useFactory: () => ({
-        dest: FILE_DESTINATION,
+        dest: STATIC_FILE_DESTINATION,
       }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: STATIC_FILE_DESTINATION,
     }),
     DatabaseModule,
     AdminsModule,
