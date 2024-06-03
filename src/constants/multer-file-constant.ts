@@ -4,9 +4,9 @@ const oneKb = 1024;
 const oneMb = oneKb * 1024;
 const maxSize = 5 * oneMb;
 
-const baseFilePath = join(__dirname, '..', '..', 'uploads');
+const baseFilePath = join(__dirname, '..', '..', 'public');
 
-export const PostPhotosPath = '/post-photos';
+export const PostPhotosPath = '/postPhotos';
 
 export const STATIC_FILE_DESTINATION = baseFilePath;
 export const MAX_FILE_SIZE = maxSize;
