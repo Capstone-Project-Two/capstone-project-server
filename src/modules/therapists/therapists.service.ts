@@ -31,45 +31,48 @@ export class TherapistsService {
     };
   }
 
-  async getAllSpecializations(){
-    const specializations = await this.therapistModel.aggregate([
-      { $unwind: '$specializations' },
-      { $group: { _id: null, specializations: { $addToSet: '$specializations' } } },
-      { $project: { _id: 0, specializations: 1 } }
-    ]).exec();
+  async getAllSpecializations() {
+    const specializations = await this.therapistModel
+      .aggregate([
+        { $unwind: '$specializations' },
+        {
+          $group: {
+            _id: null,
+            specializations: { $addToSet: '$specializations' },
+          },
+        },
+        { $project: { _id: 0, specializations: 1 } },
+      ])
+      .exec();
     return specializations.length > 0 ? specializations[0].specializations : [];
   }
 
   async findAll(pagination: PaginationParamDto) {
     const { limit, page } = pagination;
-    try {
-      const skip = page * limit - limit;
-      const res = await this.therapistModel
-        .find()
-        .limit(limit)
-        .skip(Number(page) === 0 || Number(page) === 1 ? 0 : skip)
-        .exec();
-      if (page > 1 && res.length === 0)
-        throw new HttpException(
-          {
-            status: HttpStatus.NO_CONTENT,
-            error: 'No Data',
-          },
-          HttpStatus.NO_CONTENT,
-          { cause: error },
-        );
-      return {
-        data: res,
-        meta: {
-          ...(await getPaginateMeta({
-            model: this.therapistModel,
-            resLength: res.length,
-          })),
+    const skip = page * limit - limit;
+    const res = await this.therapistModel
+      .find()
+      .limit(limit)
+      .skip(Number(page) === 0 || Number(page) === 1 ? 0 : skip)
+      .exec();
+    if (page > 1 && res.length === 0)
+      throw new HttpException(
+        {
+          status: HttpStatus.NO_CONTENT,
+          error: 'No Data',
         },
-      };
-    } catch (error) {
-      return error;
-    }
+        HttpStatus.NO_CONTENT,
+        { cause: error },
+      );
+    return {
+      data: res,
+      meta: {
+        ...(await getPaginateMeta({
+          model: this.therapistModel,
+          resLength: res.length,
+        })),
+      },
+    };
   }
 
   async findOne(id: string) {

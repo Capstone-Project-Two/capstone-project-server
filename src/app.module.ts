@@ -11,6 +11,7 @@ import { PostsModule } from './modules/posts/posts.module';
 import { SeedsModule } from './modules/seeds/seeds.module';
 import { FactoriesModule } from './modules/factories/factories.module';
 import { EventsModule } from './config/web-socket/events.module';
+import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CredentialModule } from './modules/credential/credential.module';
 import { AtGuard } from './common/guards';
@@ -28,6 +29,7 @@ import { AtGuard } from './common/guards';
     SeedsModule,
     FactoriesModule,
     EventsModule,
+    AppointmentsModule,
     AuthModule,
     CredentialModule,
   ],
