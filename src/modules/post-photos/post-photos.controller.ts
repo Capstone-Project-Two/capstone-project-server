@@ -11,15 +11,16 @@ import {
 } from '@nestjs/common';
 import { PostPhotosService } from './post-photos.service';
 import { UpdatePostPhotoDto } from './dto/update-post-photo.dto';
-import { ApiOkResponse } from '@nestjs/swagger';
-import { PostResponseDto } from '../posts/response/post-response.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   MAX_FILE_COUNT,
   PostPhotosPath,
 } from 'src/constants/multer-file-constant';
 import { multerOptions } from 'src/config/files/multer-file-options';
+import { PostPhotoResponseDto } from './response/post-photo-response.dto';
 
+@ApiTags('Post Photos')
 @Controller('post-photos')
 export class PostPhotosController {
   constructor(private readonly postPhotosService: PostPhotosService) {}
@@ -39,7 +40,7 @@ export class PostPhotosController {
     return this.postPhotosService.create(id, files);
   }
 
-  @ApiOkResponse({ type: PostResponseDto })
+  @ApiOkResponse({ type: PostPhotoResponseDto })
   @Get()
   findAll() {
     return this.postPhotosService.findAll();
