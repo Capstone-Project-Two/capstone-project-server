@@ -13,8 +13,6 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AdminResponseDto } from './dto/response/admin-response.dto';
-import { GetCurrentUser } from 'src/common/decorator';
-import { Admin } from 'src/database/schemas/admin.schema';
 
 @ApiTags('Admin')
 @Controller('admins')

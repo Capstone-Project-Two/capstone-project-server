@@ -117,7 +117,7 @@ export class AuthService {
       });
     }
     try {
-      await this.adminModel.updateOne({ _id: id }, { rt: null });
+      await this.adminModel.updateOne({ _id: id }, { refresh_token: null });
     } catch (error) {
       console.log(error);
     }
