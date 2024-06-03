@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AdminResponseDto } from './dto/response/admin-response.dto';
+import { GetCurrentUser } from 'src/common/decorator';
+import { Admin } from 'src/database/schemas/admin.schema';
 
 @ApiTags('Admin')
 @Controller('admins')
@@ -30,17 +33,17 @@ export class AdminsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminsService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.adminsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminsService.update(+id, updateAdminDto);
+  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateAdminDto: UpdateAdminDto) {
+    return this.adminsService.update(id, updateAdminDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminsService.remove(+id);
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.adminsService.remove(id);
   }
 }
