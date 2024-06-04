@@ -15,12 +15,24 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CredentialModule } from './modules/credential/credential.module';
 import { AtGuard } from './common/guards';
+import { PostPhotosModule } from './modules/post-photos/post-photos.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        dest: STATIC_FILE_DESTINATION,
+      }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: STATIC_FILE_DESTINATION,
     }),
     DatabaseModule,
     AdminsModule,
@@ -34,6 +46,7 @@ import { LikePostsModule } from './modules/like-posts/like-posts.module';
     AuthModule,
     CredentialModule,
     LikePostsModule,
+    PostPhotosModule,
   ],
   controllers: [AppController],
   providers: [

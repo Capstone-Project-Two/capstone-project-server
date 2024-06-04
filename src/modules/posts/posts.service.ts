@@ -12,15 +12,22 @@ import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
+import { PostPhoto } from 'src/database/schemas/post-photo-schema';
+import { PostPhotosService } from '../post-photos/post-photos.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
+    @InjectModel(PostPhoto.name) private postPhoto: Model<PostPhoto>,
+    private postPhotosService: PostPhotosService,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(
+    createPostDto: CreatePostDto,
+    files: Array<Express.Multer.File>,
+  ) {
     if (!isValidObjectId(createPostDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }
@@ -29,15 +36,35 @@ export class PostsService {
     if (!findUser) {
       throw new NotFoundException('Patient does not exist');
     }
-    const res = await this.postModel.create(createPostDto);
 
+    const postPhotos = [];
+
+    const createPostRes = await this.postModel.create(createPostDto);
+
+    if (files?.length > 0) {
+      const postPhotosRes = await this.postPhotosService.create(
+        createPostRes._id,
+        files,
+      );
+
+      postPhotosRes.forEach((postPhoto) => {
+        const { _id } = postPhoto;
+        postPhotos.push(_id);
+      });
+
+      await createPostRes.updateOne({
+        $push: {
+          postPhotos: [...postPhotos],
+        },
+      });
+    }
     await findUser.updateOne({
       $push: {
-        posts: res._id,
+        posts: createPostRes._id,
       },
     });
 
-    return res;
+    return createPostRes;
   }
 
   async findAll(pagination: PaginationParamDto) {
@@ -47,7 +74,10 @@ export class PostsService {
       .find()
       .limit(limit)
       .skip(skip)
-      .populate(['patient'])
+      .sort({
+        updatedAt: 'desc',
+      })
+      .populate(['patient', 'postPhotos'])
       .exec();
 
     return {
@@ -66,7 +96,10 @@ export class PostsService {
       .findOne({
         _id: id,
       })
-      .populate(['patient']);
+      .populate(['patient', 'postPhotos']);
+
+    if (!res) throw new NotFoundException();
+
     return res;
   }
 

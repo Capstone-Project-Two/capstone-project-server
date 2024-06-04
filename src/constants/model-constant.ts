@@ -4,4 +4,5 @@ export enum MODEL {
   Post = 'Post',
   Therapist = 'Therapist',
   Credential = 'Credential',
+  PostPhoto = 'PostPhoto',
 }

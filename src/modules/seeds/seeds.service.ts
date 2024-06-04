@@ -6,14 +6,12 @@ import { Post } from 'src/database/schemas/post.schema';
 import { seed } from 'src/utils/seeder-helpter';
 import { PatientSeeder } from 'src/database/seeders/patient.seeder';
 import { PostSeeder } from 'src/database/seeders/post.seeder';
-import { LikePost } from 'src/database/schemas/like-post.schema';
 
 @Injectable()
 export class SeedsService {
   constructor(
     @InjectModel(Patient.name) private patientsModel: Model<Patient>,
     @InjectModel(Post.name) private postsModel: Model<Post>,
-    @InjectModel(LikePost.name) private likePostsModel: Model<LikePost>,
   ) {}
 
   async create() {
