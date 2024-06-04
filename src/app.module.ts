@@ -30,10 +30,10 @@ import { LikePostsModule } from './modules/like-posts/like-posts.module';
     SeedsModule,
     FactoriesModule,
     EventsModule,
-    LikePostsModule,
     AppointmentsModule,
     AuthModule,
     CredentialModule,
+    LikePostsModule,
   ],
   controllers: [AppController],
   providers: [
