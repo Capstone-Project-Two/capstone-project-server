@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './config/database/database.module';
 import { AdminsModule } from './modules/admins/admins.module';
 import { PatientsModule } from './modules/patients/patients.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './common/response.interceptor';
 import { TherapistsModule } from './modules/therapists/therapists.module';
 import { PostsModule } from './modules/posts/posts.module';
@@ -14,7 +14,6 @@ import { EventsModule } from './config/web-socket/events.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CredentialModule } from './modules/credential/credential.module';
-import { AtGuard } from './common/guards';
 import { PostPhotosModule } from './modules/post-photos/post-photos.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
@@ -54,10 +53,12 @@ import { LikePostsModule } from './modules/like-posts/like-posts.module';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    {
-      provide: APP_GUARD,
-      useClass: AtGuard,
-    },
+
+    /** TODO: Handle Protected routes */
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AtGuard,
+    // },
   ],
 })
 export class AppModule {}
