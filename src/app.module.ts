@@ -15,6 +15,7 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CredentialModule } from './modules/credential/credential.module';
 import { AtGuard } from './common/guards';
+import { LikePostsModule } from './modules/like-posts/like-posts.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AtGuard } from './common/guards';
     AppointmentsModule,
     AuthModule,
     CredentialModule,
+    LikePostsModule,
   ],
   controllers: [AppController],
   providers: [

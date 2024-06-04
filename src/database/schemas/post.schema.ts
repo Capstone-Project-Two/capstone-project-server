@@ -19,6 +19,9 @@ export class Post {
 
   @Prop({ type: Boolean, default: false })
   is_deleted: boolean;
+
+  @Prop({ type: Number, default: 0 })
+  like_count: number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
