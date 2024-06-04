@@ -1,12 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { STATUS } from 'src/constants/status-constant';
 
 export class CreateAppointmentDto {
+
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
+  note: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  symptoms: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   patient: string;
 
   @ApiProperty()
@@ -18,10 +35,10 @@ export class CreateAppointmentDto {
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date)
-  datetime: Date;
+  scheduleDate: Date;
 
   @ApiProperty()
   @IsOptional()
   @IsEnum(STATUS)
-  status: string
+  status: string;
 }

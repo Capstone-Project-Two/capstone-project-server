@@ -36,10 +36,10 @@ export class CreateTherapistDto {
   @IsString()
   phone_number: string;
 
-  @ApiProperty({isArray: true, type: String})
+  @ApiProperty({ isArray: true, type: String })
   @IsArray()
   @IsOptional()
-  specializations?: string[]
+  specializations?: string[];
 
   @ApiProperty({ enum: GENDER })
   @IsEnum(GENDER)

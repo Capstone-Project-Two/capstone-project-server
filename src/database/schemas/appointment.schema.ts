@@ -10,8 +10,14 @@ export type AppointmentDocument = HydratedDocument<Appointment>;
 
 @Schema({ timestamps: true })
 export class Appointment {
+  @Prop({ type: String, default: '' })
+  note: string;
+
+  @Prop({ type: String, default: '' })
+  symptoms: string;
+
   @Prop({ type: Date, isRequired: true })
-  datetime: Date;
+  scheduleDate: Date;
 
   @Prop({ type: String, enum: STATUS, default: STATUS.REQUESTED })
   status: STATUS;

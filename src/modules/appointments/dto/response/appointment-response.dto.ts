@@ -6,8 +6,15 @@ import { PatientResponseDto } from 'src/modules/patients/dto/response/patient-re
 import { TherapistResponseDto } from 'src/modules/therapists/dto/response/therapist-response.dto';
 
 export class AppointmentResponseDto extends BaseResponse {
+
+  @ApiProperty({ type: String })
+  note: string;
+
+  @ApiProperty({ type: String })
+  symptoms: string;
+
   @ApiProperty({ type: Date })
-  datetime: Date;
+  scheduleDate: Date;
 
   @ApiProperty({ type: STATUS, enum: STATUS })
   status: string;
