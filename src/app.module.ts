@@ -15,11 +15,11 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CredentialModule } from './modules/credential/credential.module';
 import { AtGuard } from './common/guards';
-import { LikePostsModule } from './modules/like-posts/like-posts.module';
 import { PostPhotosModule } from './modules/post-photos/post-photos.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { LikePostsModule } from './modules/like-posts/like-posts.module';
 
 @Module({
   imports: [
