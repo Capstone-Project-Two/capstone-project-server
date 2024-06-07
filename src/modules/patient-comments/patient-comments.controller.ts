@@ -47,7 +47,7 @@ export class PatientCommentsController {
 
   @Patch('remove-comment/:id')
   removePost(@Param('id') id: string) {
-    return this.patientCommentsService.removePost(id);
+    return this.patientCommentsService.removeComment(id);
   }
 
   @Delete(':id')

@@ -73,7 +73,7 @@ export class PatientCommentsService {
     };
   }
 
-  async removePost(id: string) {
+  async removeComment(id: string) {
     const findComment = await this.patientCommentModel.findOne({
       _id: id,
     });
