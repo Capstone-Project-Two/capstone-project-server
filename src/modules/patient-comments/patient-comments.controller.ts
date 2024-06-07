@@ -42,7 +42,7 @@ export class PatientCommentsController {
     @Param('id') id: string,
     @Body() updatePatientCommentDto: UpdatePatientCommentDto,
   ) {
-    return this.patientCommentsService.update(+id, updatePatientCommentDto);
+    return this.patientCommentsService.update(id, updatePatientCommentDto);
   }
 
   @Delete(':id')

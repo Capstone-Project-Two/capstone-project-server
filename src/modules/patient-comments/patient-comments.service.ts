@@ -49,8 +49,28 @@ export class PatientCommentsService {
     return res;
   }
 
-  update(id: number, updatePatientCommentDto: UpdatePatientCommentDto) {
-    return `This action updates a #${id} patientComment`;
+  async update(id: string, updatePatientCommentDto: UpdatePatientCommentDto) {
+    const findPatients = await this.patientModel.findOne({
+      _id: updatePatientCommentDto.patient,
+    });
+
+    if (!findPatients) throw new NotFoundException('Patient not found');
+
+    const res = await this.patientCommentModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          content: updatePatientCommentDto.content,
+        },
+      },
+    );
+
+    return {
+      data: res,
+      field: updatePatientCommentDto.content,
+    };
   }
 
   remove(id: number) {
