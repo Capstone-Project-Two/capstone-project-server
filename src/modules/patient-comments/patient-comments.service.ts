@@ -73,7 +73,38 @@ export class PatientCommentsService {
     };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} patientComment`;
+  async removePost(id: string) {
+    const findComment = await this.patientCommentModel.findOne({
+      _id: id,
+    });
+    if (!findComment) throw new NotFoundException('Comment not found');
+
+    const findPost = await this.postModel.findOne({
+      _id: findComment.post,
+    });
+
+    const res = await this.patientCommentModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          is_deleted: true,
+        },
+      },
+    );
+
+    await findPost.updateOne({
+      comment_count: Number(findPost.comment_count) - 1,
+    });
+
+    return res;
+  }
+
+  async remove(id: string) {
+    const res = await this.patientCommentModel.deleteOne({
+      _id: id,
+    });
+    return res;
   }
 }

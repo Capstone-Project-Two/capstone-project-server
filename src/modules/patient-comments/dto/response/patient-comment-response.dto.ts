@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BaseResponse } from 'src/common/base-response.dto';
 import { RelationalPatientResponseDto } from 'src/modules/patients/dto/response/relational-patient-response.dto';
 
-export class PatientCommentResponse {
+export class PatientCommentResponse extends BaseResponse {
   @ApiProperty()
   content: string;
 
@@ -13,4 +14,7 @@ export class PatientCommentResponse {
 
   @ApiProperty({ type: PatientCommentResponse, isArray: true })
   children: Array<PatientCommentResponse>;
+
+  @ApiProperty({ type: Boolean, default: false })
+  is_deleted: boolean;
 }

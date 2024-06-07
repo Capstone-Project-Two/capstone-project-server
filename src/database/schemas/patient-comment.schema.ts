@@ -32,6 +32,9 @@ export class PatientComment {
     isRequired: false,
   })
   children: Array<Comment>;
+
+  @Prop({ type: Boolean, default: false })
+  is_deleted: boolean;
 }
 
 export const PatientCommentSchema =
