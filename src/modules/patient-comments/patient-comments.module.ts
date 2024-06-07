@@ -6,11 +6,15 @@ import {
   PatientCommentSchema,
   PatientComment,
 } from 'src/database/schemas/patient-comment.schema';
+import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
+import { Post, PostSchema } from 'src/database/schemas/post.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: PatientComment.name, schema: PatientCommentSchema },
+      { name: Patient.name, schema: PatientSchema },
+      { name: Post.name, schema: PostSchema },
     ]),
   ],
   controllers: [PatientCommentsController],

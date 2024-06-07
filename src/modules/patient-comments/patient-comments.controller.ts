@@ -10,9 +10,10 @@ import {
 import { PatientCommentsService } from './patient-comments.service';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PatientCommentResponse } from './dto/response/patient-comment-response.dto';
 
+@ApiTags('Patient Comments')
 @Controller('patient-comments')
 export class PatientCommentsController {
   constructor(
@@ -24,15 +25,16 @@ export class PatientCommentsController {
     return this.patientCommentsService.create(createPatientCommentDto);
   }
 
-  @ApiOkResponse({ type: PatientCommentResponse })
+  @ApiOkResponse({ type: PatientCommentResponse, isArray: true })
   @Get()
   findAll() {
     return this.patientCommentsService.findAll();
   }
 
+  @ApiOkResponse({ type: PatientCommentResponse })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.patientCommentsService.findOne(+id);
+    return this.patientCommentsService.findOne(id);
   }
 
   @Patch(':id')

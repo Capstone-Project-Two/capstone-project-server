@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { Post } from 'src/database/schemas/post.schema';
 import { seed } from 'src/utils/seeder-helpter';
 import { PatientSeeder } from 'src/database/seeders/patient.seeder';
-import { PostSeeder } from 'src/database/seeders/post.seeder';
 
 @Injectable()
 export class SeedsService {
@@ -21,11 +20,11 @@ export class SeedsService {
       seedData: PatientSeeder(),
     });
 
-    // seed posts
-    await seed({
-      model: this.postsModel,
-      seedData: PostSeeder(),
-    });
+    // // seed posts
+    // await seed({
+    //   model: this.postsModel,
+    //   seedData: PostSeeder(),
+    // });
 
     // other seed...
 

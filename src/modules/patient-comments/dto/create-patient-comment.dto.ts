@@ -12,11 +12,15 @@ export class CreatePatientCommentDto {
   patient: string;
 
   @ApiProperty()
+  @IsString()
+  post: string;
+
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString()
   parent?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String, required: false, isArray: true })
   @IsOptional()
   @IsArray()
   children?: Array<string>;

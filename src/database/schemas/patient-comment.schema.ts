@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 import { MODEL } from 'src/constants/model-constant';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Patient } from './patient.schema';
+import { Post } from './post.schema';
 
 export type PatientCommentDocument = HydratedDocument<PatientComment>;
 
@@ -14,10 +15,22 @@ export class PatientComment {
   @Prop({ type: TObjectId, ref: MODEL.Patient })
   patient: Patient;
 
-  @Prop({ type: TObjectId, ref: MODEL.Comment, default: null })
+  @Prop({ type: TObjectId, ref: MODEL.Post })
+  post: Post;
+
+  @Prop({
+    type: TObjectId,
+    ref: MODEL.Comment,
+    default: null,
+    isRequired: false,
+  })
   parent: Comment;
 
-  @Prop({ type: [{ type: TObjectId, ref: MODEL.Comment }], default: [] })
+  @Prop({
+    type: [{ type: TObjectId, ref: MODEL.Comment }],
+    default: [],
+    isRequired: false,
+  })
   children: Array<Comment>;
 }
 
