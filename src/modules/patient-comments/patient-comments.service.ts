@@ -20,28 +20,6 @@ export class PatientCommentsService {
     @InjectModel(Post.name) private postModel: Model<Post>,
   ) {}
 
-  async create(createPatientCommentDto: CreatePatientCommentDto) {
-    const findPatient = await this.patientModel.findOne({
-      _id: createPatientCommentDto.patient,
-    });
-
-    if (!findPatient) throw new NotFoundException('Patient not found');
-
-    const findPost = await this.postModel.findOne({
-      _id: createPatientCommentDto.post,
-    });
-
-    if (!findPost) throw new NotFoundException('Post not found');
-
-    if (createPatientCommentDto.parent) {
-      return await this.replyComment(createPatientCommentDto, findPost);
-    }
-
-    const res = await this.patientCommentModel.create(createPatientCommentDto);
-    await this.increaseCommentCount(findPost);
-    return res;
-  }
-
   private async increaseCommentCount(
     findPost: import('mongoose').Document<unknown, any, Post> &
       Post & { _id: import('mongoose').Types.ObjectId },
@@ -65,6 +43,9 @@ export class PatientCommentsService {
     const res = await this.patientCommentModel.create(createPatientCommentDto);
 
     await parentComment.updateOne({
+      $set: {
+        reply_count: Number(parentComment.reply_count) + 1,
+      },
       $push: {
         children: res._id,
       },
@@ -72,6 +53,28 @@ export class PatientCommentsService {
 
     await this.increaseCommentCount(findPost);
 
+    return res;
+  }
+
+  async create(createPatientCommentDto: CreatePatientCommentDto) {
+    const findPatient = await this.patientModel.findOne({
+      _id: createPatientCommentDto.patient,
+    });
+
+    if (!findPatient) throw new NotFoundException('Patient not found');
+
+    const findPost = await this.postModel.findOne({
+      _id: createPatientCommentDto.post,
+    });
+
+    if (!findPost) throw new NotFoundException('Post not found');
+
+    if (createPatientCommentDto.parent) {
+      return await this.replyComment(createPatientCommentDto, findPost);
+    }
+
+    const res = await this.patientCommentModel.create(createPatientCommentDto);
+    await this.increaseCommentCount(findPost);
     return res;
   }
 

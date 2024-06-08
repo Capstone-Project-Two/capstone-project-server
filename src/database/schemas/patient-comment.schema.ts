@@ -18,6 +18,9 @@ export class PatientComment {
   @Prop({ type: TObjectId, ref: MODEL.Post })
   post: Post;
 
+  @Prop({ type: Number, default: 0 })
+  reply_count: number;
+
   @Prop({
     type: TObjectId,
     ref: MODEL.PatientComment,
