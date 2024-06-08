@@ -11,7 +11,7 @@ import { PatientCommentsService } from './patient-comments.service';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { PatientCommentResponse } from './dto/response/patient-comment-response.dto';
+import { RelationalPatientCommentResponseDto } from './dto/response/relational-patient-comment-response.dto';
 
 @ApiTags('Patient Comments')
 @Controller('patient-comments')
@@ -25,13 +25,13 @@ export class PatientCommentsController {
     return this.patientCommentsService.create(createPatientCommentDto);
   }
 
-  @ApiOkResponse({ type: PatientCommentResponse, isArray: true })
+  @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
   @Get()
   findAll() {
     return this.patientCommentsService.findAll();
   }
 
-  @ApiOkResponse({ type: PatientCommentResponse })
+  @ApiOkResponse({ type: RelationalPatientCommentResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.patientCommentsService.findOne(id);
