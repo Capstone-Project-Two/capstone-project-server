@@ -20,14 +20,14 @@ export class PatientComment {
 
   @Prop({
     type: TObjectId,
-    ref: MODEL.Comment,
+    ref: MODEL.PatientComment,
     default: null,
     isRequired: false,
   })
   parent: Comment;
 
   @Prop({
-    type: [{ type: TObjectId, ref: MODEL.Comment }],
+    type: [{ type: TObjectId, ref: MODEL.PatientComment }],
     default: [],
     isRequired: false,
   })

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -29,16 +33,52 @@ export class PatientCommentsService {
 
     if (!findPost) throw new NotFoundException('Post not found');
 
+    if (createPatientCommentDto.parent) {
+      return await this.replyComment(createPatientCommentDto, findPost);
+    }
+
     const res = await this.patientCommentModel.create(createPatientCommentDto);
+    await this.increaseCommentCount(findPost);
+    return res;
+  }
+
+  private async increaseCommentCount(
+    findPost: import('mongoose').Document<unknown, any, Post> &
+      Post & { _id: import('mongoose').Types.ObjectId },
+  ) {
     await findPost.updateOne({
       comment_count: Number(findPost.comment_count) + 1,
     });
+  }
+
+  private async replyComment(
+    createPatientCommentDto: CreatePatientCommentDto,
+    findPost: import('mongoose').Document<unknown, any, Post> &
+      Post & { _id: import('mongoose').Types.ObjectId },
+  ) {
+    const parentComment = await this.patientCommentModel.findOne({
+      _id: createPatientCommentDto.parent,
+    });
+
+    if (!parentComment) throw new BadRequestException('No parent comment');
+
+    const res = await this.patientCommentModel.create(createPatientCommentDto);
+
+    await parentComment.updateOne({
+      $push: {
+        children: res._id,
+      },
+    });
+
+    await this.increaseCommentCount(findPost);
 
     return res;
   }
 
   async findAll() {
-    const res = await this.patientCommentModel.find().populate(['patient']);
+    const res = await this.patientCommentModel
+      .find()
+      .populate(['patient', 'children']);
     return res;
   }
 
