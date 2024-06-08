@@ -83,9 +83,11 @@ export class PatientCommentsService {
   }
 
   async findOne(id: string) {
-    const res = await this.patientCommentModel.findOne({
-      _id: id,
-    });
+    const res = await this.patientCommentModel
+      .findOne({
+        _id: id,
+      })
+      .populate(['children', 'patient']);
     return res;
   }
 
