@@ -15,6 +15,9 @@ export class PatientCommentResponse extends BaseResponse {
   @ApiProperty({ type: PatientCommentResponse, isArray: true })
   children: Array<PatientCommentResponse>;
 
+  @ApiProperty({ type: Number, default: 0 })
+  reply_count: number;
+
   @ApiProperty({ type: Boolean, default: false })
   is_deleted: boolean;
 }
