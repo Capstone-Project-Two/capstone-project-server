@@ -34,18 +34,13 @@ export class PatientCommentsService {
     findPost: import('mongoose').Document<unknown, any, Post> &
       Post & { _id: import('mongoose').Types.ObjectId },
   ) {
-    const parentComment = await this.patientCommentModel.findOne({
-      _id: createPatientCommentDto.parent,
-    });
+    const parentComment = await this.findOne(createPatientCommentDto.parent);
 
     if (!parentComment) throw new BadRequestException('No parent comment');
 
     const res = await this.patientCommentModel.create(createPatientCommentDto);
 
     await parentComment.updateOne({
-      $set: {
-        reply_count: Number(parentComment.reply_count) + 1,
-      },
       $push: {
         children: res._id,
       },
@@ -81,7 +76,17 @@ export class PatientCommentsService {
   async findAll() {
     const res = await this.patientCommentModel
       .find()
-      .populate(['patient', 'children']);
+      .where({
+        is_deleted: false,
+      })
+      .populate(['patient'])
+      .populate({
+        path: 'children',
+        match: {
+          is_deleted: false,
+        },
+      });
+
     return res;
   }
 
@@ -90,7 +95,16 @@ export class PatientCommentsService {
       .findOne({
         _id: id,
       })
-      .populate(['children', 'patient']);
+      .where({
+        is_deleted: false,
+      })
+      .populate(['patient'])
+      .populate({
+        path: 'children',
+        match: {
+          is_deleted: false,
+        },
+      });
     return res;
   }
 
@@ -118,19 +132,15 @@ export class PatientCommentsService {
     };
   }
 
-  async removeComment(id: string) {
-    const findComment = await this.patientCommentModel.findOne({
-      _id: id,
-    });
-    if (!findComment) throw new NotFoundException('Comment not found');
-
-    const findPost = await this.postModel.findOne({
-      _id: findComment.post,
-    });
-
-    const res = await this.patientCommentModel.updateOne(
+  private async removeMultiComments(
+    findComment: import('mongoose').Document<unknown, any, PatientComment> &
+      PatientComment & { _id: import('mongoose').Types.ObjectId },
+    findPost: import('mongoose').Document<unknown, any, Post> &
+      Post & { _id: import('mongoose').Types.ObjectId },
+  ) {
+    const res = await this.patientCommentModel.updateMany(
       {
-        _id: id,
+        $or: [{ parent: findComment._id }, { _id: findComment._id }],
       },
       {
         $set: {
@@ -139,6 +149,46 @@ export class PatientCommentsService {
       },
     );
 
+    // update post comment count
+    await findPost.updateOne({
+      comment_count:
+        Number(findPost.comment_count) - findComment.children.length - 1,
+    });
+    return res;
+  }
+
+  private async removeOneComment(id: string) {
+    const res = await this.patientCommentModel.updateOne(
+      { _id: id },
+      {
+        $set: {
+          is_deleted: true,
+        },
+      },
+    );
+    return res;
+  }
+
+  async removeComment(id: string) {
+    const findComment = await this.findOne(id);
+    if (!findComment) throw new NotFoundException('Comment not found');
+
+    const findPost = await this.postModel.findOne({
+      _id: findComment.post,
+    });
+
+    if (!findPost) throw new NotFoundException('Post Not found');
+
+    // if the comment has children
+    if (findComment.children.length > 0) {
+      const res = await this.removeMultiComments(findComment, findPost);
+      return res;
+    }
+
+    // If no parent
+    const res = await this.removeOneComment(id);
+
+    // update post comment count
     await findPost.updateOne({
       comment_count: Number(findPost.comment_count) - 1,
     });

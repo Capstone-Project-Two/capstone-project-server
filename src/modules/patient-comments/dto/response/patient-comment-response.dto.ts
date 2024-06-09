@@ -12,9 +12,6 @@ export class PatientCommentResponseDto extends BaseResponse {
   @ApiProperty({ type: PatientResponseDto })
   patient: PatientResponseDto;
 
-  @ApiProperty({ type: Number, default: 0 })
-  reply_count: number;
-
   @ApiProperty({ type: Boolean, default: false })
   is_deleted: boolean;
 }

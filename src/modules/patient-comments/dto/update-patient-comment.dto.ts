@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreatePatientCommentDto } from './create-patient-comment.dto';
-import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 export class UpdatePatientCommentDto extends PartialType(
   CreatePatientCommentDto,
@@ -9,9 +9,4 @@ export class UpdatePatientCommentDto extends PartialType(
   @IsBoolean()
   @IsOptional()
   is_deleted?: boolean;
-
-  @ApiProperty({ type: Number, default: false })
-  @IsNumber()
-  @IsOptional()
-  reply_count?: number;
 }
