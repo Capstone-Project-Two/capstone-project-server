@@ -28,6 +28,9 @@ export class PostsService {
     createPostDto: CreatePostDto,
     files: Array<Express.Multer.File>,
   ) {
+    const isNoFiles = !files || files?.length === 0;
+    const isEmpty = createPostDto.body?.trim().length === 0 && isNoFiles;
+    if (isEmpty) throw new BadRequestException();
     if (!isValidObjectId(createPostDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }
@@ -37,11 +40,12 @@ export class PostsService {
       throw new NotFoundException('Patient does not exist');
     }
 
+    if (isNoFiles) delete createPostDto.postPhotos;
     const postPhotos = [];
 
     const createPostRes = await this.postModel.create(createPostDto);
 
-    if (files?.length > 0) {
+    if (!isNoFiles) {
       const postPhotosRes = await this.postPhotosService.create(
         createPostRes._id,
         files,
@@ -75,7 +79,7 @@ export class PostsService {
       .limit(limit)
       .skip(skip)
       .sort({
-        updatedAt: 'desc',
+        createdAt: 'desc',
       })
       .populate(['patient', 'postPhotos'])
       .exec();
