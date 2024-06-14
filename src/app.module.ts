@@ -19,6 +19,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
+import { ActivitiesImagesModule } from './modules/activities-images/activities-images.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { LikePostsModule } from './modules/like-posts/like-posts.module';
     CredentialModule,
     LikePostsModule,
     PostPhotosModule,
+    ActivitiesModule,
+    ActivitiesImagesModule,
   ],
   controllers: [AppController],
   providers: [
