@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { MODEL } from 'src/constants/model-constant';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Patient } from './patient.schema';
@@ -39,3 +39,22 @@ export class PatientComment {
 
 export const PatientCommentSchema =
   SchemaFactory.createForClass(PatientComment);
+
+PatientCommentSchema.pre('deleteOne', async function (next) {
+  try {
+    const patientCommentId = this.getQuery()._id;
+    const mongoosePatientCommentId =
+      mongoose.Types.ObjectId.createFromHexString(patientCommentId);
+    const patientCommentModel = this.model.db.model(
+      MODEL.PatientComment,
+      PatientCommentSchema,
+    );
+    await patientCommentModel.deleteMany({
+      parent: mongoosePatientCommentId,
+    });
+    next();
+  } catch (error) {
+    console.error('Error while deleting patient comments', error);
+    next();
+  }
+});
