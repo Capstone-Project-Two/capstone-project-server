@@ -37,6 +37,11 @@ export class PatientCommentsController {
     return this.patientCommentsService.findOne(id);
   }
 
+  @Get('all-replies/:id')
+  findAllReplies(@Param('id') id: string) {
+    return this.patientCommentsService.findAllReplies(id);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

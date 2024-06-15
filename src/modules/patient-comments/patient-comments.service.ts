@@ -3,13 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { PatientComment } from 'src/database/schemas/patient-comment.schema';
-import { Model } from 'mongoose';
+import { Model, PipelineStage } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { Post } from 'src/database/schemas/post.schema';
+import { ToObjectId } from 'src/utils/mongo-helper';
+import { PatientCommentResponseDto } from './dto/response/patient-comment-response.dto';
+import { MongoCollection } from 'src/constants/mongo-collection-constant';
 
 @Injectable()
 export class PatientCommentsService {
@@ -20,13 +23,15 @@ export class PatientCommentsService {
     @InjectModel(Post.name) private postModel: Model<Post>,
   ) {}
 
-  private async increaseCommentCount(
-    findPost: import('mongoose').Document<unknown, any, Post> &
-      Post & { _id: import('mongoose').Types.ObjectId },
-  ) {
+  private async updatePostCommentCount(postId: any) {
+    const findPost = await this.postModel.findOne({ _id: postId });
+    const commentCount = await this.patientCommentModel.countDocuments();
+
     await findPost.updateOne({
-      comment_count: Number(findPost.comment_count) + 1,
+      comment_count: commentCount,
     });
+
+    return findPost;
   }
 
   private async replyComment(
@@ -46,7 +51,7 @@ export class PatientCommentsService {
       },
     });
 
-    await this.increaseCommentCount(findPost);
+    await this.updatePostCommentCount(findPost._id);
 
     return res;
   }
@@ -69,7 +74,7 @@ export class PatientCommentsService {
     }
 
     const res = await this.patientCommentModel.create(createPatientCommentDto);
-    await this.increaseCommentCount(findPost);
+    await this.updatePostCommentCount(findPost._id);
     return res;
   }
 
@@ -150,10 +155,7 @@ export class PatientCommentsService {
     );
 
     // update post comment count
-    await findPost.updateOne({
-      comment_count:
-        Number(findPost.comment_count) - findComment.children.length - 1,
-    });
+    await this.updatePostCommentCount(findPost._id);
     return res;
   }
 
@@ -196,10 +198,46 @@ export class PatientCommentsService {
     return res;
   }
 
+  async findAllReplies(commentId: string) {
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          _id: ToObjectId(commentId),
+        },
+      },
+      {
+        $graphLookup: {
+          from: MongoCollection.PatientComments,
+          startWith: ToObjectId(commentId),
+          connectFromField: '_id',
+          connectToField: 'parent',
+          as: 'children',
+        },
+      },
+    ];
+    const res = await this.patientCommentModel.aggregate(pipeline);
+    return res;
+  }
+
   async remove(id: string) {
-    const res = await this.patientCommentModel.deleteOne({
-      _id: id,
+    const findComment = await this.patientCommentModel.findOne({ _id: id });
+    if (!findComment) throw new NotFoundException();
+
+    const allReplies = await this.findAllReplies(id);
+
+    const replies = [allReplies[0]._id];
+    allReplies[0].children.forEach((reply: PatientCommentResponseDto) => {
+      replies.push(reply._id);
     });
+
+    const res = await this.patientCommentModel.deleteMany({
+      _id: {
+        $in: replies,
+      },
+    });
+
+    await this.updatePostCommentCount(findComment.post);
+
     return res;
   }
 }
