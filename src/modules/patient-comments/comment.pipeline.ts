@@ -42,7 +42,7 @@ export class CommentPipeline {
 
   lookupRepliesPipeline = (
     startWith: any,
-  ): Array<PipelineStage.GraphLookup | PipelineStage.Project> => {
+  ): Array<PipelineStage.GraphLookup> => {
     return [
       {
         $graphLookup: {
@@ -164,6 +164,11 @@ export class CommentPipeline {
   commentResponsePipeline(id?: any): PipelineStage[] {
     return [
       ...this.repliesResponsePipeline(id),
+      {
+        $sort: {
+          createdAt: 1,
+        },
+      },
       {
         $project: {
           replies: 0,

@@ -75,6 +75,12 @@ export const PatientCommentSeeder = () => {
       children: [12],
     }),
     createChildComment({
+      index: 14,
+      name: 'chhay',
+      content: 'First Second reply',
+      parent: 1,
+    }),
+    createChildComment({
       index: 12,
       name: 'chhay',
       content: 'First nested reply',
@@ -118,7 +124,7 @@ export const PatientCommentSeeder = () => {
     }),
   ];
 
-  const patientSeeds = [...firstCommentBatch, ...secondCommentBatch];
+  const commentSeeds = [...firstCommentBatch, ...secondCommentBatch];
 
-  return patientSeeds;
+  return commentSeeds;
 };

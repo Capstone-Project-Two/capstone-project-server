@@ -192,6 +192,22 @@ export class PatientCommentsService {
           reply_count: 1,
         },
       },
+      {
+        $unwind: '$replies',
+      },
+      {
+        $sort: {
+          'replies.createdAt': 1,
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          replies: {
+            $push: '$replies',
+          },
+        },
+      },
     ]);
     return res;
   }
