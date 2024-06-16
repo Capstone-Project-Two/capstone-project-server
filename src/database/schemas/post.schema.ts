@@ -28,7 +28,7 @@ export class Post {
   comment_count: number;
 
   @Prop({ type: Number, default: 0 })
-  saved_count: number;
+  save_count: number;
 
   @Prop({ type: [{ type: TObjectId, ref: MODEL.PostPhoto }] })
   postPhotos: PostPhoto[];

@@ -20,7 +20,7 @@ import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
 import { PatientCommentsModule } from './modules/patient-comments/patient-comments.module';
-import { SavedPostsModule } from './modules/saved-posts/saved-posts.module';
+import { SavePostsModule } from './modules/save-posts/save-posts.module';
 
 @Module({
   imports: [
@@ -49,7 +49,7 @@ import { SavedPostsModule } from './modules/saved-posts/saved-posts.module';
     LikePostsModule,
     PostPhotosModule,
     PatientCommentsModule,
-    SavedPostsModule,
+    SavePostsModule,
   ],
   controllers: [AppController],
   providers: [

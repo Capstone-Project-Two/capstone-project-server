@@ -3,16 +3,20 @@ import { HydratedDocument } from 'mongoose';
 import { Patient } from './patient.schema';
 import { Post } from './post.schema';
 import { MODEL } from 'src/constants/model-constant';
+import { TObjectId } from 'src/utils/mongo-helper';
 
-export type SavedPostsDocument = HydratedDocument<SavedPosts>;
+export type SavePostsDocument = HydratedDocument<SavePost>;
 
 @Schema({ timestamps: true })
-export class SavedPosts {
-  @Prop({ type: Patient, ref: MODEL.Patient, isRequired: true })
+export class SavePost {
+  @Prop({ type: TObjectId, ref: MODEL.Patient, isRequired: true })
   patient: Patient;
 
-  @Prop({ type: Post, ref: MODEL.Post, isRequired: true })
+  @Prop({ type: TObjectId, ref: MODEL.Post, isRequired: true })
   post: Post;
+
+  @Prop({ type: Boolean, default: true })
+  is_saved: boolean;
 }
 
-export const SavedPostsSchema = SchemaFactory.createForClass(SavedPosts);
+export const SavedPostSchema = SchemaFactory.createForClass(SavePost);
