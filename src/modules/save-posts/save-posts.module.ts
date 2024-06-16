@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   SavePost,
   SavedPostSchema,
-} from 'src/database/schemas/saved-post.schema';
+} from 'src/database/schemas/save-post.schema';
 import { Post, PostSchema } from 'src/database/schemas/post.schema';
 
 @Module({

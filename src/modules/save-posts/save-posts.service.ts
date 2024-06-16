@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSavedPostDto } from './dto/create-save-post.dto';
 import { UpdateSavedPostDto } from './dto/update-save-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { SavePost } from 'src/database/schemas/saved-post.schema';
+import { SavePost } from 'src/database/schemas/save-post.schema';
 import { Model } from 'mongoose';
 import { Post } from 'src/database/schemas/post.schema';
 
