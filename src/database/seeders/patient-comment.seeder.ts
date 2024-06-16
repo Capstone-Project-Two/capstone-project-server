@@ -60,39 +60,65 @@ export const PatientCommentSeeder = () => {
     return comment;
   };
 
-  const patientSeeds = [
+  const firstCommentBatch = [
     createComment({
       index: 1,
       name: 'chhay',
       content: 'First comment',
-      children: [2],
-    }),
-    createComment({
-      index: 5,
-      name: 'chhay',
-      content: 'Second comment',
+      children: [11],
     }),
     createChildComment({
-      index: 2,
+      index: 11,
       name: 'chhay',
       content: 'First reply',
       parent: 1,
-      children: [3],
+      children: [12],
     }),
     createChildComment({
-      index: 3,
+      index: 12,
       name: 'chhay',
       content: 'First nested reply',
-      parent: 2,
-      children: [4],
+      parent: 11,
+      children: [13],
     }),
     createChildComment({
-      index: 4,
+      index: 13,
       name: 'chhay',
       content: 'First nested nested reply',
-      parent: 3,
+      parent: 12,
     }),
   ];
+
+  const secondCommentBatch = [
+    createComment({
+      index: 2,
+      name: 'chhay',
+      content: 'Second comment',
+      children: [21],
+    }),
+    createChildComment({
+      index: 21,
+      name: 'chhay',
+      content: 'Second reply',
+      parent: 2,
+      children: [22],
+    }),
+    createChildComment({
+      index: 22,
+      name: 'chhay',
+      content: 'Second nested reply',
+      parent: 21,
+      children: [23],
+    }),
+    createChildComment({
+      index: 23,
+      name: 'chhay',
+      content: 'Second nested nested reply',
+      parent: 22,
+    }),
+  ];
+
+  const patientSeeds = [...firstCommentBatch, ...secondCommentBatch];
 
   return patientSeeds;
 };
