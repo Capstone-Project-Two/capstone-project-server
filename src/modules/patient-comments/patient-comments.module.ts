@@ -8,6 +8,7 @@ import {
 } from 'src/database/schemas/patient-comment.schema';
 import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
 import { Post, PostSchema } from 'src/database/schemas/post.schema';
+import { CommentPipeline } from './comment.pipeline';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { Post, PostSchema } from 'src/database/schemas/post.schema';
     ]),
   ],
   controllers: [PatientCommentsController],
-  providers: [PatientCommentsService],
+  providers: [PatientCommentsService, CommentPipeline],
 })
 export class PatientCommentsModule {}

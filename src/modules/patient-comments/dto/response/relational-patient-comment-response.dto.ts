@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PatientCommentResponseDto } from './patient-comment-response.dto';
+import { NestedPatientCommentResponseDto } from './nested-patient-comment-response.dto';
 
-export class RelationalPatientCommentResponseDto extends PatientCommentResponseDto {
-  @ApiProperty({ type: PatientCommentResponseDto, isArray: true })
-  children: Array<PatientCommentResponseDto>;
+export class RelationalPatientCommentResponseDto extends NestedPatientCommentResponseDto {
+  @ApiProperty({ type: NestedPatientCommentResponseDto, isArray: true })
+  children: Array<NestedPatientCommentResponseDto>;
 }
