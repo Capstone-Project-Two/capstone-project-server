@@ -15,7 +15,7 @@ export const PostSeeder = () => {
       _id: stringToHex(`${name}post${index}`),
       body: `(${name}) - ${body}`,
       patient: stringToHex(name),
-      comment_count: name === 'chhay' ? 8 : 0,
+      comment_count: index === 1 ? 8 : index === 2 ? 4 : 0,
     };
 
     return post;

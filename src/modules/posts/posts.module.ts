@@ -9,12 +9,17 @@ import {
   PostPhoto,
   PostPhotoSchema,
 } from 'src/database/schemas/post-photo-schema';
+import {
+  PatientComment,
+  PatientCommentSchema,
+} from 'src/database/schemas/patient-comment.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Post.name, schema: PostSchema },
       { name: Patient.name, schema: PatientSchema },
+      { name: PatientComment.name, schema: PatientCommentSchema },
       { name: PostPhoto.name, schema: PostPhotoSchema },
     ]),
   ],

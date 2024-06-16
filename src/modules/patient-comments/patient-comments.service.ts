@@ -90,7 +90,17 @@ export class PatientCommentsService {
 
   async findAll() {
     const res = this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline(),
+      this.commentPipeline.commentResponsePipeline({}),
+    );
+
+    return res;
+  }
+
+  async findCommentByPost(postId: string) {
+    const res = await this.patientCommentModel.aggregate(
+      this.commentPipeline.commentResponsePipeline({
+        postId: ToObjectId(postId),
+      }),
     );
 
     return res;
@@ -98,7 +108,9 @@ export class PatientCommentsService {
 
   async findOne(id: string) {
     const res = await this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline(ToObjectId(id)),
+      this.commentPipeline.commentResponsePipeline({
+        commentId: ToObjectId(id),
+      }),
     );
     if (res.length === 0) throw new NotFoundException();
     return res[0];
@@ -185,7 +197,9 @@ export class PatientCommentsService {
 
   async findAllReplies(commentId: string) {
     const res = await this.patientCommentModel.aggregate([
-      ...this.commentPipeline.repliesResponsePipeline(ToObjectId(commentId)),
+      ...this.commentPipeline.repliesResponsePipeline({
+        commentId: ToObjectId(commentId), 
+      }),
       {
         $project: {
           replies: 1,

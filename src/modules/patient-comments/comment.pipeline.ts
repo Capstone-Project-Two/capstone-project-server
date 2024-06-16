@@ -2,6 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PipelineStage } from 'mongoose';
 import { MongoCollection } from 'src/constants/mongo-collection-constant';
 
+type TCommentParam = {
+  commentId?: any;
+  postId?: any;
+};
+
 @Injectable()
 export class CommentPipeline {
   lookupPatientPipeline: Array<
@@ -135,21 +140,31 @@ export class CommentPipeline {
     },
   ];
 
-  repliesResponsePipeline(id?: any): PipelineStage[] {
+  repliesResponsePipeline({
+    commentId,
+    postId,
+  }: TCommentParam): PipelineStage[] {
     return [
-      id
+      {
+        $match: {
+          is_deleted: false,
+        },
+      },
+      commentId
         ? {
             $match: {
-              _id: id,
-              is_deleted: false,
+              _id: commentId,
             },
           }
-        : {
+        : { $match: {} },
+      postId
+        ? {
             $match: {
-              is_deleted: false,
+              post: postId,
             },
-          },
-      ...this.lookupRepliesPipeline(id ?? '$$ROOT._id'),
+          }
+        : { $match: {} },
+      ...this.lookupRepliesPipeline(commentId ?? '$$ROOT._id'),
       ...this.lookupPatientPipeline,
       ...this.lookupParentPipeline,
       ...this.lookupChildrenPipeline,
@@ -161,9 +176,12 @@ export class CommentPipeline {
     ];
   }
 
-  commentResponsePipeline(id?: any): PipelineStage[] {
+  commentResponsePipeline({
+    commentId,
+    postId,
+  }: TCommentParam): PipelineStage[] {
     return [
-      ...this.repliesResponsePipeline(id),
+      ...this.repliesResponsePipeline({ commentId, postId }),
       {
         $sort: {
           createdAt: 1,
