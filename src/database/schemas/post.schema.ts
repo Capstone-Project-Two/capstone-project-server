@@ -24,6 +24,9 @@ export class Post {
   @Prop({ type: Number, default: 0 })
   like_count: number;
 
+  @Prop({ type: Number, default: 0 })
+  comment_count: number;
+
   @Prop({ type: [{ type: TObjectId, ref: MODEL.PostPhoto }] })
   postPhotos: PostPhoto[];
 }
