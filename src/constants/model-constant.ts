@@ -6,4 +6,5 @@ export enum MODEL {
   Credential = 'Credential',
   PostPhoto = 'PostPhoto',
   PatientComment = 'PatientComment',
+  SavePost = 'SavePost',
 }
