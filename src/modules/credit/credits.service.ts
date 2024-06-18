@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCreditDto } from './dto/create-credit.dto';
 import { UpdateCreditDto } from './dto/update-credit.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Credit } from 'src/database/schemas/credit.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CreditsService {
-  create(createCreditDto: CreateCreditDto) {
-    return 'This action adds a new credit';
+  constructor(@InjectModel(Credit.name) private creditModel: Model<Credit>) {}
+
+  async create(createCreditDto: CreateCreditDto) {
+    const res = await this.creditModel.create(createCreditDto);
+    return {
+      message: 'Credit Package Created Successfully!',
+      data: res,
+    };
   }
 
-  findAll() {
-    return `This action returns all credit`;
+  async findAll() {
+    const res = await this.creditModel
+      .find({
+        is_visible: true,
+      })
+      .exec();
+
+    return {
+      data: res,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} credit`;
+  async findOne(id: string) {
+    const res = await this.creditModel.findOne({
+      _id: id,
+      is_visible: true,
+    });
+
+    if (!res) throw new NotFoundException();
+
+    return res;
   }
 
-  update(id: number, updateCreditDto: UpdateCreditDto) {
-    return `This action updates a #${id} credit`;
+  async update(id: string, updateCreditDto: UpdateCreditDto) {
+    const res = await this.creditModel.updateOne(
+      { _id: id },
+      { ...updateCreditDto },
+    );
+    return {
+      data: {
+        res,
+        field: updateCreditDto,
+      },
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} credit`;
+  async remove(id: string) {
+    const res = await this.creditModel.updateOne(
+      { _id: id },
+      { is_visible: false },
+    );
+    return res;
   }
 }
