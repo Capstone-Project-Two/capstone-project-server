@@ -9,6 +9,7 @@ import { PatientFactory } from 'src/database/factories/patients.factory';
 import { PostFactory } from 'src/database/factories/posts.factory';
 import { Therapist } from 'src/database/schemas/therapist.schema';
 import { TherapistFactory } from 'src/database/factories/therapists.factory';
+import { PatientSeeder } from 'src/database/seeders/patient.seeder';
 
 @Injectable()
 export class FactoriesService {
@@ -19,15 +20,20 @@ export class FactoriesService {
   ) {}
 
   async create(createFactoryDto: CreateFactoryDto) {
-    await seed({
-      model: this.patientsModel,
-      seedData: PatientFactory({ ...createFactoryDto }),
-    });
+    // await seed({
+    //   model: this.patientsModel,
+    //   seedData: PatientFactory({ ...createFactoryDto }),
+    // });
 
     await seed({
-      model: this.postsModel,
-      seedData: PostFactory({ ...createFactoryDto }),
+      model: this.patientsModel,
+      seedData: PatientSeeder(),
     });
+
+    // await seed({
+    //   model: this.postsModel,
+    //   seedData: PostFactory({ ...createFactoryDto }),
+    // });
 
     await seed({
       model: this.therapistModel,

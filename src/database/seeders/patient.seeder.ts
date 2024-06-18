@@ -14,7 +14,8 @@ export const PatientSeeder = () => {
 
   const createPatient = (name: TSeederNames) => {
     const list: Array<
-      CreatePatientDto & { _id: string; posts: Array<string> }
+      CreatePatientDto & { _id: string }
+      // CreatePatientDto & { _id: string; posts: Array<string> }
     > = [];
     list.push({
       _id: stringToHex(name),
@@ -23,7 +24,7 @@ export const PatientSeeder = () => {
         name !== 'lizac' && name !== 'lizaj' ? GENDER.MALE : GENDER.FEMALE,
       phone_number: '+855' + faker.string.numeric(8),
       username: name,
-      posts: createPosts(name),
+      // posts: createPosts(name),
     });
     return list;
   };

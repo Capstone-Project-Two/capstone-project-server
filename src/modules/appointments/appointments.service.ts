@@ -11,6 +11,7 @@ import { Patient } from 'src/database/schemas/patient.schema';
 import { isValidObjectId, Model } from 'mongoose';
 import { Appointment } from 'src/database/schemas/appointment.schema';
 import { STATUS } from 'src/constants/status-constant';
+import { FilterAppointmentDto } from './dto/filter-appointment.dto';
 
 @Injectable()
 export class AppointmentsService {
@@ -49,10 +50,26 @@ export class AppointmentsService {
     return res;
   }
 
-  async findAll() {
-    const res = await this.appointmentModel
-      .find()
-      .populate(['patient', 'therapist']);
+  async findAll(queryParams: FilterAppointmentDto) {
+    const { status } = queryParams;
+    let res: any;
+    if (!status) {
+      res = await this.appointmentModel
+        .find()
+        .sort({
+          updatedAt: 'desc',
+        })
+        .populate(['patient', 'therapist']);
+    } else {
+      res = await this.appointmentModel
+        .find({
+          status,
+        })
+        .sort({
+          updatedAt: 'desc',
+        })
+        .populate(['patient', 'therapist']);
+    }
     return res;
   }
 
