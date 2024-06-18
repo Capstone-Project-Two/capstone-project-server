@@ -21,6 +21,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
 import { PatientCommentsModule } from './modules/patient-comments/patient-comments.module';
 import { SavePostsModule } from './modules/save-posts/save-posts.module';
+import { CreditModule } from './modules/credit/credits.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { SavePostsModule } from './modules/save-posts/save-posts.module';
     PostPhotosModule,
     PatientCommentsModule,
     SavePostsModule,
+    CreditModule,
   ],
   controllers: [AppController],
   providers: [

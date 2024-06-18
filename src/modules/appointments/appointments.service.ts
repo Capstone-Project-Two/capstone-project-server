@@ -10,7 +10,6 @@ import { Therapist } from 'src/database/schemas/therapist.schema';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { isValidObjectId, Model } from 'mongoose';
 import { Appointment } from 'src/database/schemas/appointment.schema';
-import { STATUS } from 'src/constants/status-constant';
 import { FilterAppointmentDto } from './dto/filter-appointment.dto';
 
 @Injectable()
