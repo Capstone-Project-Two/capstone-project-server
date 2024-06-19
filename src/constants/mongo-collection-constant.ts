@@ -6,4 +6,5 @@ export enum MongoCollection {
   Credentials = 'credentials',
   PostPhotos = 'postphotos',
   PatientComments = 'patientcomments',
+  SavePosts = 'saveposts',
 }
