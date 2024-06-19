@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PipelineStage } from 'mongoose';
 import { MongoCollection } from 'src/constants/mongo-collection-constant';
+import { ToObjectId } from 'src/utils/mongo-helper';
 
 type TCommentParam = {
   commentId?: any;
@@ -153,14 +154,14 @@ export class CommentPipeline {
       commentId
         ? {
             $match: {
-              _id: commentId,
+              _id: ToObjectId(commentId),
             },
           }
         : { $match: {} },
       postId
         ? {
             $match: {
-              post: postId,
+              post: ToObjectId(postId),
             },
           }
         : { $match: {} },

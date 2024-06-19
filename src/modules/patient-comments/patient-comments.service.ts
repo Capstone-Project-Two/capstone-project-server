@@ -10,7 +10,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { Post } from 'src/database/schemas/post.schema';
-import { ToObjectId } from 'src/utils/mongo-helper';
 import { PatientCommentResponseDto } from './dto/response/patient-comment-response.dto';
 import { CommentPipeline } from './comment.pipeline';
 
@@ -99,7 +98,7 @@ export class PatientCommentsService {
   async findCommentByPost(postId: string) {
     const res = await this.patientCommentModel.aggregate(
       this.commentPipeline.commentResponsePipeline({
-        postId: ToObjectId(postId),
+        postId: postId,
       }),
     );
 
@@ -109,7 +108,7 @@ export class PatientCommentsService {
   async findOne(id: string) {
     const res = await this.patientCommentModel.aggregate(
       this.commentPipeline.commentResponsePipeline({
-        commentId: ToObjectId(id),
+        commentId: id,
       }),
     );
     if (res.length === 0) throw new NotFoundException();
@@ -198,7 +197,7 @@ export class PatientCommentsService {
   async findAllReplies(commentId: string) {
     const res = await this.patientCommentModel.aggregate([
       ...this.commentPipeline.repliesResponsePipeline({
-        commentId: ToObjectId(commentId), 
+        commentId: commentId,
       }),
       {
         $project: {
