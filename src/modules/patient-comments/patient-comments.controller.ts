@@ -37,6 +37,12 @@ export class PatientCommentsController {
     return this.patientCommentsService.findOne(id);
   }
 
+  @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
+  @Get('post/:id')
+  findCommentByPost(@Param('id') id: string) {
+    return this.patientCommentsService.findCommentByPost(id);
+  }
+
   @Get('all-replies/:id')
   findAllReplies(@Param('id') id: string) {
     return this.patientCommentsService.findAllReplies(id);

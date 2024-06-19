@@ -52,16 +52,39 @@ export class LikePostsService {
     return res;
   }
 
+  private async findPostLikeCount(postId: string) {
+    const likeCount = await this.likePostModel
+      .find({
+        post: postId,
+        is_like: true,
+      })
+      .countDocuments();
+
+    return likeCount;
+  }
+
+  private async updatePostLikeCount(postId: string) {
+    const likeCount = await this.findPostLikeCount(postId);
+
+    await this.postModel.findOneAndUpdate(
+      {
+        _id: postId,
+      },
+      {
+        $set: {
+          like_count: likeCount,
+        },
+      },
+    );
+
+    return likeCount;
+  }
+
   async update(id: string, updateLikePostDto: UpdateLikePostDto) {
     // find like post record
     const findPost = await this.likePostModel.findOne({
       patient: updateLikePostDto.patient,
       post: id,
-    });
-
-    // get original post
-    const post = await this.postModel.findOne({
-      _id: id,
     });
 
     // if not exist
@@ -72,10 +95,7 @@ export class LikePostsService {
       });
 
       // update like count of post
-      await this.postModel.findOneAndUpdate(
-        { _id: id },
-        { like_count: Number(post.like_count) + 1 },
-      );
+      await this.updatePostLikeCount(id);
 
       return {
         message: 'Like',
@@ -88,11 +108,9 @@ export class LikePostsService {
       const res = await findPost.updateOne({
         is_like: false,
       });
+
       // update like count of original post
-      await this.postModel.findOneAndUpdate(
-        { _id: id },
-        { like_count: Number(post.like_count) - 1 },
-      );
+      await this.updatePostLikeCount(id);
 
       return {
         message: 'Unlike',
@@ -104,10 +122,7 @@ export class LikePostsService {
       is_like: true,
     });
     // update like count of original post
-    await this.postModel.findOneAndUpdate(
-      { _id: id },
-      { like_count: Number(post.like_count) + 1 },
-    );
+    await this.updatePostLikeCount(id);
 
     return {
       message: 'Like',
