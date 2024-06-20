@@ -1,9 +1,10 @@
 import { DocumentBuilder } from '@nestjs/swagger';
+import * as project from 'package.json';
 
-export const documentBuilder = new DocumentBuilder()
+export const documentBuilderOptions = new DocumentBuilder()
   .addServer(process.env.API_BASE_URL)
   .addBearerAuth()
-  .setTitle('Capstone Project')
+  .setTitle(project.name)
   .setDescription(`API documents (${process.env.ENV_MODE})`)
-  .setVersion('0.0.1')
+  .setVersion(project.version)
   .build();
