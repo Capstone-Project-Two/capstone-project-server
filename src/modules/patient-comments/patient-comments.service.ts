@@ -12,6 +12,7 @@ import { Patient } from 'src/database/schemas/patient.schema';
 import { Post } from 'src/database/schemas/post.schema';
 import { PatientCommentResponseDto } from './dto/response/patient-comment-response.dto';
 import { CommentPipeline } from './comment.pipeline';
+import { CommentQueryParam } from './dto/comment-query-param';
 
 @Injectable()
 export class PatientCommentsService {
@@ -89,16 +90,17 @@ export class PatientCommentsService {
 
   async findAll() {
     const res = this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline({}),
+      this.commentPipeline.allCommentPipeline(),
     );
 
     return res;
   }
 
-  async findCommentByPost(postId: string) {
+  async findCommentByPost(commentQueryParam: CommentQueryParam) {
     const res = await this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline({
-        postId: postId,
+      this.commentPipeline.commentByPostPipeline({
+        postId: commentQueryParam?.post,
+        parentId: commentQueryParam?.parent,
       }),
     );
 
@@ -107,7 +109,7 @@ export class PatientCommentsService {
 
   async findOne(id: string) {
     const res = await this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline({
+      this.commentPipeline.oneCommentByIdPipeline({
         commentId: id,
       }),
     );
@@ -194,10 +196,11 @@ export class PatientCommentsService {
     return res;
   }
 
-  async findAllReplies(commentId: string) {
+  async findAllReplies(commentId: string, includeDeleted?: boolean) {
     const res = await this.patientCommentModel.aggregate([
-      ...this.commentPipeline.repliesResponsePipeline({
+      ...this.commentPipeline.repliesPipeline({
         commentId: commentId,
+        includeDeleted: includeDeleted,
       }),
       {
         $project: {
@@ -229,7 +232,7 @@ export class PatientCommentsService {
     const findComment = await this.patientCommentModel.findOne({ _id: id });
     if (!findComment) throw new NotFoundException();
 
-    const allReplies = await this.findAllReplies(id);
+    const allReplies = await this.findAllReplies(id, true);
 
     const replies = [allReplies[0]._id];
     allReplies[0].replies.forEach((reply: PatientCommentResponseDto) => {

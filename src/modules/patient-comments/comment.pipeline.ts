@@ -6,6 +6,7 @@ import { ToObjectId } from 'src/utils/mongo-helper';
 type TCommentParam = {
   commentId?: any;
   postId?: any;
+  parentId?: any;
 };
 
 @Injectable()
@@ -48,12 +49,28 @@ export class CommentPipeline {
 
   lookupRepliesPipeline = (
     startWith: any,
+    includeDeleted?: boolean,
   ): Array<PipelineStage.GraphLookup> => {
+    if (includeDeleted) {
+      return [
+        {
+          $graphLookup: {
+            from: MongoCollection.PatientComments,
+            startWith:
+              startWith === '$$ROOT._id' ? '$$ROOT._id' : ToObjectId(startWith),
+            connectFromField: '_id',
+            connectToField: 'parent',
+            as: 'replies',
+          },
+        },
+      ];
+    }
     return [
       {
         $graphLookup: {
           from: MongoCollection.PatientComments,
-          startWith: startWith,
+          startWith:
+            startWith === '$$ROOT._id' ? '$$ROOT._id' : ToObjectId(startWith),
           connectFromField: '_id',
           connectToField: 'parent',
           as: 'replies',
@@ -141,16 +158,21 @@ export class CommentPipeline {
     },
   ];
 
-  repliesResponsePipeline({
+  repliesPipeline({
     commentId,
     postId,
-  }: TCommentParam): PipelineStage[] {
+    includeDeleted,
+  }: TCommentParam & { includeDeleted?: boolean }): PipelineStage[] {
     return [
-      {
-        $match: {
-          is_deleted: false,
-        },
-      },
+      !includeDeleted
+        ? {
+            $match: {
+              is_deleted: false,
+            },
+          }
+        : {
+            $match: {},
+          },
       commentId
         ? {
             $match: {
@@ -165,7 +187,7 @@ export class CommentPipeline {
             },
           }
         : { $match: {} },
-      ...this.lookupRepliesPipeline(commentId ?? '$$ROOT._id'),
+      ...this.lookupRepliesPipeline(commentId ?? '$$ROOT._id', includeDeleted),
       ...this.lookupPatientPipeline,
       ...this.lookupParentPipeline,
       ...this.lookupChildrenPipeline,
@@ -177,15 +199,64 @@ export class CommentPipeline {
     ];
   }
 
-  commentResponsePipeline({
-    commentId,
-    postId,
-  }: TCommentParam): PipelineStage[] {
+  allCommentPipeline(): PipelineStage[] {
     return [
-      ...this.repliesResponsePipeline({ commentId, postId }),
+      ...this.repliesPipeline({}),
       {
         $sort: {
           createdAt: 1,
+        },
+      },
+      {
+        $project: {
+          replies: 0,
+        },
+      },
+    ];
+  }
+
+  oneCommentByIdPipeline({ commentId }: TCommentParam): PipelineStage[] {
+    return [
+      ...this.repliesPipeline({ commentId }),
+      {
+        $sort: {
+          createdAt: 1,
+        },
+      },
+      {
+        $project: {
+          replies: 0,
+        },
+      },
+    ];
+  }
+
+  commentByPostPipeline({ postId, parentId }: TCommentParam): PipelineStage[] {
+    return [
+      {
+        $match: {
+          is_deleted: false,
+          parent: ToObjectId(parentId) ?? null,
+        },
+      },
+      postId
+        ? {
+            $match: {
+              post: ToObjectId(postId),
+            },
+          }
+        : { $match: {} },
+      {
+        $sort: {
+          createdAt: 1,
+        },
+      },
+      ...this.lookupRepliesPipeline('$$ROOT._id'),
+      ...this.lookupPatientPipeline,
+      ...this.lookupChildrenPipeline,
+      {
+        $addFields: {
+          reply_count: { $size: '$replies' },
         },
       },
       {
