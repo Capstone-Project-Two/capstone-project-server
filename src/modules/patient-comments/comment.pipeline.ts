@@ -141,7 +141,7 @@ export class CommentPipeline {
             },
           },
           ...this.lookupRepliesPipeline('$$ROOT._id'),
-          ...this.lookupParentPipeline,
+          // ...this.lookupParentPipeline,
           ...this.lookupPatientPipeline,
           {
             $addFields: {
