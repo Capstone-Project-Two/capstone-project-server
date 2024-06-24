@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CreditsService } from './credits.service';
 import { CreditsController } from './credits.controller';
-import { InjectModel, MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule } from '@nestjs/mongoose';
 import { Credit, CreditSchema } from 'src/database/schemas/credit.schema';
 
 @Module({

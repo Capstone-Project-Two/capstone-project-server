@@ -3,6 +3,8 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   MaxLength,
@@ -29,4 +31,9 @@ export class CreatePatientDto {
   @ApiProperty()
   @IsEnum(GENDER)
   gender: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  credits: number;
 }

@@ -17,12 +17,22 @@ export class CreditsService {
     };
   }
 
+  //Show only the credit that are visible
   async findAll() {
     const res = await this.creditModel
       .find({
         is_visible: true,
       })
       .exec();
+
+    return {
+      data: res,
+    };
+  }
+
+  //Show all
+  async getAllCredit() {
+    const res = await this.creditModel.find().exec();
 
     return {
       data: res,

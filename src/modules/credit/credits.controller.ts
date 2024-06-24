@@ -29,6 +29,12 @@ export class CreditsController {
     return this.creditService.findAll();
   }
 
+  @ApiOkResponse({ type: CreditReponseDto, isArray: true })
+  @Get('all')
+  getAllCredit() {
+    return this.creditService.getAllCredit();
+  }
+
   @ApiOkResponse({ type: CreditReponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
