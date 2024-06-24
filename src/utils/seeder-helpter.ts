@@ -1,6 +1,4 @@
 import { Model } from 'mongoose';
-import { wait } from './helpter';
-import { MODEL } from 'src/constants/model-constant';
 
 export type TSeederNames =
   | 'chhay'
@@ -23,16 +21,8 @@ export async function seed({
   seedData: any;
 }) {
   const res = await drop(model).then(async () => {
-    if (model.modelName === MODEL.PatientComment) {
-      for (const seed of seedData) {
-        // simulate a delay
-        await wait(500);
-        await model.create(seed);
-      }
-    } else {
-      const res = await model.insertMany(seedData);
-      return res;
-    }
+    const res = await model.insertMany(seedData);
+    return res;
   });
   return res;
 }
