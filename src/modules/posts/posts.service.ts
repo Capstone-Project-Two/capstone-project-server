@@ -12,15 +12,16 @@ import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
-import { PostPhoto } from 'src/database/schemas/post-photo-schema';
 import { PostPhotosService } from '../post-photos/post-photos.service';
+import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
-    @InjectModel(PostPhoto.name) private postPhoto: Model<PostPhoto>,
+    @InjectModel(PatientComment.name)
+    private patientCommentModel: Model<PatientComment>,
     private postPhotosService: PostPhotosService,
   ) {}
 
@@ -136,6 +137,18 @@ export class PostsService {
     const res = await this.postModel.updateOne(
       { _id: id },
       { is_deleted: true },
+    );
+
+    // find comments and remove
+    await this.patientCommentModel.updateMany(
+      {
+        post: id,
+      },
+      {
+        $set: {
+          is_deleted: true,
+        },
+      },
     );
 
     return res;
