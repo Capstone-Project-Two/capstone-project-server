@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Model, Types } from 'mongoose';
@@ -11,18 +11,22 @@ import { ActivityImages } from 'src/database/schemas/activity-image.schema';
 export class ActivitiesService {
   constructor(
     @InjectModel(Activity.name) private activitiesModel: Model<Activity>,
-    @InjectModel(ActivityImages.name) private activityImagesModel: Model<ActivityImages>,
+    @InjectModel(ActivityImages.name)
+    private activityImagesModel: Model<ActivityImages>,
     private activityImagesService: ActivityImagesService,
   ) {}
   async create(
     createDto: CreateActivityDto,
     files: Array<Express.Multer.File>,
   ) {
-    console.log(createDto)
+    console.log(createDto);
     const isEmpty =
       createDto.description?.trim().length === 0 &&
       (!files || files.length === 0);
-    if (isEmpty) throw new BadRequestException('Description and files cannot both be empty');
+    if (isEmpty)
+      throw new BadRequestException(
+        'Description and files cannot both be empty',
+      );
 
     if (!files || files.length === 0) {
       delete createDto.activityImages;
@@ -53,19 +57,45 @@ export class ActivitiesService {
     return createActivityRes;
   }
 
-  findAll() {
-    return `This action returns all activities`;
+  async findAll() {
+    const res = await this.activitiesModel
+      .find()
+      .sort({
+        createdAt: 'desc',
+      })
+      .populate(['postImages'])
+      .exec();
+
+    return {
+      data: res,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} activity`;
+  async findOne(id: string) {
+    const res = await this.activitiesModel
+      .findOne({
+        _id: id,
+      })
+      .populate(['postImages']);
+
+    if (!res) throw new NotFoundException();
+
+    return res;
   }
 
-  update(id: number, updateDto: UpdateActivityDto) {
-    return `This action updates a #${id} activity`;
+  async update(id: string, updateDto: UpdateActivityDto) {
+    const res = await this.activitiesModel.updateOne(
+      { _id: id },
+      { ...updateDto },
+    );
+    return {
+      data: {
+        res,
+        field: updateDto,
+      },
+    };
   }
-
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} activity`;
   }
 }

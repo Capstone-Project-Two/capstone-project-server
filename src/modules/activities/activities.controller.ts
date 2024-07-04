@@ -5,6 +5,8 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AcitvitiesImagesPath, MAX_FILE_COUNT } from 'src/constants/multer-file-constant';
 import { multerOptions } from 'src/config/files/multer-file-options';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { ActivityResponseDto } from './dto/response/activity-response.dto';
 
 @Controller('activities')
 export class ActivitiesController {
@@ -27,23 +29,25 @@ export class ActivitiesController {
     return this.activitiesService.create(createPostDto, files);
   }
 
+  @ApiOkResponse({ type: ActivityResponseDto, isArray: true})
   @Get()
   findAll() {
     return this.activitiesService.findAll();
   }
 
+  @ApiOkResponse({ type: ActivityResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.activitiesService.findOne(+id);
+    return this.activitiesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateActivityDto: UpdateActivityDto) {
-    return this.activitiesService.update(+id, updateActivityDto);
+    return this.activitiesService.update(id, updateActivityDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.activitiesService.remove(+id);
+    return this.activitiesService.remove(id);
   }
 }
