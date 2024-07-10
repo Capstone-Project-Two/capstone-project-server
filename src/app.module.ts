@@ -19,6 +19,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { STATIC_FILE_DESTINATION } from './constants/multer-file-constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { LikePostsModule } from './modules/like-posts/like-posts.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
+import { ActivityImagesModule } from './modules/activities-images/activity-images.module';
 import { PatientCommentsModule } from './modules/patient-comments/patient-comments.module';
 import { SavePostsModule } from './modules/save-posts/save-posts.module';
 import { CreditModule } from './modules/credit/credits.module';
@@ -49,6 +51,8 @@ import { CreditModule } from './modules/credit/credits.module';
     CredentialModule,
     LikePostsModule,
     PostPhotosModule,
+    ActivitiesModule,
+    ActivityImagesModule,
     PatientCommentsModule,
     SavePostsModule,
     CreditModule,
