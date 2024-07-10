@@ -23,6 +23,7 @@ import { ActivitiesModule } from './modules/activities/activities.module';
 import { ActivityImagesModule } from './modules/activities-images/activity-images.module';
 import { PatientCommentsModule } from './modules/patient-comments/patient-comments.module';
 import { SavePostsModule } from './modules/save-posts/save-posts.module';
+import { CreditModule } from './modules/credit/credits.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { SavePostsModule } from './modules/save-posts/save-posts.module';
     ActivityImagesModule,
     PatientCommentsModule,
     SavePostsModule,
+    CreditModule,
   ],
   controllers: [AppController],
   providers: [

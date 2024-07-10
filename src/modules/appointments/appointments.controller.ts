@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AppointmentResponseDto } from './dto/response/appointment-response.dto';
+import { FilterAppointmentDto } from './dto/filter-appointment.dto';
 
 @ApiTags('Appointments')
 @Controller('appointments')
@@ -25,8 +27,8 @@ export class AppointmentsController {
 
   @ApiOkResponse({ type: AppointmentResponseDto, isArray: true })
   @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
+  findAll(@Query() filterParams: FilterAppointmentDto) {
+    return this.appointmentsService.findAll(filterParams);
   }
 
   @ApiOkResponse({ type: AppointmentResponseDto })
