@@ -25,18 +25,14 @@ export class CreditsService {
       })
       .exec();
 
-    return {
-      data: res,
-    };
+    return res;
   }
 
   //Show all
   async getAllCredit() {
     const res = await this.creditModel.find().exec();
 
-    return {
-      data: res,
-    };
+    return res;
   }
 
   async findOne(id: string) {
@@ -64,10 +60,8 @@ export class CreditsService {
   }
 
   async remove(id: string) {
-    const res = await this.creditModel.updateOne(
-      { _id: id },
-      { is_visible: false },
-    );
+    const res = await this.creditModel.deleteOne({ _id: id });
+
     return res;
   }
 }
