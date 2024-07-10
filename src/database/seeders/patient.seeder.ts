@@ -17,6 +17,7 @@ export const PatientSeeder = () => {
     const patient: CreatePatientDto & { _id: string; posts: Array<string> } = {
       _id: stringToHex(name),
       email: `${name}@gmail.com`,
+      credits: 0,
       gender:
         name !== 'lizac' && name !== 'lizaj' ? GENDER.MALE : GENDER.FEMALE,
       phone_number: '+855' + faker.string.numeric(8),

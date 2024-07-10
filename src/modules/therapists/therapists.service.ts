@@ -51,7 +51,7 @@ export class TherapistsService {
     const { limit, page } = pagination;
     const skip = page * limit - limit;
     const res = await this.therapistModel
-      .find()
+      .find({ is_deleted: false })
       .limit(limit)
       .skip(Number(page) === 0 || Number(page) === 1 ? 0 : skip)
       .exec();
@@ -101,10 +101,10 @@ export class TherapistsService {
   }
 
   async remove(id: string) {
-    const res = await this.therapistModel.deleteOne({
-      _id: id,
-    });
-
+    const res = await this.therapistModel.updateOne(
+      { _id: id },
+      { is_deleted: true },
+    );
     return res;
   }
 }

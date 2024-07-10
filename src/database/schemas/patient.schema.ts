@@ -31,6 +31,9 @@ export class Patient {
   @Prop({ type: Boolean, default: false })
   is_banned: boolean;
 
+  @Prop({type: Number, default: 0})
+  credits: number;
+
   @Prop({ type: [{ type: TObjectId, ref: MODEL.Post }], isRequired: false })
   posts: Post[];
 }

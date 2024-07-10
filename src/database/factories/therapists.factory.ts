@@ -12,7 +12,7 @@ export const TherapistFactory = ({ length }: { length?: number }) => {
       gender: GENDER.MALE,
       first_name: faker.person.firstName(),
       last_name: faker.person.lastName(),
-      bio: faker.lorem.sentence(100),
+      bio: faker.lorem.sentence(20),
       specializations: ['Divorce', 'Education', 'Physician'],
     });
   });

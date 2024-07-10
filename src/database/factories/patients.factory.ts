@@ -11,6 +11,7 @@ export const PatientFactory = ({ length }: { length?: number }) => {
     email: `admin@email.com`,
     gender: GENDER.MALE,
     phone_number: '+85512345678',
+    credits: 0,
   };
   Array.from({ length: length ?? 10 }).forEach(() => {
     fakePatient.push({
@@ -18,6 +19,7 @@ export const PatientFactory = ({ length }: { length?: number }) => {
       username: faker.internet.userName(),
       phone_number: '+855' + faker.string.numeric(8),
       gender: GENDER.MALE,
+      credits: 0,
     });
   });
 
