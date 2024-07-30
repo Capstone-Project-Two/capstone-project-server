@@ -23,8 +23,8 @@ export const AppointmentFactory = async (
       scheduleDate: faker.date.recent(),
       status: APNT_STATUS.REQUESTED,
       symptoms: faker.lorem.sentence(1),
-      end_time: faker.date.anytime(),
-      start_time: faker.date.anytime(),
+      start_time: "09:47",
+      end_time: "12:00",
     });
   });
 
