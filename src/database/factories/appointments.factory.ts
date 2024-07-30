@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 import { Therapist } from '../schemas/therapist.schema';
 import { CreateAppointmentDto } from 'src/modules/appointments/dto/create-appointment.dto';
 import { faker } from '@faker-js/faker';
-import { STATUS } from 'src/constants/status-constant';
+import { APNT_STATUS } from 'src/constants/apnt-status-constant';
 import { Patient } from '../schemas/patient.schema';
 
 export const AppointmentFactory = async (
@@ -21,8 +21,10 @@ export const AppointmentFactory = async (
       patient: patients[0].id,
       therapist: therapists[0].id,
       scheduleDate: faker.date.recent(),
-      status: STATUS.REQUESTED,
+      status: APNT_STATUS.REQUESTED,
       symptoms: faker.lorem.sentence(1),
+      end_time: faker.date.anytime(),
+      start_time: faker.date.anytime(),
     });
   });
 

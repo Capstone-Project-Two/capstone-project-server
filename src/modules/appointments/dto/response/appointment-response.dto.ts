@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseResponse } from 'src/common/base-response.dto';
-import { ROLES } from 'src/constants/roles-constant';
-import { STATUS } from 'src/constants/status-constant';
+import { APNT_STATUS } from 'src/constants/apnt-status-constant';
 import { PatientResponseDto } from 'src/modules/patients/dto/response/patient-response.dto';
 import { TherapistResponseDto } from 'src/modules/therapists/dto/response/therapist-response.dto';
 
@@ -16,7 +15,7 @@ export class AppointmentResponseDto extends BaseResponse {
   @ApiProperty({ type: Date })
   scheduleDate: Date;
 
-  @ApiProperty({ type: STATUS, enum: STATUS })
+  @ApiProperty({ type: APNT_STATUS, enum: APNT_STATUS })
   status: string;
 
   @ApiProperty({ type: PatientResponseDto })

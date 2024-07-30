@@ -6,3 +6,7 @@ export function phoneFormat(ph: string) {
 export const wait = async (duration: number) => {
   await new Promise((res) => setTimeout(res, duration));
 };
+
+export const isValidTimeFormat = () => {
+  
+}

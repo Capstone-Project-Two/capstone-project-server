@@ -21,6 +21,9 @@ export class AppointmentsService {
   ) {}
 
   async create(createAppointmentDto: CreateAppointmentDto) {
+    console.log(createAppointmentDto.start_time)
+    console.log(createAppointmentDto.end_time)
+
     //Check if patient ID is valid
     if (!isValidObjectId(createAppointmentDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
