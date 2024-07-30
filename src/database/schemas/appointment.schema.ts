@@ -4,7 +4,7 @@ import { MODEL } from 'src/constants/model-constant';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Patient } from './patient.schema';
 import { Therapist } from './therapist.schema';
-import { STATUS } from 'src/constants/status-constant';
+import { APNT_STATUS } from 'src/constants/apnt-status-constant';
 
 export type AppointmentDocument = HydratedDocument<Appointment>;
 
@@ -19,14 +19,20 @@ export class Appointment {
   @Prop({ type: Date, isRequired: true })
   scheduleDate: Date;
 
-  @Prop({ type: String, enum: STATUS, default: STATUS.REQUESTED })
-  status: STATUS;
+  @Prop({ type: String, enum: APNT_STATUS, default: APNT_STATUS.REQUESTED })
+  status: APNT_STATUS;
 
   @Prop({ type: TObjectId, ref: MODEL.Patient })
   patient: Patient;
 
   @Prop({ type: TObjectId, ref: MODEL.Therapist })
   therapist: Therapist;
+
+  @Prop({ type: String, isRequired: true })
+  start_time: string;
+
+  @Prop({ type: String, isRequired: true })
+  end_time: string;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

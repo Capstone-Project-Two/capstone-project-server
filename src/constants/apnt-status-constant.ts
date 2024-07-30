@@ -1,4 +1,4 @@
-export enum STATUS {
+export enum APNT_STATUS {
   REQUESTED = 'requested',
   SCHEDULED = 'scheduled',
   COMPLETED = 'completed',
