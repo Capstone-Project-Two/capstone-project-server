@@ -28,11 +28,11 @@ export class Appointment {
   @Prop({ type: TObjectId, ref: MODEL.Therapist })
   therapist: Therapist;
 
-  @Prop({ type: Date, isRequired: true })
-  start_time: Date;
+  @Prop({ type: String, isRequired: true })
+  start_time: string;
 
-  @Prop({ type: Date, isRequired: true })
-  end_time: Date;
+  @Prop({ type: String, isRequired: true })
+  end_time: string;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

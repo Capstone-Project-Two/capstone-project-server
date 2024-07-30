@@ -11,6 +11,7 @@ import { Patient } from 'src/database/schemas/patient.schema';
 import { isValidObjectId, Model } from 'mongoose';
 import { Appointment } from 'src/database/schemas/appointment.schema';
 import { FilterAppointmentDto } from './dto/filter-appointment.dto';
+import { compareDates, timeStringToDate } from 'src/utils/helpter';
 
 @Injectable()
 export class AppointmentsService {
@@ -21,9 +22,15 @@ export class AppointmentsService {
   ) {}
 
   async create(createAppointmentDto: CreateAppointmentDto) {
-    console.log(createAppointmentDto.start_time)
-    console.log(createAppointmentDto.end_time)
+    const { start_time, end_time, scheduleDate } = createAppointmentDto;
 
+    const startDate = timeStringToDate({ time: start_time, date: scheduleDate })
+    const endDate = timeStringToDate({ time: end_time, date: scheduleDate })
+
+    if(!compareDates(startDate, endDate )) {
+      throw new BadRequestException(`Start time: ${startDate} must start before end time: ${endDate}`)
+    }
+    
     //Check if patient ID is valid
     if (!isValidObjectId(createAppointmentDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');

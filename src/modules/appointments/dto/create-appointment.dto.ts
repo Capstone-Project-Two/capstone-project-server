@@ -33,13 +33,10 @@ export class CreateAppointmentDto {
   status: string;
 
   @ApiProperty()
-  @IsDate()
-  @Type(() => Date)
-  start_time: Date
-  @ApiProperty()
+  @IsString()
+  start_time: string
 
   @ApiProperty()
-  @IsDate()
-  @Type(() => Date)
-  end_time: Date
+  @IsString()
+  end_time: string
 }

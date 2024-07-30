@@ -5,7 +5,6 @@ import { PatientResponseDto } from 'src/modules/patients/dto/response/patient-re
 import { TherapistResponseDto } from 'src/modules/therapists/dto/response/therapist-response.dto';
 
 export class AppointmentResponseDto extends BaseResponse {
-
   @ApiProperty({ type: String })
   note: string;
 
@@ -23,4 +22,18 @@ export class AppointmentResponseDto extends BaseResponse {
 
   @ApiProperty({ type: TherapistResponseDto })
   therapist: string;
+
+  /**
+   * @description Will return in `HH:mm` format
+   * @returns String
+   */
+  @ApiProperty({ type: String })
+  start_time: string;
+
+  /**
+   * @description Will return in `HH:mm` format
+   * @returns String
+   */
+  @ApiProperty({ type: String })
+  end_time: string;
 }
