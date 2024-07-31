@@ -29,7 +29,6 @@ export class AuthService {
       const buffer = await randomBytesAsync(48);
       return buffer.toString('hex');
     } catch (error) {
-      // Handle error appropriately
       throw new Error('Token generation failed');
     }
   }
@@ -124,28 +123,6 @@ export class AuthService {
 
     return true;
   }
-
-  // async getProfile(id: string) {
-  //   try {
-  //     const admin = await this.adminModel
-  //       .findById(id)
-  //       .populate('unit')
-  //       .populate('role')
-  //       .populate('credential');
-
-  //     if (admin?.credential?.password) {
-  //       delete admin.credential.password;
-  //     }
-
-  //     if (admin?.refresh_token) {
-  //       delete admin?.refresh_token;
-  //     }
-
-  //     return admin;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   async refreshToken(request: Request, response: Response) {
     const cookies = request.cookies;
