@@ -41,6 +41,9 @@ export class Therapist {
 
   @Prop({ default: false })
   is_deleted: boolean;
+
+  @Prop({ type: Number, default: 0 })
+  session_price: number
 }
 
 export const TherapistSchema = SchemaFactory.createForClass(Therapist);

@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsEmail,
   IsEnum,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -54,4 +55,8 @@ export class CreateTherapistDto {
   @IsOptional()
   @IsBoolean()
   is_deleted?: boolean;
+
+  @ApiProperty({ type: Number, default: 0 })
+  @IsNumber()
+  session_price: number
 }

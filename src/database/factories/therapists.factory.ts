@@ -14,6 +14,7 @@ export const TherapistFactory = ({ length }: { length?: number }) => {
       last_name: faker.person.lastName(),
       bio: faker.lorem.sentence(20),
       specializations: ['Divorce', 'Education', 'Physician'],
+      session_price: 10
     });
   });
 
