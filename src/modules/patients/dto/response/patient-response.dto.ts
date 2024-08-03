@@ -27,4 +27,7 @@ export class PatientResponseDto extends BaseResponse {
 
   @ApiProperty({ type: Boolean, default: false })
   is_banned: boolean;
+
+  @ApiProperty({ type: String })
+  profile_img: string;
 }

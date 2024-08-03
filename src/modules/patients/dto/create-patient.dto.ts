@@ -36,4 +36,8 @@ export class CreatePatientDto {
   @IsNumber()
   @IsOptional()
   credits: number;
+
+  @ApiProperty()
+  @IsString()
+  profile_img: string;
 }
