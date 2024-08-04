@@ -30,8 +30,9 @@ export class PostsService {
     files: Array<Express.Multer.File>,
   ) {
     const isNoFiles = !files || files?.length === 0;
-    const isEmpty = createPostDto.body?.trim().length === 0 && isNoFiles;
-    if (isEmpty) throw new BadRequestException();
+    const isEmpty = (!createPostDto.body || createPostDto.body?.trim().length === 0) && isNoFiles;
+
+    if (isEmpty) throw new BadRequestException('Post photos or body is required');
     if (!isValidObjectId(createPostDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }
