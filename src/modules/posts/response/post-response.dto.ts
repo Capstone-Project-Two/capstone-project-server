@@ -8,4 +8,13 @@ export class PostResponseDto extends BaseResponse {
 
   @ApiProperty({ type: PatientResponseDto })
   patient: string;
+
+  @ApiProperty({ type: Number })
+  like_count: number;
+
+  @ApiProperty({ type: Number })
+  save_count: number;
+
+  @ApiProperty({ type: Number })
+  comment_count: number;
 }

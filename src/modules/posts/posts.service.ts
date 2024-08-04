@@ -12,15 +12,26 @@ import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
+import { PostPhotosService } from '../post-photos/post-photos.service';
+import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
+    @InjectModel(PatientComment.name)
+    private patientCommentModel: Model<PatientComment>,
+    private postPhotosService: PostPhotosService,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(
+    createPostDto: CreatePostDto,
+    files: Array<Express.Multer.File>,
+  ) {
+    const isNoFiles = !files || files?.length === 0;
+    const isEmpty = createPostDto.body?.trim().length === 0 && isNoFiles;
+    if (isEmpty) throw new BadRequestException();
     if (!isValidObjectId(createPostDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }
@@ -29,15 +40,36 @@ export class PostsService {
     if (!findUser) {
       throw new NotFoundException('Patient does not exist');
     }
-    const res = await this.postModel.create(createPostDto);
 
+    if (isNoFiles) delete createPostDto.postPhotos;
+    const postPhotos = [];
+
+    const createPostRes = await this.postModel.create(createPostDto);
+
+    if (!isNoFiles) {
+      const postPhotosRes = await this.postPhotosService.create(
+        createPostRes._id,
+        files,
+      );
+
+      postPhotosRes.forEach((postPhoto) => {
+        const { _id } = postPhoto;
+        postPhotos.push(_id);
+      });
+
+      await createPostRes.updateOne({
+        $push: {
+          postPhotos: [...postPhotos],
+        },
+      });
+    }
     await findUser.updateOne({
       $push: {
-        posts: res._id,
+        posts: createPostRes._id,
       },
     });
 
-    return res;
+    return createPostRes;
   }
 
   async findAll(pagination: PaginationParamDto) {
@@ -47,7 +79,10 @@ export class PostsService {
       .find()
       .limit(limit)
       .skip(skip)
-      .populate(['patient'])
+      .sort({
+        createdAt: 'desc',
+      })
+      .populate(['patient', 'postPhotos'])
       .exec();
 
     return {
@@ -66,7 +101,10 @@ export class PostsService {
       .findOne({
         _id: id,
       })
-      .populate(['patient']);
+      .populate(['patient', 'postPhotos']);
+
+    if (!res) throw new NotFoundException();
+
     return res;
   }
 
@@ -99,6 +137,18 @@ export class PostsService {
     const res = await this.postModel.updateOne(
       { _id: id },
       { is_deleted: true },
+    );
+
+    // find comments and remove
+    await this.patientCommentModel.updateMany(
+      {
+        post: id,
+      },
+      {
+        $set: {
+          is_deleted: true,
+        },
+      },
     );
 
     return res;
