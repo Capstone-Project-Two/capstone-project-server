@@ -7,6 +7,7 @@ import { Post } from './post.schema';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Credential } from './credential.schema';
 import { StressMonitor } from './stress-monitor.schema';
+import { flatten } from '@nestjs/common';
 
 export type PatientDocument = HydratedDocument<Patient>;
 
@@ -24,8 +25,9 @@ export class Patient {
   @Prop({ type: String, unique: true, minlength: 3, maxlength: 64 })
   username: string;
 
-  @Prop({ type: String, unique: true, trim: true })
-  phone_number: string;
+  // @Prop({ type: String, unique: true, trim: true })
+  @Prop({ type: String, trim: true, isRequired: false })
+  phone_number?: string;
 
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender?: GENDER;
