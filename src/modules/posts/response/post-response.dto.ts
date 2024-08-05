@@ -17,4 +17,7 @@ export class PostResponseDto extends BaseResponse {
 
   @ApiProperty({ type: Number })
   comment_count: number;
+
+  @ApiProperty({ type: Boolean, default: false })
+  stress_result: boolean;
 }
