@@ -15,6 +15,7 @@ import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PatientResponseDto } from './dto/response/patient-response.dto';
 import { RelationalPatientResponseDto } from './dto/response/relational-patient-response.dto';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
+import { UpdateBalanceDto } from './dto/update-balance.dto';
 
 @ApiTags('Patients')
 @Controller('patients')
@@ -48,6 +49,14 @@ export class PatientsController {
   @Patch('/ban-patient/:id')
   banPatient(@Param('id') id: string) {
     return this.patientsService.banPatient(id);
+  }
+
+  @Patch('/add-credits/:id')
+  addCredits(
+    @Param('id') id: string,
+    @Body() updateBalanceDto: UpdateBalanceDto,
+  ) {
+    return this.patientsService.addCredits(id, updateBalanceDto);
   }
 
   @Patch('/unban-patient/:id')
