@@ -15,6 +15,10 @@ import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 import { PostPhotosService } from '../post-photos/post-photos.service';
 import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
+import { ML_ROUTE_ENUM } from 'src/constants/ml-route-constant';
+import { ConfigService } from '@nestjs/config';
+import { ML_BASE_URL } from 'src/constants/env-constants';
 
 @Injectable()
 export class PostsService {
@@ -25,15 +29,33 @@ export class PostsService {
     private patientCommentModel: Model<PatientComment>,
     private postPhotosService: PostPhotosService,
     private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
+
+  async sendPostBodyRequest(postBody: string) {
+    const url = this.configService.getOrThrow(ML_BASE_URL);
+    const data = { text: postBody };
+
+    const response = await firstValueFrom(
+      this.httpService.post(url + ML_ROUTE_ENUM.PREDICT_STRESS, data),
+    );
+    return response.data;
+  }
 
   async create(
     createPostDto: CreatePostDto,
     files: Array<Express.Multer.File>,
   ) {
     const isNoFiles = !files || files?.length === 0;
-    const isEmpty = createPostDto.body?.trim().length === 0 && isNoFiles;
-    if (isEmpty) throw new BadRequestException();
+    const isNoBody =
+      !createPostDto.body || createPostDto.body?.trim().length === 0;
+    const isEmpty = isNoBody && isNoFiles;
+
+    if (isEmpty)
+      throw new BadRequestException(
+        'filed: body or field: postPhotos is required',
+      );
+
     if (!isValidObjectId(createPostDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }
@@ -45,9 +67,18 @@ export class PostsService {
 
     if (isNoFiles) delete createPostDto.postPhotos;
     const postPhotos = [];
+    let stressResult = false;
 
-    console.log('🚀 ~ PostsService ~ createPostDto:', createPostDto);
-    const createPostRes = await this.postModel.create(createPostDto);
+    if (!isNoBody) {
+      const mlRes = await this.sendPostBodyRequest(createPostDto.body);
+      const { Result } = mlRes;
+      stressResult = Result
+    }
+
+    const createPostRes = await this.postModel.create({
+      ...createPostDto,
+      stress_result: stressResult,
+    });
 
     if (!isNoFiles) {
       const postPhotosRes = await this.postPhotosService.create(
@@ -66,6 +97,7 @@ export class PostsService {
         },
       });
     }
+
     await findUser.updateOne({
       $push: {
         posts: createPostRes._id,
