@@ -10,7 +10,6 @@ export const AppointmentFactory = async (
   therapistModel: Model<Therapist>,
   patientModel: Model<Patient>,
 ) => {
-  
   const therapists = await therapistModel.find().limit(1);
   const patients = await patientModel.find().limit(1);
 
@@ -18,13 +17,15 @@ export const AppointmentFactory = async (
   Array.from({ length: length ?? 10 }).forEach(() => {
     fakeAppointment.push({
       note: faker.lorem.sentence(1),
+      duration: 2,
+      session_price: 8,
       patient: patients[0].id,
       therapist: therapists[0].id,
       scheduleDate: faker.date.recent(),
       status: APNT_STATUS.REQUESTED,
       symptoms: faker.lorem.sentence(1),
-      start_time: "09:47",
-      end_time: "12:00",
+      start_time: '09:47',
+      end_time: '12:00',
     });
   });
 
