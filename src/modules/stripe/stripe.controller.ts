@@ -15,19 +15,24 @@ import { UpdateStripeDto } from './dto/update-stripe.dto';
 export class StripeController {
   constructor(private readonly stripeService: StripeService) {}
 
-  @Post('create-payment-intent')
+  @Post('payment-intent')
   create(@Body() createStripeDto: CreateStripeDto) {
     return this.stripeService.createPaymentIntent(createStripeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.stripeService.findAll();
+  @Get('charges')
+  getAllCharges() {
+    return this.stripeService.getAllCharges();
   }
 
-  @Get(':id')
+  @Get('balance')
+  getBalance() {
+    return this.stripeService.getBalance();
+  }
+
+  @Get('payment-intent/:id')
   findOne(@Param('id') id: string) {
-    return this.stripeService.findOne(+id);
+    return this.stripeService.findOne(id);
   }
 
   @Patch(':id')

@@ -1,43 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateStripeDto } from './dto/create-stripe.dto';
 import { UpdateStripeDto } from './dto/update-stripe.dto';
-import { HttpService } from '@nestjs/axios';
-import { AxiosRequestConfig } from 'axios';
-import { map } from 'rxjs';
+import Stripe from 'stripe';
 
 @Injectable()
 export class StripeService {
-  constructor(private readonly httpService: HttpService) {}
+  private stripe: Stripe;
+  constructor(@Inject('STRIPE_API_KEY') private readonly apiKey: string) {
+    this.stripe = new Stripe(this.apiKey);
+  }
 
   async createPaymentIntent(createStripeDto: CreateStripeDto) {
-    const requestConfig: AxiosRequestConfig = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization':
-          'Bearer sk_test_51PiHciKgdNzS6wGQ2Ku8xqJob2kC7qwIXwkqanRrav37oIKOlnZUKN3ivjikdyrawQxujkist6slsk8w6IeyTGow00yd6i4KBM',
-      },
-    };
-
-    const res = await this.httpService
-      .post(
-        'https://api.stripe.com/v1/payment_intents',
-        createStripeDto,
-        requestConfig,
-      )
-      .pipe(
-        map((response) => {
-          return response.data
-        }),
-      );
-    return res
+    const res = await this.stripe.paymentIntents.create({
+      currency: createStripeDto.currency,
+      amount: createStripeDto.amount,
+    });
+    return res;
   }
 
-  findAll() {
-    return `This action returns all stripe`;
+  async getAllCharges() {
+    const res = this.stripe.charges.list();
+    return res;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} stripe`;
+  async getBalance() {
+    const res = this.stripe.balance.retrieve();
+    return res;
+  }
+
+  findOne(id: string) {
+    const res = this.stripe.paymentIntents.retrieve(id);
+    return res;
   }
 
   update(id: number, updateStripeDto: UpdateStripeDto) {
