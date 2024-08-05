@@ -15,6 +15,7 @@ import { Credential, CredentialDocument } from 'src/database/schemas/credential.
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Patient, PatientDocument } from 'src/database/schemas/patient.schema';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class AuthService {
@@ -63,6 +64,8 @@ export class AuthService {
   }
 
   async patient_login(loginDto: LoginDto, response: Response) {
+    console.log(loginDto)
+
     response.clearCookie('jwt', {
       httpOnly: true,
       sameSite: 'none',
@@ -77,7 +80,7 @@ export class AuthService {
     const patient = await this.patientModel
       .findOne({ 'credential': credential._id })
       .populate('credential');
-      
+
     if (patient) {
       const matched = await argon2.verify(patient.credential.password, password);
       
@@ -102,6 +105,7 @@ export class AuthService {
       });
 
       return {
+        patient,
         accessToken,
       };
     }
@@ -233,6 +237,10 @@ export class AuthService {
   }
 
   async patient_register (registerDto: RegisterDto, response: Response) {
+
+    // generate random username
+    const patient_username = faker.internet.userName()
+
     // Hash the password using argon2
     registerDto.password = await argon2.hash(registerDto.password);
 
@@ -260,6 +268,7 @@ export class AuthService {
 
     // Create and save the Admin document with a reference to the Credential
     const newPatient = new this.patientModel({
+      username: patient_username,
       credential: patientCredential._id,
     });
 
