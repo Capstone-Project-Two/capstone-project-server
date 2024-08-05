@@ -6,6 +6,7 @@ import { ROLES } from 'src/constants/roles-constant';
 import { Post } from './post.schema';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Credential } from './credential.schema';
+import { StressMonitor } from './stress-monitor.schema';
 
 export type PatientDocument = HydratedDocument<Patient>;
 
@@ -15,7 +16,7 @@ export class Patient {
   // email: string;
 
   @Prop({ isRequired: false })
-  refresh_token: string
+  refresh_token: string;
 
   @Prop({ type: TObjectId, ref: MODEL.Credential })
   credential: Credential;
@@ -46,6 +47,12 @@ export class Patient {
 
   @Prop({ type: String })
   profile_img: string;
+
+  @Prop({ type: Number, default: 0 })
+  stress_monitor_count: number;
+
+  @Prop({ type: [{ type: TObjectId, ref: MODEL.StressMonitor }], isRequired: false })
+  stress_monitor: StressMonitor[];
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);
