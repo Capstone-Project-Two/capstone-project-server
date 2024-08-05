@@ -25,6 +25,7 @@ import { PatientCommentsModule } from './modules/patient-comments/patient-commen
 import { SavePostsModule } from './modules/save-posts/save-posts.module';
 import { CreditModule } from './modules/credit/credits.module';
 import { StripeModule } from './modules/stripe/stripe.module';
+import { StressMonitorModule } from './stress-monitor/stress-monitor.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { StripeModule } from './modules/stripe/stripe.module';
     SavePostsModule,
     CreditModule,
     StripeModule,
+    StressMonitorModule,
   ],
   controllers: [AppController],
   providers: [

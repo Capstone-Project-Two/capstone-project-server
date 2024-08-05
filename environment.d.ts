@@ -8,6 +8,7 @@ declare global {
       CLIENT_BASE_URL: string;
       ACCESS_TOKEN_SECRET: string;
       REFRESH_TOKEN_SECRET: string;
+      ML_BASE_URL: string;
     }
   }
 }

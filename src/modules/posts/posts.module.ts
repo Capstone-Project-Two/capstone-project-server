@@ -13,9 +13,11 @@ import {
   PatientComment,
   PatientCommentSchema,
 } from 'src/database/schemas/patient-comment.schema';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forFeature([
       { name: Post.name, schema: PostSchema },
       { name: Patient.name, schema: PatientSchema },

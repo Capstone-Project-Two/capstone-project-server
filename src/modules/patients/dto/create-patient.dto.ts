@@ -25,8 +25,9 @@ export class CreatePatientDto {
 
   @ApiProperty()
   @IsPhoneNumber('KH')
-  @IsNotEmpty()
-  phone_number: string;
+  // @IsNotEmpty()
+  @IsOptional()
+  phone_number?: string;
 
   @ApiProperty()
   @IsEnum(GENDER)
@@ -36,4 +37,8 @@ export class CreatePatientDto {
   @IsNumber()
   @IsOptional()
   credits: number;
+
+  @ApiProperty()
+  @IsString()
+  profile_img: string;
 }
