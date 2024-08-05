@@ -5,13 +5,20 @@ import { MODEL } from 'src/constants/model-constant';
 import { ROLES } from 'src/constants/roles-constant';
 import { Post } from './post.schema';
 import { TObjectId } from 'src/utils/mongo-helper';
+import { Credential } from './credential.schema';
 
 export type PatientDocument = HydratedDocument<Patient>;
 
 @Schema({ timestamps: true })
 export class Patient {
-  @Prop({ type: String, unique: true })
-  email: string;
+  // @Prop({ type: String, unique: true })
+  // email: string;
+
+  @Prop({ isRequired: false })
+  refresh_token: string
+
+  @Prop({ type: TObjectId, ref: MODEL.Credential })
+  credential: Credential;
 
   @Prop({ type: String, unique: true, minlength: 3, maxlength: 64 })
   username: string;
