@@ -14,6 +14,7 @@ import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 import { PostPhotosService } from '../post-photos/post-photos.service';
 import { PatientComment } from 'src/database/schemas/patient-comment.schema';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class PostsService {
@@ -23,6 +24,7 @@ export class PostsService {
     @InjectModel(PatientComment.name)
     private patientCommentModel: Model<PatientComment>,
     private postPhotosService: PostPhotosService,
+    private readonly httpService: HttpService,
   ) {}
 
   async create(
@@ -44,6 +46,7 @@ export class PostsService {
     if (isNoFiles) delete createPostDto.postPhotos;
     const postPhotos = [];
 
+    console.log('🚀 ~ PostsService ~ createPostDto:', createPostDto);
     const createPostRes = await this.postModel.create(createPostDto);
 
     if (!isNoFiles) {
