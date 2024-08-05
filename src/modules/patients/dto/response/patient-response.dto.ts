@@ -30,4 +30,10 @@ export class PatientResponseDto extends BaseResponse {
 
   @ApiProperty({ type: String })
   profile_img: string;
+
+  @ApiProperty({ type: Number, default: 0 })
+  stress_monitor_count: number;
+
+  @ApiProperty({ type: Number, default: 0 })
+  mind_checkup_count: number;
 }

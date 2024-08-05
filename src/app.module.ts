@@ -25,7 +25,8 @@ import { PatientCommentsModule } from './modules/patient-comments/patient-commen
 import { SavePostsModule } from './modules/save-posts/save-posts.module';
 import { CreditModule } from './modules/credit/credits.module';
 import { StripeModule } from './modules/stripe/stripe.module';
-import { StressMonitorModule } from './stress-monitor/stress-monitor.module';
+import { StressMonitorModule } from './modules/stress-monitor/stress-monitor.module';
+import { MindCheckupModule } from './modules/mind-checkup/mind-checkup.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { StressMonitorModule } from './stress-monitor/stress-monitor.module';
     CreditModule,
     StripeModule,
     StressMonitorModule,
+    MindCheckupModule,
   ],
   controllers: [AppController],
   providers: [

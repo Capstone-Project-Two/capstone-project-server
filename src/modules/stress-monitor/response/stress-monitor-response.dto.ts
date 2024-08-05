@@ -10,3 +10,8 @@ export class StressMonitorResponseDto extends BaseResponse {
   @ApiProperty({ type: Number })
   total_score: number;
 }
+
+export class StressMonitorCountResponseDto {
+  @ApiProperty({ type: Number, default: 0 })
+  stressMonitorCount: number;
+}

@@ -10,4 +10,5 @@ export enum MODEL {
   PatientComment = 'PatientComment',
   SavePost = 'SavePost',
   StressMonitor = 'StressMonitor',
+  MindCheckup = 'MindCheckup',
 }
