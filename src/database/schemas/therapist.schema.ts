@@ -26,11 +26,11 @@ export class Therapist {
   })
   username: string;
 
-  // @Prop({ type: String, unique: true })
-  // email: string;
+  @Prop({ type: String, unique: true })
+  email: string;
 
   @Prop({ isRequired: false })
-  refresh_token: string
+  refresh_token: string;
 
   @Prop({ type: TObjectId, ref: MODEL.Credential })
   credential: Credential;
