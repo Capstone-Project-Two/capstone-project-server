@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { GENDER } from 'src/constants/gender-constant';
 import { CreatePatientDto } from 'src/modules/patients/dto/create-patient.dto';
 import { stringToHex, TSeederNames } from 'src/utils/seeder-helpter';
+import data from "public/data/static-img.json";
 
 type TPatientSeed = {
   name: TSeederNames;
@@ -28,6 +29,7 @@ export const PatientSeeder = () => {
           index,
         }),
       ],
+      profile_img: data.profileImg.one,
     };
     return patient;
   };
