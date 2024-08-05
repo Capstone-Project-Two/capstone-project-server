@@ -39,4 +39,10 @@ export class AuthController {
   logout(@GetCurrentUserId() id: string, @Req() request: Request, @Res({ passthrough: true }) response: Response) {
     return this.authService.admin_logout(id, request, response);
   }
+
+  @Public()
+  @Get('refresh-token')
+  refreshToken(@Req() request: Request,  @Res({ passthrough: true }) response: Response) {
+    return this.authService.refreshToken(request,response);
+  }
 }
