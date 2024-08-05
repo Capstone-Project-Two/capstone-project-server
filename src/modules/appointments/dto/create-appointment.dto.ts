@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { APNT_STATUS } from 'src/constants/apnt-status-constant';
 
@@ -34,9 +40,18 @@ export class CreateAppointmentDto {
 
   @ApiProperty()
   @IsString()
-  start_time: string
+  start_time: string;
 
   @ApiProperty()
   @IsString()
-  end_time: string
+  end_time: string;
+
+  @ApiProperty()
+  @IsNumber()
+  duration: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  session_price?: number;
 }

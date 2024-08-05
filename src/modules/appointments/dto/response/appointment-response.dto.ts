@@ -36,4 +36,10 @@ export class AppointmentResponseDto extends BaseResponse {
    */
   @ApiProperty({ type: String })
   end_time: string;
+
+  @ApiProperty({ type: Number })
+  duration: number;
+
+  @ApiProperty({ type: Number })
+  session_price: number;
 }

@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsEmail,
   IsEnum,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -32,6 +33,10 @@ export class CreateTherapistDto {
   @IsEmail()
   email: string;
 
+  @ApiProperty()
+  @IsNumber()
+  hourly_rate: number;
+
   @ApiProperty({ uniqueItems: true })
   @IsString()
   phone_number: string;
@@ -45,8 +50,8 @@ export class CreateTherapistDto {
   @IsEnum(GENDER)
   gender: string;
 
-  @ApiProperty({ enum: ROLES, default: [ROLES.THERAPIST] })
-  @IsEnum(ROLES)
+  @ApiProperty({ enum: ROLES, default: [ROLES.THERAPIST], isArray: true })
+  @IsArray()
   @IsOptional()
   roles?: Array<ROLES>;
 

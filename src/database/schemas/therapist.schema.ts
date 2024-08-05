@@ -30,6 +30,9 @@ export class Therapist {
   @Prop({ type: String, unique: true, trim: true })
   phone_number: string;
 
+  @Prop({ type: Number })
+  hourly_rate: number;
+
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender: GENDER;
 
