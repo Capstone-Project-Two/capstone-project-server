@@ -5,9 +5,10 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AcitvitiesImagesPath, MAX_FILE_COUNT } from 'src/constants/multer-file-constant';
 import { multerOptions } from 'src/config/files/multer-file-options';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ActivityResponseDto } from './dto/response/activity-response.dto';
 
+@ApiTags('activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
@@ -25,7 +26,6 @@ export class ActivitiesController {
     @UploadedFiles()
     files: Array<Express.Multer.File>,
   ) {
-    console.log("Controller")
     return this.activitiesService.create(createPostDto, files);
   }
 

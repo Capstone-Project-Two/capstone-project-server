@@ -14,5 +14,6 @@ import { Post, PostSchema } from 'src/database/schemas/post.schema';
   ],
   controllers: [PatientsController],
   providers: [PatientsService],
+  exports: [PatientsService],
 })
 export class PatientsModule {}

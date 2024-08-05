@@ -20,8 +20,9 @@ export class Patient {
   @Prop({ type: String, unique: true, minlength: 3, maxlength: 64 })
   username: string;
 
-  @Prop({ type: String, unique: true, trim: true })
-  phone_number: string;
+  // @Prop({ type: String, unique: true, trim: true })
+  @Prop({ type: String, trim: true, isRequired: false })
+  phone_number?: string;
 
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender?: GENDER;
