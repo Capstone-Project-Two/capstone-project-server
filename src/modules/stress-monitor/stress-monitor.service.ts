@@ -17,6 +17,35 @@ export class StressMonitorService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
   ) {}
 
+  async findStressMonitorCount(patientId: string) {
+    const res = await this.stressMonitorModel
+      .find({ patient: patientId })
+      .countDocuments();
+
+    return {
+      stressMonitorCount: res,
+    };
+  }
+
+  async updateStressMonitorCount(patientId: string) {
+    if (!isValidObjectId(patientId))
+      throw new BadRequestException('Invalid patient id');
+
+    const findPatient = await this.patientModel.findOne({ _id: patientId });
+    if (!findPatient)
+      throw new NotFoundException(`Patient: ${patientId} does not exist`);
+
+    const checkupCountRes = await this.findStressMonitorCount(patientId);
+
+    const { stressMonitorCount } = checkupCountRes;
+
+    const res = await findPatient.updateOne({
+      stress_monitor_count: stressMonitorCount,
+    });
+
+    return res;
+  }
+
   async create(createStressMonitorDto: CreateStressMonitorDto) {
     const { patient, total_score } = createStressMonitorDto;
     if (!isValidObjectId(patient))
@@ -33,6 +62,8 @@ export class StressMonitorService {
       );
 
     const res = await this.stressMonitorModel.create(createStressMonitorDto);
+
+    await this.updateStressMonitorCount(createStressMonitorDto.patient);
 
     return res;
   }
@@ -58,7 +89,9 @@ export class StressMonitorService {
     if (!findPatient)
       throw new NotFoundException(`Patient: ${patientId} does not exist`);
 
-    const res = await this.stressMonitorModel.find({ patient: patientId });
+    const res = await this.stressMonitorModel
+      .find({ patient: patientId })
+      .populate(['patient']);
 
     return res;
   }

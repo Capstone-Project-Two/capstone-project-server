@@ -41,11 +41,29 @@ export class MindCheckupService {
     const res = await this.mindCheckupModel
       .find({ patient: patientId })
       .countDocuments();
-    console.log('🚀 ~ MindCheckupService ~ findCheckupCount ~ res:', res);
 
     return {
       checkupCount: res,
     };
+  }
+
+  async updateCheckupCount(patientId: string) {
+    if (!isValidObjectId(patientId))
+      throw new BadRequestException('Invalid patient id');
+
+    const findPatient = await this.patientModel.findOne({ _id: patientId });
+    if (!findPatient)
+      throw new NotFoundException(`Patient: ${patientId} does not exist`);
+
+    const checkupCountRes = await this.findCheckupCount(patientId);
+
+    const { checkupCount } = checkupCountRes;
+
+    const res = await findPatient.updateOne({
+      mind_checkup_count: checkupCount,
+    });
+
+    return res;
   }
 
   async create(createMindCheckupDto: CreateMindCheckupDto) {
@@ -68,6 +86,8 @@ export class MindCheckupService {
     };
 
     const createCheckup = await this.mindCheckupModel.create(createCheckupDto);
+
+    await this.updateCheckupCount(createCheckupDto.patient.toString());
 
     return createCheckup;
   }

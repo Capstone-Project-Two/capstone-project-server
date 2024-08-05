@@ -17,3 +17,8 @@ export class MindCheckupResponseDto extends BaseResponse {
   @ApiProperty({ type: PatientResponseDto })
   patient: PatientResponseDto;
 }
+
+export class CheckupCountResponseDto {
+  @ApiProperty({ type: Number })
+  checkupCount: number;
+}

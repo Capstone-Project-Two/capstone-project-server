@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { MindCheckupService } from './mind-checkup.service';
 import { CreateMindCheckupDto } from './dto/create-mind-checkup.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { MindCheckupResponseDto } from './response/mind-checkup-response.dto';
+import { CheckupCountResponseDto, MindCheckupResponseDto } from './response/mind-checkup-response.dto';
 
 @ApiTags('Mind Checkup')
 @Controller('mind-checkup')
@@ -20,11 +20,13 @@ export class MindCheckupController {
     return this.mindCheckupService.findAll();
   }
 
+  @ApiOkResponse({ type: MindCheckupResponseDto, isArray: true })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.mindCheckupService.findOne(id);
   }
 
+  @ApiOkResponse({ type: CheckupCountResponseDto })
   @Get('checkup-count/:id')
   findCheckupCount(@Param('id') id: string) {
     return this.mindCheckupService.findCheckupCount(id);
