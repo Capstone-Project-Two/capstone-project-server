@@ -33,6 +33,12 @@ export class Appointment {
 
   @Prop({ type: String, isRequired: true })
   end_time: string;
+
+  @Prop({ type: Number, isRequired: true })
+  session_price: number;
+
+  @Prop({ type: Number, isRequired: true })
+  duration: number;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);
