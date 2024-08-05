@@ -1,6 +1,19 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { BaseResponse } from 'src/common/base-response.dto';
+import { PatientResponseDto } from 'src/modules/patients/dto/response/patient-response.dto';
+
 type TResponse = 'Yes' | 'No' | 'Maybe';
 
-// Does not need to extend base response
-export class MindCheckupResponseDto {
-  'is_have_mental_issues': TResponse;
+enum Response {
+  Yes = 'Yes',
+  No = 'No',
+  Maybe = 'Maybe',
+}
+
+export class MindCheckupResponseDto extends BaseResponse {
+  @ApiProperty({ enum: Response })
+  result: TResponse;
+
+  @ApiProperty({ type: PatientResponseDto })
+  patient: PatientResponseDto;
 }

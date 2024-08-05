@@ -7,6 +7,7 @@ import { Post } from './post.schema';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Credential } from './credential.schema';
 import { StressMonitor } from './stress-monitor.schema';
+import { MindCheckup } from './mind-checkup.schema';
 
 export type PatientDocument = HydratedDocument<Patient>;
 
@@ -51,8 +52,17 @@ export class Patient {
   @Prop({ type: Number, default: 0 })
   stress_monitor_count: number;
 
-  @Prop({ type: [{ type: TObjectId, ref: MODEL.StressMonitor }], isRequired: false })
+  @Prop({
+    type: [{ type: TObjectId, ref: MODEL.StressMonitor }],
+    isRequired: false,
+  })
   stress_monitor: StressMonitor[];
+
+  @Prop({
+    type: [{ type: TObjectId, ref: MODEL.MindCheckup }],
+    isRequired: false,
+  })
+  mind_checkup: MindCheckup[];
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export enum Gender {
   Female = 'Female',
@@ -46,6 +46,11 @@ export enum NotSureNoYes {
 }
 
 export class CreateMindCheckupDto {
+  @ApiProperty({})
+  @IsNotEmpty()
+  @IsString()
+  patient: string;
+
   @ApiProperty({ enum: Gender })
   @IsEnum(Gender)
   @IsNotEmpty()
