@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { MindCheckupService } from './mind-checkup.service';
 import { CreateMindCheckupDto } from './dto/create-mind-checkup.dto';
-import { UpdateMindCheckupDto } from './dto/update-mind-checkup.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MindCheckupResponseDto } from './response/mind-checkup-response.dto';
 
@@ -34,16 +25,21 @@ export class MindCheckupController {
     return this.mindCheckupService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateMindCheckupDto: UpdateMindCheckupDto,
-  ) {
-    return this.mindCheckupService.update(+id, updateMindCheckupDto);
+  @Get('checkup-count/:id')
+  findCheckupCount(@Param('id') id: string) {
+    return this.mindCheckupService.findCheckupCount(id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mindCheckupService.remove(+id);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateMindCheckupDto: UpdateMindCheckupDto,
+  // ) {
+  //   return this.mindCheckupService.update(+id, updateMindCheckupDto);
+  // }
+
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.mindCheckupService.remove(+id);
+  // }
 }

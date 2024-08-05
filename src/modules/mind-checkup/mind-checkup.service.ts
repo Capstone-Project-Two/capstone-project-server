@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateMindCheckupDto } from './dto/create-mind-checkup.dto';
-import { UpdateMindCheckupDto } from './dto/update-mind-checkup.dto';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { ML_BASE_URL } from 'src/constants/env-constants';
@@ -36,6 +35,17 @@ export class MindCheckupService {
     );
 
     return res.data;
+  }
+
+  async findCheckupCount(patientId: string) {
+    const res = await this.mindCheckupModel
+      .find({ patient: patientId })
+      .countDocuments();
+    console.log('🚀 ~ MindCheckupService ~ findCheckupCount ~ res:', res);
+
+    return {
+      checkupCount: res,
+    };
   }
 
   async create(createMindCheckupDto: CreateMindCheckupDto) {
@@ -84,15 +94,17 @@ export class MindCheckupService {
     if (!findPatient)
       throw new NotFoundException(`Patient: ${id} does not exist`);
 
-    const res = await this.mindCheckupModel.findOne({ patient: id });
+    const res = await this.mindCheckupModel
+      .find({ patient: id })
+      .populate(['patient']);
     return res;
   }
 
-  update(id: number, updateMindCheckupDto: UpdateMindCheckupDto) {
-    return `This action updates a #${id} mindCheckup`;
-  }
+  // update(id: number, updateMindCheckupDto: UpdateMindCheckupDto) {
+  //   return `This action updates a #${id} mindCheckup`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} mindCheckup`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} mindCheckup`;
+  // }
 }
