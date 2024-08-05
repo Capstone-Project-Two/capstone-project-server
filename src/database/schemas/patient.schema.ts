@@ -6,16 +6,11 @@ import { ROLES } from 'src/constants/roles-constant';
 import { Post } from './post.schema';
 import { TObjectId } from 'src/utils/mongo-helper';
 import { Credential } from './credential.schema';
-import { StressMonitor } from './stress-monitor.schema';
-import { flatten } from '@nestjs/common';
 
 export type PatientDocument = HydratedDocument<Patient>;
 
 @Schema({ timestamps: true })
 export class Patient {
-  // @Prop({ type: String, unique: true })
-  // email: string;
-
   @Prop({ isRequired: false })
   refresh_token: string;
 
@@ -53,8 +48,8 @@ export class Patient {
   @Prop({ type: Number, default: 0 })
   stress_monitor_count: number;
 
-  @Prop({ type: [{ type: TObjectId, ref: MODEL.StressMonitor }], isRequired: false })
-  stress_monitor: StressMonitor[];
+  @Prop({ type: Number, default: 0 })
+  mind_checkup_count: number;
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);
