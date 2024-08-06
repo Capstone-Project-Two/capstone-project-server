@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseResponse } from 'src/common/base-response.dto';
 import { APNT_STATUS } from 'src/constants/apnt-status-constant';
 import { PatientResponseDto } from 'src/modules/patients/dto/response/patient-response.dto';
-import { TherapistResponseDto } from 'src/modules/therapists/dto/response/therapist-response.dto';
+import { TherapistResponseDto } from 'src/modules/therapists/response/therapist-response.dto';
 
 export class AppointmentResponseDto extends BaseResponse {
   @ApiProperty({ type: String })

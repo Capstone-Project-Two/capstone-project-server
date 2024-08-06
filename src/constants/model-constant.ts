@@ -11,4 +11,6 @@ export enum MODEL {
   SavePost = 'SavePost',
   StressMonitor = 'StressMonitor',
   MindCheckup = 'MindCheckup',
+  TherapistApplication = 'TherapistApplication',
+  TherapistApplicationPhoto = 'TherapistApplicationPhoto',
 }
