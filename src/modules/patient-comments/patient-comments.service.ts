@@ -7,11 +7,12 @@ import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { Post } from 'src/database/schemas/post.schema';
 import { PatientCommentResponseDto } from './dto/response/patient-comment-response.dto';
 import { CommentPipeline } from './comment.pipeline';
+import { CommentQueryParam } from './dto/comment-query-param';
 
 @Injectable()
 export class PatientCommentsService {
@@ -27,6 +28,7 @@ export class PatientCommentsService {
     const findPost = await this.postModel.findOne({ _id: postId });
     const commentCount = await this.patientCommentModel
       .where({
+        post: postId,
         is_deleted: false,
       })
       .countDocuments();
@@ -89,16 +91,34 @@ export class PatientCommentsService {
 
   async findAll() {
     const res = this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline({}),
+      this.commentPipeline.allCommentPipeline(),
     );
 
     return res;
   }
 
-  async findCommentByPost(postId: string) {
+  async findCommentByPostV2(postId: string) {
+    if (!isValidObjectId(postId))
+      throw new BadRequestException(`Invalid post id`);
+
+    const res = await this.patientCommentModel
+      .find({
+        post: postId,
+        is_deleted: false,
+      })
+      .sort({
+        createdAt: 'desc',
+      })
+      .populate(['patient']);
+
+    return res;
+  }
+
+  async findCommentByPost(commentQueryParam: CommentQueryParam) {
     const res = await this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline({
-        postId: postId,
+      this.commentPipeline.commentByPostPipeline({
+        postId: commentQueryParam?.post,
+        parentId: commentQueryParam?.parent,
       }),
     );
 
@@ -107,7 +127,7 @@ export class PatientCommentsService {
 
   async findOne(id: string) {
     const res = await this.patientCommentModel.aggregate(
-      this.commentPipeline.commentResponsePipeline({
+      this.commentPipeline.oneCommentByIdPipeline({
         commentId: id,
       }),
     );
@@ -141,7 +161,42 @@ export class PatientCommentsService {
     };
   }
 
+  async removeCommentV2(id: string) {
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid comment id');
+
+    const findComment = await this.patientCommentModel.findOne({
+      _id: id,
+      is_deleted: false,
+    });
+    if (!findComment) throw new NotFoundException();
+
+    const findPost = await this.postModel.findOne({
+      _id: findComment.post,
+    });
+
+    if (!findPost) throw new NotFoundException('Post Not found');
+
+    const res = await this.patientCommentModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          is_deleted: true,
+        },
+      },
+    );
+
+    await this.updatePostCommentCount(findPost._id);
+
+    return res;
+  }
+
   async removeComment(id: string) {
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid comment id');
+
     const findComment = await this.patientCommentModel.findOne({
       _id: id,
       is_deleted: false,
@@ -194,10 +249,11 @@ export class PatientCommentsService {
     return res;
   }
 
-  async findAllReplies(commentId: string) {
+  async findAllReplies(commentId: string, includeDeleted?: boolean) {
     const res = await this.patientCommentModel.aggregate([
-      ...this.commentPipeline.repliesResponsePipeline({
+      ...this.commentPipeline.repliesPipeline({
         commentId: commentId,
+        includeDeleted: includeDeleted,
       }),
       {
         $project: {
@@ -229,7 +285,7 @@ export class PatientCommentsService {
     const findComment = await this.patientCommentModel.findOne({ _id: id });
     if (!findComment) throw new NotFoundException();
 
-    const allReplies = await this.findAllReplies(id);
+    const allReplies = await this.findAllReplies(id, true);
 
     const replies = [allReplies[0]._id];
     allReplies[0].replies.forEach((reply: PatientCommentResponseDto) => {

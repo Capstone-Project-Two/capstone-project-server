@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PatientCommentsService } from './patient-comments.service';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RelationalPatientCommentResponseDto } from './dto/response/relational-patient-comment-response.dto';
+import { CommentQueryParam } from './dto/comment-query-param';
 
 @ApiTags('Patient Comments')
 @Controller('patient-comments')
@@ -26,21 +28,29 @@ export class PatientCommentsController {
   }
 
   @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
-  @Get()
+  @Get('all')
   findAll() {
     return this.patientCommentsService.findAll();
+  }
+
+  @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
+  @ApiQuery({ name: 'comment', required: false })
+  @ApiQuery({ name: 'post', required: false })
+  @Get()
+  findCommentByPost(@Query() commentQueryParam: CommentQueryParam) {
+    return this.patientCommentsService.findCommentByPost(commentQueryParam);
+  }
+
+  @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
+  @Get('comments-new/:id')
+  findCommentByPostV2(@Param('id') postId: string) {
+    return this.patientCommentsService.findCommentByPostV2(postId);
   }
 
   @ApiOkResponse({ type: RelationalPatientCommentResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.patientCommentsService.findOne(id);
-  }
-
-  @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
-  @Get('post/:id')
-  findCommentByPost(@Param('id') id: string) {
-    return this.patientCommentsService.findCommentByPost(id);
   }
 
   @Get('all-replies/:id')
@@ -58,7 +68,7 @@ export class PatientCommentsController {
 
   @Patch('remove-comment/:id')
   removePost(@Param('id') id: string) {
-    return this.patientCommentsService.removeComment(id);
+    return this.patientCommentsService.removeCommentV2(id);
   }
 
   @Delete(':id')
