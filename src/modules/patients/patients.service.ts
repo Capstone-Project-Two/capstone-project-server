@@ -8,6 +8,7 @@ import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
+import { UpdateBalanceDto } from './dto/update-balance.dto';
 
 @Injectable()
 export class PatientsService {
@@ -20,6 +21,23 @@ export class PatientsService {
     const res = await this.patientModel.create({
       phone_number: phoneFormat(createPatientDto.phone_number.trim()),
       ...createPatientDto,
+    });
+    return res;
+  }
+
+  async addCredits(id: string, updateBalanceDto: UpdateBalanceDto) {
+    const foundPatient = await this.patientModel
+      .findOne({
+        _id: id,
+      })
+      .exec();
+
+    if (!foundPatient) {
+      throw new NotFoundException('User Not Found.');
+    }
+
+    const res = await this.update(foundPatient.id, {
+      credits: foundPatient.credits + updateBalanceDto.credits,
     });
     return res;
   }

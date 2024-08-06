@@ -11,6 +11,7 @@ import {
   Appointment,
   AppointmentSchema,
 } from 'src/database/schemas/appointment.schema';
+import { PatientsModule } from '../patients/patients.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import {
       { name: Patient.name, schema: PatientSchema },
       { name: Appointment.name, schema: AppointmentSchema },
     ]),
+    PatientsModule
   ],
   controllers: [AppointmentsController],
   providers: [AppointmentsService],

@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PatientResponseDto } from 'src/modules/patients/dto/response/patient-response.dto';
+import { BaseResponse } from 'src/common/base-response.dto';
 import { PostResponseDto } from 'src/modules/posts/response/post-response.dto';
 
-export class SavePostsResponseDto {
-  @ApiProperty({ type: PatientResponseDto })
-  patient: PatientResponseDto;
+export class SavePostsResponseDto extends BaseResponse {
+  @ApiProperty({ type: String })
+  patient: string;
 
   @ApiProperty({ type: PostResponseDto })
   post: PostResponseDto;

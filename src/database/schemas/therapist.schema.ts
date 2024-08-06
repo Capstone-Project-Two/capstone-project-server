@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { GENDER } from 'src/constants/gender-constant';
+import { MODEL } from 'src/constants/model-constant';
 import { ROLES } from 'src/constants/roles-constant';
+import { TObjectId } from 'src/utils/mongo-helper';
 
 export type TherapistDocument = HydratedDocument<Therapist>;
 
@@ -27,8 +29,17 @@ export class Therapist {
   @Prop({ type: String, unique: true })
   email: string;
 
+  @Prop({ isRequired: false })
+  refresh_token: string;
+
+  @Prop({ type: TObjectId, ref: MODEL.Credential })
+  credential: Credential;
+
   @Prop({ type: String, unique: true, trim: true })
   phone_number: string;
+
+  @Prop({ type: Number })
+  hourly_rate: number;
 
   @Prop({ type: String, enum: GENDER, isRequired: false })
   gender: GENDER;

@@ -24,6 +24,10 @@ import { ActivityImagesModule } from './modules/activities-images/activity-image
 import { PatientCommentsModule } from './modules/patient-comments/patient-comments.module';
 import { SavePostsModule } from './modules/save-posts/save-posts.module';
 import { CreditModule } from './modules/credit/credits.module';
+import { StripeModule } from './modules/stripe/stripe.module';
+import { StressMonitorModule } from './modules/stress-monitor/stress-monitor.module';
+import { MindCheckupModule } from './modules/mind-checkup/mind-checkup.module';
+import { TherapistApplicationPhotosModule } from './modules/therapist-application-photos/therapist-application-photos.module';
 
 @Module({
   imports: [
@@ -56,6 +60,10 @@ import { CreditModule } from './modules/credit/credits.module';
     PatientCommentsModule,
     SavePostsModule,
     CreditModule,
+    StripeModule,
+    StressMonitorModule,
+    MindCheckupModule,
+    TherapistApplicationPhotosModule,
   ],
   controllers: [AppController],
   providers: [

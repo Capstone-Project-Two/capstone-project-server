@@ -8,6 +8,9 @@ import { PatientSeeder } from 'src/database/seeders/patient.seeder';
 import { PostSeeder } from 'src/database/seeders/post.seeder';
 import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 import { PatientCommentSeeder } from 'src/database/seeders/patient-comment.seeder';
+import { Admin } from 'src/database/schemas/admin.schema';
+import { AdminSeeder } from 'src/database/seeders/admin-seeder';
+import { AdminsService } from '../admins/admins.service';
 
 @Injectable()
 export class SeedsService {
@@ -16,6 +19,8 @@ export class SeedsService {
     @InjectModel(Post.name) private postsModel: Model<Post>,
     @InjectModel(PatientComment.name)
     private patientCommentsModel: Model<PatientComment>,
+    @InjectModel(Admin.name) private adminModel: Model<Admin>,
+    private readonly adminService: AdminsService,
   ) {}
 
   async create() {
@@ -36,6 +41,11 @@ export class SeedsService {
       model: this.patientCommentsModel,
       seedData: PatientCommentSeeder(),
     });
+
+    // seed admins
+    AdminSeeder().forEach(
+      async (admin) => await this.adminService.create(admin),
+    );
 
     // other seed...
 

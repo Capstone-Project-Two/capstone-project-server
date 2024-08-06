@@ -12,6 +12,7 @@ export const TherapistFactory = ({ length }: { length?: number }) => {
       gender: GENDER.MALE,
       first_name: faker.person.firstName(),
       last_name: faker.person.lastName(),
+      hourly_rate: faker.number.int({ min: 2, max: 4 }),
       bio: faker.lorem.sentence(20),
       specializations: ['Divorce', 'Education', 'Physician'],
     });

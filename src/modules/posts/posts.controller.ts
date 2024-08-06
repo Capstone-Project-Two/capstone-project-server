@@ -22,12 +22,14 @@ import {
   PostPhotosPath,
 } from 'src/constants/multer-file-constant';
 import { RelationalPostResponseDto } from './response/relational-post-response.dto';
+import { CreatePostResponseDto } from './response/create-post-response.dto';
 
 @ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @ApiOkResponse({ type: CreatePostResponseDto })
   @Post()
   @UseInterceptors(
     FilesInterceptor(
@@ -56,6 +58,12 @@ export class PostsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);
+  }
+
+  @ApiOkResponse({ type: RelationalPostResponseDto, isArray: true })
+  @Get('patient-post/:patientId')
+  findPatientPost(@Param('patientId') id: string) {
+    return this.postsService.findPatientPost(id);
   }
 
   @Patch(':id')

@@ -9,4 +9,8 @@ export enum MODEL {
   ActivityImages = 'ActivityImages',
   PatientComment = 'PatientComment',
   SavePost = 'SavePost',
+  StressMonitor = 'StressMonitor',
+  MindCheckup = 'MindCheckup',
+  TherapistApplication = 'TherapistApplication',
+  TherapistApplicationPhoto = 'TherapistApplicationPhoto',
 }
