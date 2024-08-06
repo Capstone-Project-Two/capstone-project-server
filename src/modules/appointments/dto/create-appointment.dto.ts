@@ -13,12 +13,12 @@ export class CreateAppointmentDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  note: string;
+  note?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  prescriptions: string;
+  prescriptions?: string;
 
   @ApiProperty()
   @IsString()

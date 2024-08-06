@@ -16,7 +16,6 @@ export const AppointmentFactory = async (
   const fakeAppointment: CreateAppointmentDto[] = [];
   Array.from({ length: length ?? 10 }).forEach(() => {
     fakeAppointment.push({
-      note: faker.lorem.sentence(1),
       duration: 2,
       session_price: 8,
       patient: patients[0].id,
