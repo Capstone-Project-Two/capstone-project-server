@@ -3,9 +3,14 @@ import { StripeService } from './stripe.service';
 import { StripeController } from './stripe.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
 
 @Module({
-  imports: [HttpModule],
+  imports: [
+    HttpModule,
+    MongooseModule.forFeature([{ name: Patient.name, schema: PatientSchema }]),
+  ],
   controllers: [StripeController],
   providers: [
     StripeService,
