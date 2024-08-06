@@ -60,6 +60,12 @@ export class PostsController {
     return this.postsService.findOne(id);
   }
 
+  @ApiOkResponse({ type: RelationalPostResponseDto, isArray: true })
+  @Get('patient-post/:patientId')
+  findPatientPost(@Param('patientId') id: string) {
+    return this.postsService.findPatientPost(id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(id, updatePostDto);
