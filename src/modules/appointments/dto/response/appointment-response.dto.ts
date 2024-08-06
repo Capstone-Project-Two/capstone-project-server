@@ -9,6 +9,9 @@ export class AppointmentResponseDto extends BaseResponse {
   note: string;
 
   @ApiProperty({ type: String })
+  prescriptions: string;
+
+  @ApiProperty({ type: String })
   symptoms: string;
 
   @ApiProperty({ type: Date })
