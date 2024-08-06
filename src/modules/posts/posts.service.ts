@@ -53,7 +53,7 @@ export class PostsService {
 
     if (isEmpty)
       throw new BadRequestException(
-        'filed: body or field: postPhotos is required',
+        'field: body or field: postPhotos is required',
       );
 
     if (!isValidObjectId(createPostDto.patient)) {
@@ -72,7 +72,7 @@ export class PostsService {
     if (!isNoBody) {
       const mlRes = await this.sendPostBodyRequest(createPostDto.body);
       const { Result } = mlRes;
-      stressResult = Result
+      stressResult = Result;
     }
 
     const createPostRes = await this.postModel.create({
@@ -132,6 +132,9 @@ export class PostsService {
   }
 
   async findOne(id: string) {
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid patient post id');
+
     const res = await this.postModel
       .findOne({
         _id: id,
@@ -139,6 +142,25 @@ export class PostsService {
       .populate(['patient', 'postPhotos']);
 
     if (!res) throw new NotFoundException();
+
+    return res;
+  }
+
+  async findPatientPost(patientId: string) {
+    if (!isValidObjectId(patientId))
+      throw new BadRequestException('Invalid patient patient id');
+
+    const res = await this.postModel
+      .find({ patient: patientId, is_deleted: false })
+      .populate(['patient', 'postPhotos']);
+
+    if (res.length === 0) {
+      return {
+        message: 'No post by patient',
+        statusCode: 204,
+        data: [],
+      };
+    }
 
     return res;
   }
