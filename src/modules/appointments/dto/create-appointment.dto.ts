@@ -18,6 +18,11 @@ export class CreateAppointmentDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  prescriptions: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   symptoms: string;
 
   @ApiProperty()
