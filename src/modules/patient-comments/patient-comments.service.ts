@@ -7,7 +7,7 @@ import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 import { CreatePatientCommentDto } from './dto/create-patient-comment.dto';
 import { UpdatePatientCommentDto } from './dto/update-patient-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { Post } from 'src/database/schemas/post.schema';
 import { PatientCommentResponseDto } from './dto/response/patient-comment-response.dto';
@@ -28,6 +28,7 @@ export class PatientCommentsService {
     const findPost = await this.postModel.findOne({ _id: postId });
     const commentCount = await this.patientCommentModel
       .where({
+        post: postId,
         is_deleted: false,
       })
       .countDocuments();
@@ -96,6 +97,23 @@ export class PatientCommentsService {
     return res;
   }
 
+  async findCommentByPostV2(postId: string) {
+    if (!isValidObjectId(postId))
+      throw new BadRequestException(`Invalid post id`);
+
+    const res = await this.patientCommentModel
+      .find({
+        post: postId,
+        is_deleted: false,
+      })
+      .sort({
+        createdAt: 'desc',
+      })
+      .populate(['patient']);
+
+    return res;
+  }
+
   async findCommentByPost(commentQueryParam: CommentQueryParam) {
     const res = await this.patientCommentModel.aggregate(
       this.commentPipeline.commentByPostPipeline({
@@ -143,7 +161,42 @@ export class PatientCommentsService {
     };
   }
 
+  async removeCommentV2(id: string) {
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid comment id');
+
+    const findComment = await this.patientCommentModel.findOne({
+      _id: id,
+      is_deleted: false,
+    });
+    if (!findComment) throw new NotFoundException();
+
+    const findPost = await this.postModel.findOne({
+      _id: findComment.post,
+    });
+
+    if (!findPost) throw new NotFoundException('Post Not found');
+
+    const res = await this.patientCommentModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          is_deleted: true,
+        },
+      },
+    );
+
+    await this.updatePostCommentCount(findPost._id);
+
+    return res;
+  }
+
   async removeComment(id: string) {
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid comment id');
+
     const findComment = await this.patientCommentModel.findOne({
       _id: id,
       is_deleted: false,

@@ -41,6 +41,12 @@ export class PatientCommentsController {
     return this.patientCommentsService.findCommentByPost(commentQueryParam);
   }
 
+  @ApiOkResponse({ type: RelationalPatientCommentResponseDto, isArray: true })
+  @Get('comments-new/:id')
+  findCommentByPostV2(@Param('id') postId: string) {
+    return this.patientCommentsService.findCommentByPostV2(postId);
+  }
+
   @ApiOkResponse({ type: RelationalPatientCommentResponseDto })
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -62,7 +68,7 @@ export class PatientCommentsController {
 
   @Patch('remove-comment/:id')
   removePost(@Param('id') id: string) {
-    return this.patientCommentsService.removeComment(id);
+    return this.patientCommentsService.removeCommentV2(id);
   }
 
   @Delete(':id')
