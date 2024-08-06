@@ -27,6 +27,7 @@ import { CreditModule } from './modules/credit/credits.module';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { StressMonitorModule } from './modules/stress-monitor/stress-monitor.module';
 import { MindCheckupModule } from './modules/mind-checkup/mind-checkup.module';
+import { TherapistApplicationPhotosModule } from './modules/therapist-application-photos/therapist-application-photos.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { MindCheckupModule } from './modules/mind-checkup/mind-checkup.module';
     StripeModule,
     StressMonitorModule,
     MindCheckupModule,
+    TherapistApplicationPhotosModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -13,11 +14,18 @@ import { phoneFormat } from 'src/utils/helpter';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
 import { error } from 'console';
 import { getPaginateMeta } from 'src/common/paginate';
+import { TherapistApplication } from 'src/database/schemas/therapist-application.schema';
+import { TherapistRegistrationDto } from './dto/therapist-registration.dto';
+import { TherapistApplicationPhotosService } from '../therapist-application-photos/therapist-application-photos.service';
+import { UpdateTherapistRegistration } from './dto/update-therapist-registration.dto';
 
 @Injectable()
 export class TherapistsService {
   constructor(
     @InjectModel(Therapist.name) private therapistModel: Model<Therapist>,
+    @InjectModel(TherapistApplication.name)
+    private therapistApplicationModel: Model<TherapistApplication>,
+    private therapistApplicationPhotosService: TherapistApplicationPhotosService,
   ) {}
 
   async create(createTherapistDto: CreateTherapistDto) {
@@ -29,6 +37,69 @@ export class TherapistsService {
       message: 'Therapist Created Successfully!',
       data: res,
     };
+  }
+
+  async getAllTherapistRegistration() {
+    const res = await this.therapistApplicationModel
+      .find()
+      .sort({
+        createdAt: 'desc',
+      })
+      .populate(['therapistApplicationPhotos'])
+      .exec();
+    return res;
+  }
+
+  async updateTherapistRegistration(
+    id: string,
+    updateTherapistRegistration: UpdateTherapistRegistration,
+  ) {
+    const therapistRegistration = await this.therapistApplicationModel.findOne({
+      _id: id,
+    });
+    if (!therapistRegistration) {
+      throw new NotFoundException('Appointment does not exist');
+    }
+
+    //Update the status of the therapistRegistration
+    const res = await therapistRegistration.updateOne(
+      updateTherapistRegistration,
+    );
+
+    return res;
+  }
+
+  async therapistRegistration(
+    therapistRegistrationDto: TherapistRegistrationDto,
+    files: Array<Express.Multer.File>,
+  ) {
+    const isNoFiles = !files || files?.length === 0;
+
+    if (isNoFiles)
+      throw new BadRequestException('field: Therapist Photos is required');
+
+    const therapistApplicationPhotos = [];
+
+    const createTherapistApplicationRes =
+      await this.therapistApplicationModel.create(therapistRegistrationDto);
+
+    const therapistApplicationPhotosRes =
+      await this.therapistApplicationPhotosService.create(
+        createTherapistApplicationRes._id,
+        files,
+      );
+
+    therapistApplicationPhotosRes.forEach((therapistApplicationPhoto) => {
+      const { _id } = therapistApplicationPhoto;
+      therapistApplicationPhotos.push(_id);
+    });
+
+    await createTherapistApplicationRes.updateOne({
+      $push: {
+        therapistApplicationPhotos: [...therapistApplicationPhotos],
+      },
+    });
+    return createTherapistApplicationRes;
   }
 
   async getAllSpecializations() {
