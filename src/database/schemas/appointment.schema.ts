@@ -14,6 +14,9 @@ export class Appointment {
   note: string;
 
   @Prop({ type: String, default: '' })
+  prescriptions: string;
+
+  @Prop({ type: String, default: '' })
   symptoms: string;
 
   @Prop({ type: Date, isRequired: true })

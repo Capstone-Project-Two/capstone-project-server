@@ -9,4 +9,12 @@ export class CreateStripeDto {
   @ApiProperty()
   @IsString()
   currency: string;
+
+  @ApiProperty()
+  @IsNumber()
+  credits: number;
+
+  @ApiProperty()
+  @IsString()
+  patientId: string;
 }
