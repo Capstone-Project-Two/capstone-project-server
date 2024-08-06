@@ -5,12 +5,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { SavePost } from 'src/database/schemas/save-post.schema';
 import { Model } from 'mongoose';
 import { Post } from 'src/database/schemas/post.schema';
+import { MODEL } from 'src/constants/model-constant';
+import { Patient } from 'src/database/schemas/patient.schema';
 
 @Injectable()
 export class SavedPostsService {
   constructor(
     @InjectModel(SavePost.name) private savedPostsModel: Model<SavePost>,
     @InjectModel(Post.name) private postsModel: Model<Post>,
+    @InjectModel(Patient.name) private patientModel: Model<Patient>,
   ) {}
 
   async create(createSavedPostDto: CreateSavedPostDto) {
@@ -36,7 +39,13 @@ export class SavedPostsService {
         patient: patientId,
         is_saved: true,
       })
-      .populate(['post', 'patient']);
+      .populate({
+        path: 'post',
+        populate: {
+          path: 'patient',
+          model: MODEL.Patient,
+        },
+      });
 
     return res;
   }
@@ -68,8 +77,13 @@ export class SavedPostsService {
     const post = await this.postsModel.findOne({
       _id: id,
     });
-
     if (!post) throw new NotFoundException('Post not found');
+
+    const findPatient = await this.patientModel.findOne({
+      _id: updateSavedPostDto.patient,
+    });
+    if (!findPatient)
+      throw new NotFoundException(`Patient ${id} does not exist`);
 
     // find saved post record
     const findSavedPost = await this.savedPostsModel
