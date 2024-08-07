@@ -3,6 +3,7 @@ import { GENDER } from 'src/constants/gender-constant';
 import { CreatePatientDto } from 'src/modules/patients/dto/create-patient.dto';
 import { stringToHex, TSeederNames } from 'src/utils/seeder-helpter';
 import data from 'public/data/static-img.json';
+import { Credential } from '../schemas/credential.schema';
 
 type TPatientSeed = {
   name: TSeederNames;

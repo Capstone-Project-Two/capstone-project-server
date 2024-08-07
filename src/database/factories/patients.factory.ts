@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { GENDER } from 'src/constants/gender-constant';
 import { CreatePatientDto } from 'src/modules/patients/dto/create-patient.dto';
 import { stringToHex } from 'src/utils/seeder-helpter';
-import data from "public/data/static-img.json";
+import data from 'public/data/static-img.json';
 
 export const PatientFactory = ({ length }: { length?: number }) => {
   const fakePatient: CreatePatientDto[] = [];

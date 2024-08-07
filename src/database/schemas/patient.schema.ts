@@ -30,6 +30,9 @@ export class Patient {
   @Prop({ type: Array, enum: ROLES, default: [ROLES.PATIENT] })
   roles: Array<ROLES>;
 
+  @Prop({ type: String, unique: true })
+  email: string;
+
   @Prop({ type: Boolean, default: false })
   is_deleted: boolean;
 
