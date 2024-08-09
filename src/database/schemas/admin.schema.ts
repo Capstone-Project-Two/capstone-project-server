@@ -9,9 +9,14 @@ export type AdminDocument = HydratedDocument<Admin>;
 
 @Schema({ timestamps: true })
 export class Admin {
+  @Prop({ type: String, isRequired: true })
+  username: string;
+
+  @Prop({ type: String, isRequired: false })
+  profile_img: string;
 
   @Prop({ isRequired: false })
-  refresh_token: string
+  refresh_token: string;
 
   @Prop({ type: TObjectId, ref: MODEL.Credential })
   credential: Credential;

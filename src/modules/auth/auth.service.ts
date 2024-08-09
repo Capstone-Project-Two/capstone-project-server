@@ -135,6 +135,12 @@ export class AuthService {
 
     const credential = await this.credentialModel.findOne({ email });
 
+    if (!credential) {
+      throw new UnauthorizedException({
+        message: 'Incorrect Email or Password',
+      });
+    }
+
     const admin = await this.adminModel
       .findOne({ credential: credential._id })
       .populate('credential');
@@ -163,6 +169,7 @@ export class AuthService {
       });
 
       return {
+        admin,
         accessToken,
       };
     }

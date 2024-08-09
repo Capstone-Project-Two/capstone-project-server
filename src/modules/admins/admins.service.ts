@@ -9,7 +9,6 @@ import {
   Credential,
   CredentialDocument,
 } from 'src/database/schemas/credential.schema';
-// import { ROLES } from 'src/constants/roles-constant';
 
 @Injectable()
 export class AdminsService {
@@ -50,9 +49,9 @@ export class AdminsService {
 
     // Create and save the Admin document with a reference to the Credential
     const newAdmin = new this.adminModel({
-      // phone_number: createAdminDto.phone_number,
       credential: userCredential._id,
-      // roles: [ROLES.ADMIN],
+      username: createAdminDto.username,
+      profile_img: createAdminDto.profile_img,
     });
 
     await newAdmin.save();

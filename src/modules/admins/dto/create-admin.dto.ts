@@ -1,8 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEmpty, IsEnum, IsString, IsStrongPassword } from 'class-validator';
-import { ROLES } from 'src/constants/roles-constant';
+import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
 
 export class CreateAdminDto {
+  @ApiProperty()
+  @IsString()
+  username: string;
+
+  @ApiProperty()
+  @IsString()
+  profile_img: string;
+
   @ApiProperty()
   @IsEmail()
   email: string;
@@ -10,13 +17,4 @@ export class CreateAdminDto {
   @ApiProperty()
   @IsStrongPassword()
   password: string;
-
-  // @ApiProperty()
-  // @IsString()
-  // @IsEmpty()
-  // phone_number: string;
-
-  // @ApiProperty({ enum: ROLES })
-  // @IsEnum(ROLES)
-  // roles: Array<string>;
 }

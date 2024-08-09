@@ -1,4 +1,5 @@
 import { CreateAdminDto } from 'src/modules/admins/dto/create-admin.dto';
+import { getRandomImage } from 'src/utils/helpter';
 import { stringToHex, TSeederNames } from 'src/utils/seeder-helpter';
 
 type TAdminSeed = {
@@ -9,7 +10,9 @@ type TAdminSeed = {
 export const AdminSeeder = () => {
   const createAdmin = ({ name, index }: TAdminSeed) => {
     const admin: CreateAdminDto & { _id: string } = {
+      username: name,
       _id: stringToHex(`${name}admin${index}`),
+      profile_img: getRandomImage(),
       email: `${name}@chhantek.com`,
       password: `P@$$w0rd`,
     };
