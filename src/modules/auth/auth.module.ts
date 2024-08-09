@@ -7,6 +7,7 @@ import { Admin, AdminSchema } from 'src/database/schemas/admin.schema';
 import { Credential, CredentialSchema } from 'src/database/schemas/credential.schema';
 import { AtStrategy } from './strategy';
 import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
+import { PatientsModule } from '../patients/patients.module';
 
 @Module({
   imports: [
@@ -16,8 +17,10 @@ import { Patient, PatientSchema } from 'src/database/schemas/patient.schema';
       { name: Credential.name, schema: CredentialSchema },
     ]),
     JwtModule.register({}),
+    PatientsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AtStrategy],
+  exports: [AuthService]
 })
 export class AuthModule {}

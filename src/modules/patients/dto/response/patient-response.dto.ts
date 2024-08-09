@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseResponse } from 'src/common/base-response.dto';
 import { GENDER } from 'src/constants/gender-constant';
 import { ROLES } from 'src/constants/roles-constant';
+import { CredentialResponseDto } from 'src/modules/credential/response/credential-response.dto';
 
 export class PatientResponseDto extends BaseResponse {
   @ApiProperty({ type: String })
@@ -36,4 +37,7 @@ export class PatientResponseDto extends BaseResponse {
 
   @ApiProperty({ type: Number, default: 0 })
   mind_checkup_count: number;
+
+  @ApiProperty({ type: CredentialResponseDto })
+  credential: CredentialResponseDto;
 }

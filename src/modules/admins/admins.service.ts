@@ -5,7 +5,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Admin, AdminDocument } from 'src/database/schemas/admin.schema';
 import { Model } from 'mongoose';
 import * as argon2 from 'argon2';
-import { Credential, CredentialDocument } from 'src/database/schemas/credential.schema';
+import {
+  Credential,
+  CredentialDocument,
+} from 'src/database/schemas/credential.schema';
 // import { ROLES } from 'src/constants/roles-constant';
 
 @Injectable()
@@ -21,7 +24,9 @@ export class AdminsService {
     createAdminDto.password = await argon2.hash(createAdminDto.password);
 
     // Check if email is already taken
-    const existingCredential = await this.credentialModel.findOne({ email: createAdminDto.email });
+    const existingCredential = await this.credentialModel.findOne({
+      email: createAdminDto.email,
+    });
     if (existingCredential) {
       throw new ForbiddenException({
         message: 'Email is already taken',
@@ -35,7 +40,8 @@ export class AdminsService {
     });
 
     await userCredential.save().catch((error) => {
-      if (error?.code === 11000) { // MongoDB duplicate key error code
+      if (error?.code === 11000) {
+        // MongoDB duplicate key error code
         throw new ForbiddenException({
           message: 'Phone number is already taken.',
         });
@@ -58,12 +64,9 @@ export class AdminsService {
   }
 
   async findAll() {
-    const res = await this.adminModel
-    .find()
-    .populate(['credential'])
-    .exec();
+    const res = await this.adminModel.find().populate(['credential']).exec();
 
-    return res
+    return res;
   }
 
   findOne(id: string) {
