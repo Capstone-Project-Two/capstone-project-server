@@ -8,7 +8,6 @@ export class PatientCommentResponseDto extends BaseResponse {
 
   @ApiProperty({
     type: OmitType(PatientResponseDto, [
-      'phone_number',
       'gender',
       'roles',
       'is_deleted',

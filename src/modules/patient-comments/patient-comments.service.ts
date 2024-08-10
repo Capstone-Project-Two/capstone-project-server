@@ -13,6 +13,7 @@ import { Post } from 'src/database/schemas/post.schema';
 import { PatientCommentResponseDto } from './dto/response/patient-comment-response.dto';
 import { CommentPipeline } from './comment.pipeline';
 import { CommentQueryParam } from './dto/comment-query-param';
+import { MODEL } from 'src/constants/model-constant';
 
 @Injectable()
 export class PatientCommentsService {
@@ -109,7 +110,13 @@ export class PatientCommentsService {
       .sort({
         createdAt: 'desc',
       })
-      .populate(['patient']);
+      .populate({
+        path: 'patient',
+        populate: {
+          path: 'credential',
+          model: MODEL.Credential,
+        },
+      });
 
     return res;
   }

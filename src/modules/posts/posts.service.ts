@@ -19,6 +19,7 @@ import { firstValueFrom } from 'rxjs';
 import { ML_ROUTE_ENUM } from 'src/constants/ml-route-constant';
 import { ConfigService } from '@nestjs/config';
 import { ML_BASE_URL } from 'src/constants/env-constants';
+import { MODEL } from 'src/constants/model-constant';
 
 @Injectable()
 export class PostsService {
@@ -117,7 +118,14 @@ export class PostsService {
       .sort({
         createdAt: 'desc',
       })
-      .populate(['patient', 'postPhotos'])
+      .populate(['postPhotos'])
+      .populate({
+        path: 'patient',
+        populate: {
+          path: 'credential',
+          model: MODEL.Credential,
+        },
+      })
       .exec();
 
     return {
@@ -139,7 +147,14 @@ export class PostsService {
       .findOne({
         _id: id,
       })
-      .populate(['patient', 'postPhotos']);
+      .populate(['postPhotos'])
+      .populate({
+        path: 'patient',
+        populate: {
+          path: 'credential',
+          model: MODEL.Credential,
+        },
+      });
 
     if (!res) throw new NotFoundException();
 
