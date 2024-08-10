@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import dayjs from 'dayjs';
+import data from 'public/data/static-img.json';
 
 export function phoneFormat(ph: string) {
   const splitString = ph.slice(0, 4);
@@ -59,4 +60,27 @@ export const compareDates = (date1: Date, date2: Date) => {
   const d2 = dayjs(date2)
 
   return d2.isAfter(d1)
+}
+
+const imgMap = {
+  1: data.profileImg.one,
+  2: data.profileImg.two,
+  3: data.profileImg.three,
+  4: data.profileImg.four,
+  5: data.profileImg.five,
+  6: data.profileImg.six,
+  7: data.profileImg.seven,
+  8: data.profileImg.eight,
+  9: data.profileImg.nine,
+  10: data.profileImg.ten,
+};
+
+export function getRandomImage() {
+  const keys = Object.keys(imgMap);
+
+  const randomIndex = Math.floor(Math.random() * keys.length);
+
+  const randomKey = keys[randomIndex];
+
+  return imgMap[randomKey];
 }

@@ -11,19 +11,26 @@ import { promisify } from 'util';
 import * as crypto from 'crypto';
 import { Admin, AdminDocument } from 'src/database/schemas/admin.schema';
 import * as argon2 from 'argon2';
-import { Credential, CredentialDocument } from 'src/database/schemas/credential.schema';
+import {
+  Credential,
+  CredentialDocument,
+} from 'src/database/schemas/credential.schema';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Patient, PatientDocument } from 'src/database/schemas/patient.schema';
 import { faker } from '@faker-js/faker';
+import { PatientsService } from '../patients/patients.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Admin.name) private readonly adminModel: Model<AdminDocument>,
-    @InjectModel(Patient.name) private readonly patientModel: Model<PatientDocument>,
-    @InjectModel(Credential.name) private readonly credentialModel: Model<CredentialDocument>,
+    @InjectModel(Patient.name)
+    private readonly patientModel: Model<PatientDocument>,
+    @InjectModel(Credential.name)
+    private readonly credentialModel: Model<CredentialDocument>,
     private readonly jwtService: JwtService,
+    private readonly patientService: PatientsService,
   ) {}
 
   // Generate reset password token
@@ -64,7 +71,7 @@ export class AuthService {
   }
 
   async patient_login(loginDto: LoginDto, response: Response) {
-    console.log(loginDto)
+    console.log(loginDto);
 
     response.clearCookie('jwt', {
       httpOnly: true,
@@ -73,17 +80,20 @@ export class AuthService {
     });
 
     const { email, password } = loginDto;
-    console.log("🚀 ~ AuthService ~ patient_login ~ loginDto:", loginDto)
+    console.log('🚀 ~ AuthService ~ patient_login ~ loginDto:', loginDto);
 
-    const credential = await this.credentialModel.findOne({email});
+    const credential = await this.credentialModel.findOne({ email });
 
     const patient = await this.patientModel
-      .findOne({ 'credential': credential._id })
+      .findOne({ credential: credential._id })
       .populate('credential');
 
     if (patient) {
-      const matched = await argon2.verify(patient.credential.password, password);
-      
+      const matched = await argon2.verify(
+        patient.credential.password,
+        password,
+      );
+
       if (!matched) {
         throw new UnauthorizedException({
           message: 'Incorrect Email or Password!',
@@ -123,15 +133,21 @@ export class AuthService {
 
     const { email, password } = loginDto;
 
-    const credential = await this.credentialModel.findOne({email});
+    const credential = await this.credentialModel.findOne({ email });
+
+    if (!credential) {
+      throw new UnauthorizedException({
+        message: 'Incorrect Email or Password',
+      });
+    }
 
     const admin = await this.adminModel
-      .findOne({ 'credential': credential._id })
+      .findOne({ credential: credential._id })
       .populate('credential');
-      
+
     if (admin) {
       const matched = await argon2.verify(admin.credential.password, password);
-      
+
       if (!matched) {
         throw new UnauthorizedException({
           message: 'Incorrect Email or Password!',
@@ -153,6 +169,7 @@ export class AuthService {
       });
 
       return {
+        admin,
         accessToken,
       };
     }
@@ -176,9 +193,9 @@ export class AuthService {
       console.log(error);
     }
 
-    return {true: Boolean, message: "Logout successful!"};
+    return { true: Boolean, message: 'Logout successful!' };
   }
-  
+
   async admin_logout(id: string, request: Request, response: Response) {
     const cookies = request.cookies;
     if (cookies?.jwt) {
@@ -201,7 +218,9 @@ export class AuthService {
     const cookies = request.cookies;
     if (!cookies?.jwt) throw new UnauthorizedException('Access Denied.');
     const refreshToken = cookies.jwt;
-    const admin = await this.adminModel.findOne({ rt: refreshToken }).populate('credential');
+    const admin = await this.adminModel
+      .findOne({ rt: refreshToken })
+      .populate('credential');
     if (!admin) {
       throw new UnauthorizedException('Access Denied');
     }
@@ -236,16 +255,17 @@ export class AuthService {
     return { accessToken };
   }
 
-  async patient_register (registerDto: RegisterDto, response: Response) {
-
+  async patient_register(registerDto: RegisterDto) {
     // generate random username
-    const patient_username = faker.internet.userName()
+    const patient_username = faker.internet.userName();
 
     // Hash the password using argon2
     registerDto.password = await argon2.hash(registerDto.password);
 
     // Check if email is already taken
-    const existingCredential = await this.credentialModel.findOne({ email: registerDto.email });
+    const existingCredential = await this.credentialModel.findOne({
+      email: registerDto.email,
+    });
     if (existingCredential) {
       throw new ForbiddenException({
         message: 'Email is already taken',
@@ -259,20 +279,19 @@ export class AuthService {
     });
 
     await patientCredential.save().catch((error) => {
-      if (error?.code === 11000) { // MongoDB duplicate key error code
+      if (error?.code === 11000) {
+        // MongoDB duplicate key error code
         throw new ForbiddenException({
           message: 'Phone number is already taken.',
         });
       }
     });
 
-    // Create and save the Admin document with a reference to the Credential
-    const newPatient = new this.patientModel({
-      username: patient_username,
-      credential: patientCredential._id,
+    const newPatient = await this.patientService.create({
+      ...registerDto,
+      username: registerDto?.username ?? patient_username, // optionally creates a username
+      credential: patientCredential?._id.toString(),
     });
-
-    await newPatient.save();
 
     return {
       user: newPatient,

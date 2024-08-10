@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Res, HttpCode, HttpStatus, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { GetCurrentUserId, Public } from 'src/common/decorator';
@@ -6,7 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -14,7 +14,7 @@ export class AuthController {
   @Public()
   @Post('patient/register')
   register(@Body() registerDto: RegisterDto, @Res({ passthrough: true }) response: Response) {
-    return this.authService.patient_register(registerDto, response);
+    return this.authService.patient_register(registerDto);
   }
 
   @Public()

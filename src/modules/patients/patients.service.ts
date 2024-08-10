@@ -4,7 +4,6 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { Model } from 'mongoose';
-import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
@@ -19,7 +18,6 @@ export class PatientsService {
 
   async create(createPatientDto: CreatePatientDto) {
     const res = await this.patientModel.create({
-      phone_number: phoneFormat(createPatientDto.phone_number.trim()),
       ...createPatientDto,
     });
     return res;
@@ -49,7 +47,7 @@ export class PatientsService {
       .find()
       .limit(limit)
       .skip(skip)
-      .populate(['posts'])
+      .populate(['posts', 'credential'])
       .exec();
 
     return {

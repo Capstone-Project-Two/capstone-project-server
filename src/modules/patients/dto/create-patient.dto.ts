@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   MaxLength,
   MinLength,
@@ -12,32 +11,31 @@ import {
 import { GENDER } from 'src/constants/gender-constant';
 
 export class CreatePatientDto {
-  @ApiProperty({ uniqueItems: true })
-  @IsEmail()
-  email: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  credential?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @MaxLength(64)
   @MinLength(3)
   @IsString()
-  username: string;
+  username?: string;
 
-  @ApiProperty()
-  @IsPhoneNumber('KH')
-  // @IsNotEmpty()
-  @IsOptional()
-  phone_number?: string;
-
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsEnum(GENDER)
-  gender: string;
+  @IsOptional()
+  gender?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
-  credits: number;
+  credits?: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsString()
-  profile_img: string;
+  @IsOptional()
+  profile_img?: string;
 }
