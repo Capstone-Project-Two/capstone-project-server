@@ -4,10 +4,10 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { Model } from 'mongoose';
-import { phoneFormat } from 'src/utils/helpter';
 import { Post } from 'src/database/schemas/post.schema';
 import { getPaginateMeta } from 'src/common/paginate';
 import { PaginationParamDto } from 'src/common/dto/pagination-param.dto';
+import { UpdateBalanceDto } from './dto/update-balance.dto';
 
 @Injectable()
 export class PatientsService {
@@ -18,8 +18,24 @@ export class PatientsService {
 
   async create(createPatientDto: CreatePatientDto) {
     const res = await this.patientModel.create({
-      phone_number: phoneFormat(createPatientDto.phone_number.trim()),
       ...createPatientDto,
+    });
+    return res;
+  }
+
+  async addCredits(id: string, updateBalanceDto: UpdateBalanceDto) {
+    const foundPatient = await this.patientModel
+      .findOne({
+        _id: id,
+      })
+      .exec();
+
+    if (!foundPatient) {
+      throw new NotFoundException('User Not Found.');
+    }
+
+    const res = await this.update(foundPatient.id, {
+      credits: foundPatient.credits + updateBalanceDto.credits,
     });
     return res;
   }
@@ -31,7 +47,7 @@ export class PatientsService {
       .find()
       .limit(limit)
       .skip(skip)
-      .populate(['posts'])
+      .populate(['posts', 'credential'])
       .exec();
 
     return {
@@ -48,7 +64,7 @@ export class PatientsService {
   }
 
   async findOne(id: string) {
-    const res = await this.patientModel.findById(id).populate(['posts']);
+    const res = await this.patientModel.findById(id).populate(['posts', 'credential']);
     if (!res) {
       throw new NotFoundException();
     }

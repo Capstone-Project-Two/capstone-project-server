@@ -4,10 +4,14 @@ import { Patient } from 'src/database/schemas/patient.schema';
 import { Model } from 'mongoose';
 import { Post } from 'src/database/schemas/post.schema';
 import { seed } from 'src/utils/seeder-helpter';
-import { PatientSeeder } from 'src/database/seeders/patient.seeder';
 import { PostSeeder } from 'src/database/seeders/post.seeder';
 import { PatientComment } from 'src/database/schemas/patient-comment.schema';
 import { PatientCommentSeeder } from 'src/database/seeders/patient-comment.seeder';
+import { Admin } from 'src/database/schemas/admin.schema';
+import { AdminSeeder } from 'src/database/seeders/admin-seeder';
+import { AdminsService } from '../admins/admins.service';
+import { AuthService } from '../auth/auth.service';
+import { PatientCredSeeder } from 'src/database/seeders/patient-credential-seeder';
 
 @Injectable()
 export class SeedsService {
@@ -16,14 +20,20 @@ export class SeedsService {
     @InjectModel(Post.name) private postsModel: Model<Post>,
     @InjectModel(PatientComment.name)
     private patientCommentsModel: Model<PatientComment>,
+    @InjectModel(Admin.name) private adminModel: Model<Admin>,
+    private readonly adminService: AdminsService,
+    private readonly authService: AuthService,
   ) {}
 
   async create() {
     // seed patients
-    await seed({
-      model: this.patientsModel,
-      seedData: PatientSeeder(),
-    });
+    PatientCredSeeder().forEach(async (patient) => {
+      await this.authService.patient_register(patient)
+    })
+    // await seed({
+    //   model: this.patientsModel,
+    //   seedData: PatientSeeder(),
+    // });
 
     // seed posts
     await seed({
@@ -36,6 +46,11 @@ export class SeedsService {
       model: this.patientCommentsModel,
       seedData: PatientCommentSeeder(),
     });
+
+    // seed admins
+    AdminSeeder().forEach(
+      async (admin) => await this.adminService.create(admin),
+    );
 
     // other seed...
 

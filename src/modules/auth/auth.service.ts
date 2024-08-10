@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -8,18 +9,29 @@ import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import { promisify } from 'util';
 import * as crypto from 'crypto';
-// import { Credential, CredentialDocument } from 'src/database/schemas/credential.schema';
 import { Admin, AdminDocument } from 'src/database/schemas/admin.schema';
-import { AdminLoginDto } from './dto/admin-login.dto';
 import * as argon2 from 'argon2';
-import { Credential, CredentialDocument } from 'src/database/schemas/credential.schema';
+import {
+  Credential,
+  CredentialDocument,
+} from 'src/database/schemas/credential.schema';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { Patient, PatientDocument } from 'src/database/schemas/patient.schema';
+import { faker } from '@faker-js/faker';
+import { PatientsService } from '../patients/patients.service';
+import { getRandomGender, getRandomImage } from 'src/utils/helpter';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Admin.name) private readonly adminModel: Model<AdminDocument>,
-    @InjectModel(Credential.name) private readonly credentialModel: Model<CredentialDocument>,
+    @InjectModel(Patient.name)
+    private readonly patientModel: Model<PatientDocument>,
+    @InjectModel(Credential.name)
+    private readonly credentialModel: Model<CredentialDocument>,
     private readonly jwtService: JwtService,
+    private readonly patientService: PatientsService,
   ) {}
 
   // Generate reset password token
@@ -29,7 +41,6 @@ export class AuthService {
       const buffer = await randomBytesAsync(48);
       return buffer.toString('hex');
     } catch (error) {
-      // Handle error appropriately
       throw new Error('Token generation failed');
     }
   }
@@ -60,7 +71,61 @@ export class AuthService {
     await this.adminModel.updateOne({ _id: id }, { refresh_token: rt });
   }
 
-  async login(loginDto: AdminLoginDto, response: Response) {
+  async patient_login(loginDto: LoginDto, response: Response) {
+    console.log(loginDto);
+
+    response.clearCookie('jwt', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    const { email, password } = loginDto;
+    console.log('🚀 ~ AuthService ~ patient_login ~ loginDto:', loginDto);
+
+    const credential = await this.credentialModel.findOne({ email });
+
+    const patient = await this.patientModel
+      .findOne({ credential: credential._id })
+      .populate('credential');
+
+    if (patient) {
+      const matched = await argon2.verify(
+        patient.credential.password,
+        password,
+      );
+
+      if (!matched) {
+        throw new UnauthorizedException({
+          message: 'Incorrect Email or Password!',
+        });
+      }
+
+      const { accessToken, refreshToken } = await this.getTokens(
+        patient._id.toString(),
+        patient.credential.email,
+      );
+
+      await this.updateRt(patient._id.toString(), refreshToken);
+
+      response.cookie('jwt', refreshToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
+      return {
+        patient,
+        accessToken,
+      };
+    }
+    throw new UnauthorizedException({
+      message: 'Incorrect Email or Password!',
+    });
+  }
+
+  async admin_login(loginDto: LoginDto, response: Response) {
     response.clearCookie('jwt', {
       httpOnly: true,
       sameSite: 'none',
@@ -69,15 +134,21 @@ export class AuthService {
 
     const { email, password } = loginDto;
 
-    const credential = await this.credentialModel.findOne({email});
+    const credential = await this.credentialModel.findOne({ email });
+
+    if (!credential) {
+      throw new UnauthorizedException({
+        message: 'Incorrect Email or Password',
+      });
+    }
 
     const admin = await this.adminModel
-      .findOne({ 'credential': credential._id })
+      .findOne({ credential: credential._id })
       .populate('credential');
-      
+
     if (admin) {
       const matched = await argon2.verify(admin.credential.password, password);
-      
+
       if (!matched) {
         throw new UnauthorizedException({
           message: 'Incorrect Email or Password!',
@@ -99,6 +170,7 @@ export class AuthService {
       });
 
       return {
+        admin,
         accessToken,
       };
     }
@@ -107,7 +179,25 @@ export class AuthService {
     });
   }
 
-  async logout(id: string, request: Request, response: Response) {
+  async patient_logout(id: string, request: Request, response: Response) {
+    const cookies = request.cookies;
+    if (cookies?.jwt) {
+      response.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+    }
+    try {
+      await this.patientModel.updateOne({ _id: id }, { refresh_token: null });
+    } catch (error) {
+      console.log(error);
+    }
+
+    return { true: Boolean, message: 'Logout successful!' };
+  }
+
+  async admin_logout(id: string, request: Request, response: Response) {
     const cookies = request.cookies;
     if (cookies?.jwt) {
       response.clearCookie('jwt', {
@@ -125,33 +215,13 @@ export class AuthService {
     return true;
   }
 
-  // async getProfile(id: string) {
-  //   try {
-  //     const admin = await this.adminModel
-  //       .findById(id)
-  //       .populate('unit')
-  //       .populate('role')
-  //       .populate('credential');
-
-  //     if (admin?.credential?.password) {
-  //       delete admin.credential.password;
-  //     }
-
-  //     if (admin?.refresh_token) {
-  //       delete admin?.refresh_token;
-  //     }
-
-  //     return admin;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   async refreshToken(request: Request, response: Response) {
     const cookies = request.cookies;
     if (!cookies?.jwt) throw new UnauthorizedException('Access Denied.');
     const refreshToken = cookies.jwt;
-    const admin = await this.adminModel.findOne({ rt: refreshToken }).populate('credential');
+    const admin = await this.adminModel
+      .findOne({ rt: refreshToken })
+      .populate('credential');
     if (!admin) {
       throw new UnauthorizedException('Access Denied');
     }
@@ -184,5 +254,52 @@ export class AuthService {
       },
     );
     return { accessToken };
+  }
+
+  async patient_register(registerDto: RegisterDto) {
+    // generate random username
+    const patient_username = faker.internet.userName();
+
+    // Hash the password using argon2
+    registerDto.password = await argon2.hash(registerDto.password);
+
+    // Check if email is already taken
+    const existingCredential = await this.credentialModel.findOne({
+      email: registerDto.email,
+    });
+    if (existingCredential) {
+      throw new ForbiddenException({
+        message: 'Email is already taken',
+      });
+    }
+
+    // Create and save the Credential document
+    const patientCredential = new this.credentialModel({
+      email: registerDto.email,
+      password: registerDto.password,
+    });
+
+    await patientCredential.save().catch((error) => {
+      if (error?.code === 11000) {
+        // MongoDB duplicate key error code
+        throw new ForbiddenException({
+          message: 'Phone number is already taken.',
+        });
+      }
+    });
+
+    const newPatient = await this.patientService.create({
+      ...registerDto,
+      username: registerDto?.username ?? patient_username, // optionally creates a username
+      credential: patientCredential?._id.toString(),
+      profile_img: registerDto.profile_img ?? getRandomImage(),
+      gender: registerDto.gender ?? getRandomGender(),
+      credits: 0,
+    });
+
+    return {
+      user: newPatient,
+      message: 'Patient Created Successfully.',
+    };
   }
 }

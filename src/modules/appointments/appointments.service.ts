@@ -10,7 +10,9 @@ import { Therapist } from 'src/database/schemas/therapist.schema';
 import { Patient } from 'src/database/schemas/patient.schema';
 import { isValidObjectId, Model } from 'mongoose';
 import { Appointment } from 'src/database/schemas/appointment.schema';
-import { STATUS } from 'src/constants/status-constant';
+import { FilterAppointmentDto } from './dto/filter-appointment.dto';
+import { compareDates, timeStringToDate } from 'src/utils/helpter';
+import { PatientsService } from '../patients/patients.service';
 
 @Injectable()
 export class AppointmentsService {
@@ -18,19 +20,38 @@ export class AppointmentsService {
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
     @InjectModel(Therapist.name) private therapistModel: Model<Therapist>,
     @InjectModel(Appointment.name) private appointmentModel: Model<Appointment>,
+    private patientsService: PatientsService,
   ) {}
 
   async create(createAppointmentDto: CreateAppointmentDto) {
+    const { start_time, end_time, scheduleDate } = createAppointmentDto;
+
+    const startDate = timeStringToDate({
+      time: start_time,
+      date: scheduleDate,
+    });
+    const endDate = timeStringToDate({ time: end_time, date: scheduleDate });
+
+    console.log(startDate, endDate);
+
+    if (!compareDates(startDate, endDate)) {
+      throw new BadRequestException(
+        `Start time: ${startDate} must start before end time: ${endDate}`,
+      );
+    }
+
     //Check if patient ID is valid
     if (!isValidObjectId(createAppointmentDto.patient)) {
       throw new BadRequestException('Invalid Patient Id');
     }
 
-    const findPatient = await this.patientModel.findById(
-      createAppointmentDto.patient,
-    );
+    const foundPatient = await this.patientModel
+      .findOne({
+        _id: createAppointmentDto.patient,
+      })
+      .exec();
 
-    if (!findPatient) {
+    if (!foundPatient) {
       throw new NotFoundException('Patient does not exist');
     }
     //Check if therapist ID is valid
@@ -38,21 +59,54 @@ export class AppointmentsService {
       throw new BadRequestException('Invalid Therapist Id');
     }
 
-    const findTheraist = await this.therapistModel.findById(
-      createAppointmentDto.therapist,
-    );
+    const foundTherapist = await this.therapistModel
+      .findOne({
+        _id: createAppointmentDto.therapist,
+      })
+      .exec();
 
-    if (!findTheraist) {
+    if (!foundTherapist) {
       throw new NotFoundException('Therapist does not exist');
     }
+
+    const total_price = (createAppointmentDto.session_price =
+      createAppointmentDto.duration * foundTherapist.hourly_rate);
+    if (foundPatient.credits < total_price) {
+      throw new BadRequestException(
+        `Coin is not enough for booking. Please top up!`,
+      );
+    } else {
+      await this.patientsService.update(foundPatient.id, {
+        credits: foundPatient.credits - total_price,
+      });
+    }
+
+    createAppointmentDto.session_price = total_price;
+
     const res = await this.appointmentModel.create(createAppointmentDto);
     return res;
   }
 
-  async findAll() {
-    const res = await this.appointmentModel
-      .find()
-      .populate(['patient', 'therapist']);
+  async findAll(queryParams: FilterAppointmentDto) {
+    const { status } = queryParams;
+    let res: any;
+    if (!status) {
+      res = await this.appointmentModel
+        .find()
+        .sort({
+          updatedAt: 'desc',
+        })
+        .populate(['patient', 'therapist']);
+    } else {
+      res = await this.appointmentModel
+        .find({
+          status,
+        })
+        .sort({
+          updatedAt: 'desc',
+        })
+        .populate(['patient', 'therapist']);
+    }
     return res;
   }
 

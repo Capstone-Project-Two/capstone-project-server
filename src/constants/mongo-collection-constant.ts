@@ -7,4 +7,6 @@ export enum MongoCollection {
   PostPhotos = 'postphotos',
   PatientComments = 'patientcomments',
   SavePosts = 'saveposts',
+  StressMonitor = 'stressmonitors',
+  MindCheckup = 'mindcheckups'
 }

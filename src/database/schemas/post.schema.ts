@@ -32,6 +32,9 @@ export class Post {
 
   @Prop({ type: [{ type: TObjectId, ref: MODEL.PostPhoto }] })
   postPhotos: PostPhoto[];
+
+  @Prop({ type: Boolean, default: false })
+  stress_result: boolean
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
