@@ -20,6 +20,7 @@ import { RegisterDto } from './dto/register.dto';
 import { Patient, PatientDocument } from 'src/database/schemas/patient.schema';
 import { faker } from '@faker-js/faker';
 import { PatientsService } from '../patients/patients.service';
+import { getRandomGender, getRandomImage } from 'src/utils/helpter';
 
 @Injectable()
 export class AuthService {
@@ -291,6 +292,9 @@ export class AuthService {
       ...registerDto,
       username: registerDto?.username ?? patient_username, // optionally creates a username
       credential: patientCredential?._id.toString(),
+      profile_img: registerDto.profile_img ?? getRandomImage(),
+      gender: registerDto.gender ?? getRandomGender(),
+      credits: 0,
     });
 
     return {

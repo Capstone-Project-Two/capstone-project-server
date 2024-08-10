@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import dayjs from 'dayjs';
 import data from 'public/data/static-img.json';
+import { GENDER } from 'src/constants/gender-constant';
 
 export function phoneFormat(ph: string) {
   const splitString = ph.slice(0, 4);
@@ -13,7 +14,7 @@ export const wait = async (duration: number) => {
 
 /**
  * @description Check time string if in HH:mm format
- * @param time 
+ * @param time
  * @returns boolean
  */
 export const isValidTimeFormat = (time: string): boolean => {
@@ -25,7 +26,7 @@ export const isValidTimeFormat = (time: string): boolean => {
 };
 
 /**
- * 
+ *
  * @description Convert from time string (HH:mm) to ISOString
  * @returns Date
  */
@@ -49,18 +50,18 @@ export const timeStringToDate = ({
 };
 
 /**
- * 
+ *
  * @description Compares if date2 is after date1
  * @param date1
  * @param date2
  * @returns boolean
  */
 export const compareDates = (date1: Date, date2: Date) => {
-  const d1 = dayjs(date1)
-  const d2 = dayjs(date2)
+  const d1 = dayjs(date1);
+  const d2 = dayjs(date2);
 
-  return d2.isAfter(d1)
-}
+  return d2.isAfter(d1);
+};
 
 const imgMap = {
   1: data.profileImg.one,
@@ -73,6 +74,9 @@ const imgMap = {
   8: data.profileImg.eight,
   9: data.profileImg.nine,
   10: data.profileImg.ten,
+  11: data.profileImg.eleven,
+  12: data.profileImg.twelve,
+  13: data.profileImg.thirteen,
 };
 
 export function getRandomImage() {
@@ -83,4 +87,19 @@ export function getRandomImage() {
   const randomKey = keys[randomIndex];
 
   return imgMap[randomKey];
+}
+
+const genderMap = {
+  0: GENDER.FEMALE,
+  1: GENDER.MALE,
+};
+
+export function getRandomGender() {
+  const keys = Object.keys(genderMap);
+
+  const randomIndex = Math.floor(Math.random() * keys.length);
+
+  const randomKey = keys[randomIndex];
+
+  return genderMap[randomKey];
 }

@@ -11,9 +11,6 @@ export class PatientResponseDto extends BaseResponse {
   @ApiProperty({ type: String })
   username: string;
 
-  @ApiProperty({ type: String })
-  phone_number: string;
-
   @ApiProperty({ type: String, enum: GENDER })
   gender: GENDER;
 
